@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cron Job Scheduler</title>
+</head>
+<body>
+    <h1>Cron Job Scheduler</h1>
+
+    <!-- Form to Schedule a New Job -->
+    <h2>Schedule a New Job</h2>
+    <form id="scheduleJobForm">
+        <label for="scheduleJobId">Job ID:</label>
+        <input type="text" id="scheduleJobId" name="id" required>
+        <label for="scheduleCronTime">Cron Time:</label>
+        <input type="text" id="scheduleCronTime" name="cronTime" required>
+        <label for="scheduleTask">Task:</label>
+        <input type="text" id="scheduleTask" name="task" required>
+        <button type="submit">Schedule Job</button>
+    </form>
+
+    <!-- Form to Update an Existing Job -->
+    <h2>Update an Existing Job</h2>
+    <form id="updateJobForm">
+        <label for="updateJobId">Job ID:</label>
+        <input type="text" id="updateJobId" name="id" required>
+        <label for="updateCronTime">New Cron Time:</label>
+        <input type="text" id="updateCronTime" name="cronTime" required>
+        <label for="updateTask">New Task:</label>
+        <input type="text" id="updateTask" name="task" required>
+        <button type="submit">Update Job</button>
+    </form>
+
+    <!-- Form to Cancel a Job -->
+    <h2>Cancel a Job</h2>
+    <form id="cancelJobForm">
+        <label for="cancelJobId">Job ID:</label>
+        <input type="text" id="cancelJobId" name="id" required>
+        <button type="submit">Cancel Job</button>
+    </form>
+
+    <!-- Display Jobs -->
+    <h2>Scheduled Jobs</h2>
+    <button id="getJobsBtn">Get Scheduled Jobs</button>
+    <pre id="result"></pre>
+
+
+<div id="box" style="width:60%; height: 300px;  border: 1px solid gray">
+
+
+</div>
+    <script>
+        document.getElementById('scheduleJobForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const id = document.getElementById('scheduleJobId').value;
+            const cronTime = document.getElementById('scheduleCronTime').value;
+            const task = document.getElementById('scheduleTask').value;
+            
+            fetch('http://localhost:3000/schedule', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id, cronTime, task })
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                getJobs();
+            })
+            .catch(error => console.error('Error scheduling job:', error));
+        });
+
+        document.getElementById('updateJobForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const id = document.getElementById('updateJobId').value;
+            const cronTime = document.getElementById('updateCronTime').value;
+            const task = document.getElementById('updateTask').value;
+            
+            fetch(`http://localhost:3000/jobs/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cronTime, task })
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                getJobs();
+            })
+            .catch(error => console.error('Error updating job:', error));
+        });
+
+        document.getElementById('cancelJobForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const id = document.getElementById('cancelJobId').value;
+            
+            fetch(`http://localhost:3000/cancel/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                getJobs();
+            })
+            .catch(error => console.error('Error canceling job:', error));
+        });
+
+        document.getElementById('getJobsBtn').addEventListener('click', getJobs);
+
+        function getJobs() {
+            fetch('http://localhost:3000/jobs')
+                .then(response => response.json())
+                .then(data => {
+                  document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error fetching jobs:', error);
+                    document.getElementById('result').textContent = 'Error fetching jobs';
+                });
+        }
+    </script>
+</body>
+</html>
