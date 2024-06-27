@@ -4,17 +4,76 @@ const cron = require('node-cron');
 const fs = require('fs-extra');
 const path = require('path');
 const cors = require('cors'); 
-const app = express();
+const mqtt = require('mqtt'); 
 
+const app = express();
 app.use(bodyParser.json());
 app.use(cors()); 
+
 const jobs = {};
+const top = 'node/bsa/+/+/+';
+
+// MQTT Broker details
+
+const mqttBroker = 'ws://home.onesmartapi.com:1884/mqtt'; 
+const userName = 'dinuka';
+const password = 'dinuka';
+
+const mqttOptions = {
+  clientId: `mqtt_${Math.floor(Math.random() * 1000)}`,
+  username: userName,
+  password: password,
+
+};
+
+// Connect to MQTT Broker
+
+const client = mqtt.connect(mqttBroker, mqttOptions);
+
+client.on('connect', () => {
+  console.log("Connected to MQTT Broker");
+  client.subscribe(top, (err) => {
+    if (err) {
+      console.error("Subscription error:", err);
+    } else {
+      console.log("Subscribed to topic 'node/bsa/+/+/+'");
+    }
+  });
+});
+
+client.on('message', (topic, message) => {
+ // console.log(`Message Arrived: ${message.toString()} on Topic: ${topic}`);
+});
+
+client.on('error', (err) => {
+  console.error(`Connection error: ${err}`);
+});
+
+client.on('close', () => {
+  console.log('MQTT connection closed');
+});
+
+client.on('reconnect', () => {
+  console.log('MQTT client reconnecting');
+});
+
+client.on('offline', () => {
+  console.log('MQTT client is offline');
+});
+
+function sendCommandToDevice(topic, payload) {
+  if (client.connected) {
+   // console.log(`sendCommandToDevice: ${topic}, Payload: ${payload}`);
+    client.publish(topic, payload);
+  }
+}
+
 
 // File to store schedules
-const SCHEDULE_FILE = path.join(__dirname, 'schedules.json');
+//const SCHEDULE_FILE = path.join(__dirname, 'schedules.json');
 
 // Function to load schedules from file
-const loadSchedules = () => {
+/*const loadSchedules = () => {
     try {
         const data = fs.readFileSync(SCHEDULE_FILE, 'utf8');
         return JSON.parse(data);
@@ -37,30 +96,99 @@ let schedules = loadSchedules();
 schedules.forEach(({ id, cronTime, task }) => {
     const job = cron.schedule(cronTime, () => {
         console.log(`Task ID: ${id}, Task: ${task}, Cron Time: ${cronTime}`);  
+       // sendCommandToDevice('node/bsa/b2n/homeCorners/inching/set/1','1,180');
+        //node/bsa/b2n/homeCorners/sw/set
     });
     jobs[id] = { job, cronTime, task };
-});
+    console.log(jobs['job1']);
+});*/
+
+
+
+let schedules = loadSchedules(); // Load existing schedules from the file
+
+function loadSchedules() {
+  try {
+    const data = fs.readFileSync('schedules.json', 'utf8');
+    const parsedSchedules = JSON.parse(data);
+    
+    // Reconstruct cron jobs
+    parsedSchedules.forEach(schedule => {
+      schedule.tasks = schedule.cronTimes.map(pattern => {
+        return cron.schedule(pattern, () => {
+          console.log(`Running scheduled job: ${schedule.scheduleName}`);
+        });
+      });
+    });
+
+    return parsedSchedules;
+  } catch (error) {
+    console.error('Error reading schedules file:', error);
+    return [];
+  }
+}
+
+function saveSchedules(schedules) {
+  try {
+    // Create a copy of schedules without tasks to avoid circular references
+    const schedulesToSave = schedules.map(schedule => ({
+      id: schedule.id,
+      scheduleName: schedule.scheduleName,
+      cronTimes: schedule.cronTimes
+    }));
+
+    fs.writeFileSync('schedules.json', JSON.stringify(schedulesToSave, null, 2));
+  } catch (error) {
+    console.error('Error writing schedules file:', error);
+  }
+}
 
 // Schedule a new job
 app.post('/schedule', (req, res) => {
-  const { id, cronTime, task } = req.body;
-  if (jobs[id]) {
-    return res.status(400).send('Job with this ID already exists.');
+  const { scheduleName, days, scheduleTime } = req.body;
+  console.log('Body:', req.body);
+  const [hour, minute] = scheduleTime.split(':');
+  const daysArray = days.split(',').map(day => day.trim());
+  
+  try {
+    const id = schedules.length + 1;
+    const cronTimes = [];
+    const tasks = [];
+    
+    daysArray.forEach(day => {
+      const pattern = `${minute} ${hour} * * ${day}`;
+      
+      if (!cron.validate(pattern)) {
+        throw new Error(`Invalid cron pattern: ${pattern}`);
+      }
 
+      const task = cron.schedule(pattern, () => {
+        console.log(`Running scheduled job: ${scheduleName} on day ${day}`);
+      });
+
+      cronTimes.push(pattern);
+      tasks.push(task);
+    });
+
+    const job = { id, scheduleName, cronTimes, tasks };
+    schedules.push(job);
+    saveSchedules(schedules);
+
+    res.send(`Schedule "${scheduleName}" set for ${days} at ${scheduleTime}`);
+  } catch (error) {
+    console.error('Error scheduling job:', error);
+    res.status(400).send(`Error scheduling job: ${error.message}`);
   }
-
-  const job = cron.schedule(cronTime, () => {
-    console.log(`Running task for job ${id}: ${task}`);
-    //document.getElementById('box').innerHTML=`Task ID: ${id}, Task: ${task}, Cron Time: ${cronTime}`;
-
-  });
-
-  jobs[id] = { job, cronTime, task };
+});
+  /*jobs[id] = { job, cronTime, task };
   schedules.push({ id, cronTime, task });
   saveSchedules(schedules);
 
   res.status(201).send('Job scheduled.');
-});
+});*/
+
+
+
 
 // Update an existing job
 app.put('/jobs/:id', (req, res) => {
@@ -172,3 +300,19 @@ app.patch('/jobs/:id', (req, res) => {
 app.listen(3000, () => {
   console.log('Cron Job API listening on port 3000');
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

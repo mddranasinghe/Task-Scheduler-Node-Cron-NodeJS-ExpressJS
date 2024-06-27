@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cron Job Scheduler</title>
+    <script src="paho.javascript-1.0.3/paho-mqtt-min.js"></script>
+    <script src="connection.js"></script>
 </head>
 <body>
     <h1>Cron Job Scheduler</h1>
@@ -46,12 +48,119 @@
     <pre id="result"></pre>
 
 
-<div id="box" style="width:60%; height: 300px;  border: 1px solid gray">
 
 
 </div>
+
+<div class="container">
+    <h2>Schedule - Repeat</h2>
+    <form id="scheduleRepeatForm">
+      <label for="scheduleRepeatName">Schedule Name:</label>
+      <input type="text" id="scheduleRepeatName" name="scheduleRepeatName" required>
+      <br><br>
+      <label for="scheduleRepeatDays">Select Days:</label><br>
+      <input type="checkbox" id="monday" name="scheduleRepeatDays" value="1">
+      <label for="monday">Monday</label><br>
+      <input type="checkbox" id="tuesday" name="scheduleRepeatDays" value="2">
+      <label for="tuesday">Tuesday</label><br>
+      <input type="checkbox" id="wednesday" name="scheduleRepeatDays" value="3">
+      <label for="wednesday">Wednesday</label><br>
+      <input type="checkbox" id="thursday" name="scheduleRepeatDays" value="4">
+      <label for="thursday">Thursday</label><br>
+      <input type="checkbox" id="friday" name="scheduleRepeatDays" value="5">
+      <label for="friday">Friday</label><br>
+      <input type="checkbox" id="saturday" name="scheduleRepeatDays" value="6">
+      <label for="saturday">Saturday</label><br>
+      <input type="checkbox" id="sunday" name="scheduleRepeatDays" value="0">
+      <label for="sunday">Sunday</label><br><br>
+      <label for="scheduleRepeatTime">Select Time:</label>
+      <input type="time" id="scheduleRepeatTime" name="scheduleRepeatTime" required>
+      <br><br>
+      <button type="submit">Create Schedule</button>
+    </form>
+    <div id="scheduleRepeatResult"></div>
+
     <script>
-        document.getElementById('scheduleJobForm').addEventListener('submit', function(event) {
+
+
+document.getElementById('scheduleRepeatForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const scheduleName = document.getElementById('scheduleRepeatName').value;
+    const days = Array.from(document.querySelectorAll('input[name="scheduleRepeatDays"]:checked'))
+                      .map(day => day.value)
+                      .join(', ');
+    const scheduleTime = document.getElementById('scheduleRepeatTime').value;
+    displayResult('scheduleRepeatResult', `Repeating Schedule "${scheduleName}" set for ${days} at ${scheduleTime}`);
+console.log(days);
+
+       
+    fetch('http://localhost:3000/schedule', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ scheduleName, days, scheduleTime })
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                getJobs();
+            })
+            .catch(error => console.error('Error scheduling job:', error));
+  });
+
+
+
+
+  function displayResult(elementId, message) {
+    const resultElement = document.getElementById(elementId);
+    resultElement.innerHTML = `<p>${message}</p>`;
+  }
+
+
+
+ function connect(){    
+            try{
+        client.connect({ onSuccess: onConnect,useSSL:mqttUseSSL,userName,password});
+        client.onConnectionLost = onConnectionLost;
+        client.onMessageArrived = onMessageArrived;
+            }catch(error)
+            {
+          
+        
+            }
+        }
+        //............................................................................................
+          function onConnect() {
+          console.log("onConnect");
+      
+ 
+        }
+        
+        function onConnectionLost(responseObject) {
+          if (responseObject.errorCode !== 0) {
+            console.log("onConnectionLost:"+responseObject.errorMessage);
+        }  setInterval(connect, 1000); }
+
+        function onMessageArrived(message) {
+            topic = message.destinationName;
+            payload=message.payloadString;
+        console.log("Payload:" + payload);
+        console.log("Topic:", topic);
+         }
+
+    function getDataFromDevice(topic) {
+     try{
+    console.log("getDataFromDevice "+topic);
+    client.subscribe(topic);}
+    catch(error){
+        console.log(error);}
+    }
+
+    connect();
+
+   
+      /*  document.getElementById('scheduleJobForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const id = document.getElementById('scheduleJobId').value;
             const cronTime = document.getElementById('scheduleCronTime').value;
@@ -70,7 +179,7 @@
                 getJobs();
             })
             .catch(error => console.error('Error scheduling job:', error));
-        });
+        });*/
 
         document.getElementById('updateJobForm').addEventListener('submit', function(event) {
             event.preventDefault();
