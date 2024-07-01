@@ -11,7 +11,8 @@ app.use(bodyParser.json());
 app.use(cors()); 
 
 const jobs = {};
-const top = 'node/bsa/+/+/+';
+const top = 'v2jlcwytpqaufx/scene/#';
+public_topic="v2jlcwytpqaufx/scene/timers";
 
 // MQTT Broker details
 
@@ -26,7 +27,7 @@ const mqttOptions = {
 
 };
 
-// Connect to MQTT Broker
+
 
 const client = mqtt.connect(mqttBroker, mqttOptions);
 
@@ -36,13 +37,38 @@ client.on('connect', () => {
     if (err) {
       console.error("Subscription error:", err);
     } else {
-      console.log("Subscribed to topic 'node/bsa/+/+/+'");
+      console.log("Subscribed to topic 'v2jlcwytpqaufx/scene/#");
     }
   });
 });
 
 client.on('message', (topic, message) => {
- // console.log(`Message Arrived: ${message.toString()} on Topic: ${topic}`);
+try{
+    topic = topic;
+    payload=message;
+
+    console.log("Payload:" + payload);
+    console.log("Topic:", topic);
+    topicsArray = topic.split("/");
+    jobid=topicsArray[4];
+
+  
+    if (topicsArray[3] === 'list') {
+      getList();
+    } else if (topicsArray[3] === 'set') {
+      AddSchedule(payload);
+    } else if (topicsArray[3] === 'update') {
+      const jobId = topicsArray[4];
+      updateJob(payload, jobId);
+    } else if (topicsArray[3] === 'delete') {
+      jobdelete(payload);
+    } else {
+      console.error("Unknown topic action:", topicsArray[3]);
+    }
+  } catch (error) {
+    console.error("Message handling error:", error);
+  }
+
 });
 
 client.on('error', (err) => {
@@ -63,47 +89,10 @@ client.on('offline', () => {
 
 function sendCommandToDevice(topic, payload) {
   if (client.connected) {
-   // console.log(`sendCommandToDevice: ${topic}, Payload: ${payload}`);
+    console.log(`sendCommandToDevice: ${topic}, Payload: ${payload}`);
     client.publish(topic, payload);
   }
 }
-
-
-// File to store schedules
-//const SCHEDULE_FILE = path.join(__dirname, 'schedules.json');
-
-// Function to load schedules from file
-/*const loadSchedules = () => {
-    try {
-        const data = fs.readFileSync(SCHEDULE_FILE, 'utf8');
-        return JSON.parse(data);
-    } catch (error) {
-        return [];
-    }
-};
-
-// Function to save schedules to file
-const saveSchedules = (schedules) => {
-    fs.writeFileSync(SCHEDULE_FILE, JSON.stringify(schedules, null, 2));
-};
-
-// Schedule storage
-let schedules = loadSchedules();
-
-
-
-// Schedule tasks from the loaded schedules
-schedules.forEach(({ id, cronTime, task }) => {
-    const job = cron.schedule(cronTime, () => {
-        console.log(`Task ID: ${id}, Task: ${task}, Cron Time: ${cronTime}`);  
-       // sendCommandToDevice('node/bsa/b2n/homeCorners/inching/set/1','1,180');
-        //node/bsa/b2n/homeCorners/sw/set
-    });
-    jobs[id] = { job, cronTime, task };
-    console.log(jobs['job1']);
-});*/
-
-
 
 let schedules = loadSchedules(); // Load existing schedules from the file
 
@@ -128,36 +117,22 @@ function loadSchedules() {
   }
 }
 
-function saveSchedules(schedules) {
+function AddSchedule(payload) {
   try {
-    // Create a copy of schedules without tasks to avoid circular references
-    const schedulesToSave = schedules.map(schedule => ({
-      id: schedule.id,
-      scheduleName: schedule.scheduleName,
-      cronTimes: schedule.cronTimes
-    }));
+    payload = JSON.parse(payload);
+    console.log('Payload:', payload);
 
-    fs.writeFileSync('schedules.json', JSON.stringify(schedulesToSave, null, 2));
-  } catch (error) {
-    console.error('Error writing schedules file:', error);
-  }
-}
-
-// Schedule a new job
-app.post('/schedule', (req, res) => {
-  const { scheduleName, days, scheduleTime } = req.body;
-  console.log('Body:', req.body);
-  const [hour, minute] = scheduleTime.split(':');
-  const daysArray = days.split(',').map(day => day.trim());
-  
-  try {
     const id = schedules.length + 1;
     const cronTimes = [];
     const tasks = [];
-    
+    const scheduleName = payload[6];
+    daysArray = DayList(payload[5])
+   
+   // const daysArray = indices;
+
     daysArray.forEach(day => {
-      const pattern = `${minute} ${hour} * * ${day}`;
-      
+      const pattern = `${payload[2]} ${payload[3]} ${payload[0]} ${payload[1]} ${day}`;
+
       if (!cron.validate(pattern)) {
         throw new Error(`Invalid cron pattern: ${pattern}`);
       }
@@ -174,145 +149,144 @@ app.post('/schedule', (req, res) => {
     schedules.push(job);
     saveSchedules(schedules);
 
-    res.send(`Schedule "${scheduleName}" set for ${days} at ${scheduleTime}`);
+    console.log(`Schedule "${scheduleName}" set for days ${payload[5]} with cron times: ${cronTimes.join(', ')}`);
   } catch (error) {
     console.error('Error scheduling job:', error);
-    res.status(400).send(`Error scheduling job: ${error.message}`);
   }
-});
-  /*jobs[id] = { job, cronTime, task };
-  schedules.push({ id, cronTime, task });
-  saveSchedules(schedules);
+}
 
-  res.status(201).send('Job scheduled.');
-});*/
+function DayList(list)
+{
+  let mod = 0;
+  let v = list;
+  let factor = 1;
 
-
-
-
-// Update an existing job
-app.put('/jobs/:id', (req, res) => {
-  const { id } = req.params;
-  const { cronTime, task } = req.body;
-  const jobRecord = jobs[id];
-  if (!jobRecord) {
-    return res.status(404).send('Job not found.');
+  while (v > 0) {
+    let d = v % 2;
+    v = Math.floor(v / 2);
+    mod += d * factor;
+    factor *= 10;
   }
 
-  // Stop the old job
-  jobRecord.job.stop();
+  mod = mod.toString();
+  let indices = [];
 
-  // Create and start the new job
-  const newJob = cron.schedule(cronTime, () => {
-    console.log(`Running task for job ${id}: ${task}`);
-  });
-
-  // Update the job record
-  jobs[id] = { job: newJob, cronTime, task };
-
-  // Update the schedules array and save it
-  const index = schedules.findIndex(schedule => schedule.id === id);
-  if (index !== -1) {
-    schedules[index] = { id, cronTime, task };
-    saveSchedules(schedules);
+  for (let i = mod.length - 1; i >= 0; i--) {
+    if (mod[i] === "1") {
+      indices.push((mod.length - 1) - i);
+    }
   }
+ return indices;
+}
 
-  res.send('Job updated.');
-});
 
-// Cancel a job
-app.delete('/cancel/:id', (req, res) => {
-  const { id } = req.params;
-  const jobRecord = jobs[id];
-  if (!jobRecord) {
-    return res.status(404).send('Job not found.');
+// Function to save schedules to a file
+function saveSchedules(schedules) {
+  try {
+    // Create a copy of schedules without tasks to avoid circular references
+    const schedulesToSave = schedules.map(schedule => ({
+      id: schedule.id,
+      scheduleName: schedule.scheduleName,
+      cronTimes: schedule.cronTimes
+    }));
+
+    fs.writeFileSync('schedules.json', JSON.stringify(schedulesToSave, null, 2));
+    console.log('Schedules saved successfully.');
+  } catch (error) {
+    console.error('Error writing schedules file:', error);
   }
+}
 
-  // Debugging
-  console.log('Job record:', jobRecord);
 
-  jobRecord.job.stop();
-  delete jobs[id];
-
-  // Update the schedules array and save it
-  schedules = schedules.filter(schedule => schedule.id !== id);
-  saveSchedules(schedules);
-
-  res.send('Job canceled.');
-});
-
-// Get list of all jobs
-app.get('/jobs', (req, res) => {
-  const jobList = Object.keys(jobs).map(id => ({
-    id,
-    cronTime: jobs[id].cronTime,
-    task: jobs[id].task
+function getList()
+{
+  const jobList = schedules.map(schedule => ({
+    id: schedule.id,
+    scheduleName: schedule.scheduleName,
+    cronTimes: schedule.cronTimes
   }));
-  res.status(200).json(jobList);
-});
 
-// Get details of a specific job
-app.get('/jobs/:id', (req, res) => {
-  const { id } = req.params;
-  const jobRecord = jobs[id];
-  if (!jobRecord) {
-    return res.status(404).send('Job not found.');
+  sendCommandToDevice(public_topic,JSON.stringify(jobList));
+}
+
+
+function updateJob(payload,jobid)
+{
+  try{
+  payload = JSON.parse(payload);
+  const cronTimes = [];
+  const tasks = [];
+   const id = jobid;
+   const scheduleName = payload[6];
+    daysArray = DayList(payload[5])
+
+   const scheduleIndex = schedules.findIndex(schedule => schedule.id == id);
+  
+  if (scheduleIndex === -1) {
+   // return res.status(404).send(`Schedule with ID ${id} not found`);
+   console.log(`Schedule with ID ${id} not found`)
   }
+ 
+ // const daysArray = indices;
 
-  res.status(200).json({
-    id,
-    cronTime: jobRecord.cronTime,
-    task: jobRecord.task
-  });
-});
+  daysArray.forEach(day => {
+    const pattern = `${payload[2]} ${payload[3]} ${payload[0]} ${payload[1]} ${day}`;
 
-// Partially update a job
-app.patch('/jobs/:id', (req, res) => {
-  const { id } = req.params;
-  const { cronTime, task } = req.body;
-  const jobRecord = jobs[id];
-  if (!jobRecord) {
-    return res.status(404).send('Job not found.');
-  }
+    if (!cron.validate(pattern)) {
+      throw new Error(`Invalid cron pattern: ${pattern}`);
+    }
 
-  if (cronTime) {
-    // Stop the old job if the cronTime is being updated
-    jobRecord.job.stop();
-
-    // Create and start the new job with the updated cronTime
-    const newJob = cron.schedule(cronTime, () => {
-      console.log(`Running task for job ${id}: ${task || jobRecord.task}`);
+    const task = cron.schedule(pattern, () => {
+      console.log(`Running scheduled job: ${scheduleName} on day ${day}`);
     });
 
-    // Update the cronTime in the job record
-    jobRecord.job = newJob;
-    jobRecord.cronTime = cronTime;
+    cronTimes.push(pattern);
+    tasks.push(task);
+  });
+
+   // Clear existing tasks
+   schedules[scheduleIndex].tasks.forEach(task => task.stop());
+    
+   // Update schedule
+   schedules[scheduleIndex].scheduleName = scheduleName;
+   schedules[scheduleIndex].cronTimes = cronTimes;
+   schedules[scheduleIndex].tasks = tasks;
+
+   saveSchedules(schedules);
+
+   //res.send(`Schedule "${scheduleName}" updated for ${days} at ${scheduleTime}`);
+   console.log(`Schedule updateded `)
+ } catch (error) {
+   //console.error('Error updating job:', error);
+   //res.status(400).send(`Error updating job: ${error.message}`);
+   console.log(`Error updating job: ${error.message}`)
+ }
+}
+
+
+function jobdelete(payload)
+{
+  payload = JSON.parse(payload);
+  const scheduleIndex = schedules.findIndex(schedule => schedule.id == payload);
+
+  if (scheduleIndex === -1) {
+    return res.status(404).send(`Schedule with ID ${id} not found`);
   }
 
-  if (task) {
-    // Update the task in the job record
-    jobRecord.task = task;
-  }
+  // Stop all tasks for the schedule
+  schedules[scheduleIndex].tasks.forEach(task => task.stop());
 
-  res.send('Job partially updated.');
-});
+  // Remove the schedule
+  schedules.splice(scheduleIndex, 1);
+  saveSchedules(schedules);
+
+  //res.send(`Schedule with ID ${id} deleted`);
+  console.log(`Schedule with ID ${id} deleted`)
+}
+
+
 
 app.listen(3000, () => {
   console.log('Cron Job API listening on port 3000');
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
