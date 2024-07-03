@@ -1,262 +1,430 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cron Job Scheduler</title>
-    <script src="paho.javascript-1.0.3/paho-mqtt-min.js"></script>
-    <script src="connection.js"></script>
+    <link rel="icon" href="data:,">
+    <title>Document</title>
+    <script src="resources/js/paho.javascript-1.0.3/paho-mqtt-min.js"></script>
+    <script src="resources/js/connection.js"></script>
+    <style>
+             body{touch-action: pan-y;}
+        * {
+	margin: 0;
+	padding: 0;
+    font-family: 'Avenir', sans-serif;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+#device_div { width: 100%;margin: 0 auto;}
+
+table{ margin: 0 auto; width: 100%; height: 100%;border-collapse: separate; border-spacing: 15px;}
+
+td{ box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 7px; padding-left: 10px;padding-right: 20px; padding-top:5px; padding-bottom:5px ; width: 30%;}
+
+.img-container {width: 50px;  height: 50px; overflow: hidden; position: relative;} 
+.img-container img { width: 100%; height: auto; display: block; position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);}
+
+ .caption{margin-right: 15px;margin-left: 15px;  border-bottom: 1px solid rgb(211, 207, 207); margin-top: 10px; }
+ p.device_name{font-size: 13px; font-weight: bold;}
+
+p.zone{ font-size: 10px; padding-top: 3px;}
+
+.dot{
+ 
+   width: 7px;
+   height:7px;
+   border-radius:5px 5px;
+    background-color:#b4b4b0;
+   margin: 0 auto;
+   bottom: 0;
+   }
+   .dotConnction
+   {
+    
+   width: 7px;
+   height:7px;
+   border-radius:5px 5px;
+    background-color:red;
+   margin: 0 auto;
+   bottom: 0;
+   }
+   .dotdiv
+   {
+    bottom: 0;
+       position: fixed;
+       margin: 0 auto;
+       width:100%;
+       padding: 10px;
+       border-top: 1px; /* Add a border at the top for separation */
+       z-index: 1000; /* Ensure it stays above other content */
+   }
+  #waterpump.hover-effect{box-shadow: none; opacity: 0.2; background-color: #EEEEEE; }
+  #powerSource.hover-effect{box-shadow: none; opacity: 0.2; background-color: #EEEEEE; }
+  #flood.hover-effect{box-shadow: none; opacity: 0.2; background-color: #EEEEEE; }
+  #cctv.hover-effect{box-shadow: none; opacity: 0.2; background-color: #EEEEEE; }
+  #smoke.hover-effect{box-shadow: none; opacity: 0.2; background-color: #EEEEEE; }
+  #siren.hover-effect{box-shadow: none; opacity: 0.2; background-color: #EEEEEE; }
+  .popup {
+    width: 80%;
+  display: none; 
+  position: fixed;
+  top: 90%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  border-radius: 10px 10px;
+  background-color:#7D63BE;
+  padding: 12px 12px 12px 12px;
+  z-index: 9999; 
+  color: white;
+
+ 
+}
+
+
+.popup-content {text-align: center; margin-bottom:0%; }
+
+    @media only screen and (max-width: 600px) {
+
+	.img-container {width: 50px;  height: 50px; overflow: hidden; position: relative;} 
+.img-container img { width: 100%; height: auto; display: block; position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);}
+    .device_name{font-size: 13px;font-weight: bold;}
+    .zone{font-size:10px;padding-top: 3px;}
+
+}
+   @media only screen and (min-width: 600px) {
+
+	.img-container {width: 60px;  height: 60px; overflow: hidden; position: relative;} 
+.img-container img { width: 100%; height: auto; display: block; position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);}
+    .device_name{font-size: 15px;font-weight: bold;}
+    .zone{font-size:13px;padding-top: 3px;}
+    td{ box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 10px; padding-left: 15px;padding-right: 20px; padding-top:10px; padding-bottom:10px ; width: 30%};
+}
+
+@media only screen and (min-width: 1024px) {
+    
+	.img-container {width: 80px;  height: 80px; overflow: hidden; position: relative;} 
+.img-container img { width: 100%; height: auto; display: block; position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);}
+   .device_name{font-size: 17px;font-weight: bold;}
+    .zone{font-size:15px;padding-top: 3px;}
+    #device_div {width: 80%;margin: 0 auto;}
+    .dotdiv{width: 80%;}}
+
+#nav-Button{
+  width: 92%;  margin: 0 auto; overflow: hidden;color:white;font-size: 13px; margin-top: 2vw;
+}
+#nav-device-div{
+  width: 48%; float: left; display: flex; justify-content: center;
+}
+#nav-scene-div{
+  width: 48%; float: right; display: flex; justify-content: center;
+}
+#device-button{
+  width: 100%; padding: 6px; border:1px solid white; text-align: center; background-color: #68B581;
+  border-radius: 5px; margin:  0 auto; 
+}
+#scene-button
+{
+  width: 100%; padding: 6px; border:1px solid white; text-align: center;
+  background-color: #9B9B9B; border-radius: 5px;
+}
+
+
+
+
+
+
+
+#scene-list{
+  width: 95%; margin: 0 auto; overflow: hidden;color:black;font-size: 13px; margin-top: 2vw;
+}
+#left-box{
+  width: 50%; margin-top: 1vw; margin-bottom: 1vw; float: left; display: flex; justify-content: center; 
+}
+#right-box{
+  width: 50%;margin-top: 1vw; float: right; display: flex; justify-content: center;
+}
+#block-L{
+  width: 95%;height: 80px; padding: 6px;  box-shadow: 0.5px 0.5px 3px .5px gray; border-radius: 7px; text-align: center;
+ margin:  0 auto; 
+}
+#block-R
+{
+  width: 95%; height: 80px; padding:6px; box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 7px; text-align: center;
+
+}
+	</style>
 </head>
 <body>
-    <h1>Cron Job Scheduler</h1>
-<div>
-    <button style="width: 100px;" id="repeat"onclick="display('container1','container2')">Repeat</button>
-
-<button style="width: 100px;" id="onece" onclick="display('container2','container1')">Onece</button>
-</div>
-  
-<div id="container1" style="display: inline;">
-    <h2>Schedule - Repeat</h2>
-    <form id="scheduleRepeatForm">
-      <label for="scheduleRepeatName">Schedule Name:</label>
-      <input type="text" id="scheduleRepeatName" name="scheduleRepeatName" required>
-      <br><br>
-      <label for="scheduleRepeatDays">Select Days:</label><br>
-      <input type="checkbox" id="monday" name="scheduleRepeatDays" value="2">
-      <label for="monday">Monday</label><br>
-      <input type="checkbox" id="tuesday" name="scheduleRepeatDays" value="4">
-      <label for="tuesday">Tuesday</label><br>
-      <input type="checkbox" id="wednesday" name="scheduleRepeatDays" value="8">
-      <label for="wednesday">Wednesday</label><br>
-      <input type="checkbox" id="thursday" name="scheduleRepeatDays" value="16">
-      <label for="thursday">Thursday</label><br>
-      <input type="checkbox" id="friday" name="scheduleRepeatDays" value="32">
-      <label for="friday">Friday</label><br>
-      <input type="checkbox" id="saturday" name="scheduleRepeatDays" value="64">
-      <label for="saturday">Saturday</label><br>
-      <input type="checkbox" id="sunday" name="scheduleRepeatDays" value="1">
-      <label for="sunday">Sunday</label><br><br>
-      <label for="scheduleRepeatTime">Select Time:</label>
-      <input type="time" id="scheduleRepeatTime" name="scheduleRepeatTime" required>
-      <br><br>
-      <button  id="scheduleRepeat" onclick="scheduleCronTime('scheduleRepeat')">Create Schedule</button>
-    </form>
+  <div id="nav-Button">
+    <div id="nav-device-div">  
+        <div id="device-button" onclick="navfun('device_div','scene-div')">Device</div>
+    </div>
+    <div id="nav-scene-div" >    
+        <div  id="scene-button" onclick="navfun('scene-div','device_div')">Scene</div>
+    </div>
 </div>
 
 
-    <div id="container2" style="display: none;">
-        <h2>Schedule - onece</h2>
-        <form id="scheduleRepeatFormOnece">
-          <label for="scheduleOneceName">Schedule Name:</label>
-          <input type="text" id="scheduleOneceName" name="scheduleOneceName" required>
-          <br><br>
+  </div>
+  <div id="device_div" style="display : none">
+    <table> 
+    
+        <tr><td id="waterpump" ontouchstart="addHoverClass('waterpump')" ontouchend="removeHoverClass('waterpump')" style="cursor:pointer;"> <div class="dot" id="node/spc/7469308fcf871dad4d4"style="width: 5px; height: 5px; float:left;"></div>  <div class="img-container">
+                <img src="resources\image\pump.png" class="img_td" alt="Pump Image">
+            </div><p class="device_name">Water Pump</p><p class="zone">Pump room</p></td>  
+			            <td id="flood" ontouchstart="addHoverClass('flood')" ontouchend="removeHoverClass('flood')"><div class="dot" id="node/lls2/923714-42180e2de6b4" style="width: 5px; height: 5px; float:left;"></div>  <div class="img-container">
+                <img src="resources\image\flood.png" class="img_td" alt="cctv">
+            </div><p class="device_name"> Flood Level </p><p class="zone">Graden</p></td>
+			
         
-          <label for="scheduleOneceTime">Select Time:</label>
-          <input type="time" id="scheduleOneceTime" name="scheduleOneceTime" required>
-          <br><br>
-          <button  id="schedulOnece" onclick="scheduleCronTime('schedulOnece')">Create Schedule</button>
-        </form>
+			
+        </tr>
+        <tr><td id="siren" ontouchstart="addHoverClass('siren')" ontouchend="removeHoverClass('siren')"><div class="dot" id="bsa" style="width: 5px; height: 5px; float:left;"></div>  <div class="img-container">
+                <img src="resources\image\siren.jpg" class="img_td" alt="siren">
+            </div><p class="device_name"> Home Siren</p><p class="zone">Home</p></td>  
+        
+            <td id="powerSource" ontouchstart="addHoverClass('powerSource')" ontouchend="removeHoverClass('powerSource')"><div class="dot" id="" style="width: 5px; height: 5px; float:left;"></div>  <div class="img-container">
+                <img src="resources\image\power.jpg" class="img_td" alt="Power">
+            </div><p class="device_name">Power Source</p><p class="zone">Home</p></td>
 
-    </div> 
+        </tr>   
 
-    <div id="scheduleRepeatResult"></div>
-    <h2>Scheduled Jobs</h2>
-    <div id="scheduleJobsList"></div>
+        <tr>  
+
+          
+      <td id="smoke" ontouchstart="addHoverClass('smoke')" ontouchend="removeHoverClass('smoke')" ><div class="dot" id=""style="width: 5px; height: 5px; float:left;"></div>  <div class="img-container">
+        <img src="resources\image\smoke.jpg" class="img_td" alt="cctv">
+    </div><p class="device_name"> Smoke Detector </p><p class="zone">Home</p></td>
+
+      <td id="cctv" ontouchstart="addHoverClass('cctv')" ontouchend="removeHoverClass('cctv')"><div class="dot" id=""style="width: 5px; height: 5px; float:left;"></div>  <div class="img-container">
+          <img src="resources\image\cctv\cam.png" class="img_td" alt="cctv">
+      </div><p class="device_name"> CCTV Bridge </p><p class="zone">Home</p></td>
+
+  </tr>   
+
+  <tr>  
 
 
-<!-- Update Schedule Form -->
-<h2>Update Schedule</h2>
-<form id="updateScheduleForm">
-  <input type="text" id="updateScheduleId" placeholder="Schedule ID" required>
-  <input type="text" id="updateScheduleName" placeholder="Schedule Name" required>
-  <label><input type="checkbox" name="updateScheduleDays" value="2"> Monday</label>
-  <label><input type="checkbox" name="updateScheduleDays" value="4"> Tuesday</label>
-  <label><input type="checkbox" name="updateScheduleDays" value="8"> Wednesday</label>
-  <label><input type="checkbox" name="updateScheduleDays" value="16"> Thursday</label>
-  <label><input type="checkbox" name="updateScheduleDays" value="32"> Friday</label>
-  <label><input type="checkbox" name="updateScheduleDays" value="64"> Saturday</label>
-  <label><input type="checkbox" name="updateScheduleDays" value="1"> Sunday</label>
-  <input type="time" id="updateScheduleTime" required>
-  <button type="submit">Update Schedule</button>
-</form>
+    <td id="" style="opacity: 0.5;" onclick="openPopup()" ><div class="dot" id=""style="width: 5px; height: 5px; float:left"></div>  <div class="img-container">
+        <img src="resources\image\vehicle.png" class="img_td" alt="cctv">
+    </div><p class="device_name"> GPS Tracker </p><p class="zone">Home</p></td>
 
-<div id="updateScheduleResult"></div>
+</tr>
+    </table></div>
+
+
+
+  <div id="scene-div">
+    <div id="scene-list">
+      <div id="left-box">  
+          <div id="block-L" onclick="location.href='index2.html'">scene 01</div>
+      </div>
+      <div id="right-box" >    
+          <div  id="block-R">Scene 02</div>
+      </div>
+  </div>
+
+
+
+  </div>
+
+
+
+
+        <div class="dotdiv">
+            <div class="dotConnction" id="page1"style="width: 10px; height: 10px;"></div>
+            </div>
+
+            <!-- The popup message box -->
+            <div id="popup" class="popup" >
+              <div class="popup-content" >
+                <p style=" font-size: 12px;">This Device Has Not Been Registered!</p>
+      
+              </div>
+            </div>
+
+
 <script>
 
 
 
-const subTopic="v2jlcwytpqaufx/scene/#",
-publish_topic="v2jlcwytpqaufx/scene/timer/";
-
-
-
-
-function connect(){//connect------------------------------------------------------------------
-try{
-client.connect({ onSuccess: onConnect,useSSL: mqttUseSSL,userName,password });
-client.onConnectionLost = onConnectionLost;
-client.onMessageArrived = onMessageArrived;
-
-}catch{}}
-
-function onConnect() {
-try{
-    console.log("onConnect");    
-    client.subscribe(subTopic);
-    sendCommandToDevice(publish_topic+"list","read");
-}
-catch{}
-}
-
-function sendCommandToDevice(topic,payload) {
-  try{
-    if (client.isConnected()) {
-        console.log("sendCommandToDevice: " + topic + ", Payload: " + payload);
-        var message = new Paho.MQTT.Message(payload);
-        message.destinationName = topic;
-        client.send(message);
-    }}
-    catch(error)
-    {
-      console.log(error);
-    }
-}
-
-
-function onMessageArrived(message) {
-  try{
-  topic = message.destinationName;
-  payload=message.payloadString;
-    console.log("Payload:" + payload);
-    console.log("Topic:", topic);
-   
-    displayJobs(payload);
-
-
-  }
-  catch(error)
-  {
-    console.log(error);
-  } 
-}
-
-function onConnectionLost(responseObject) {
-  if (responseObject.errorCode !== 0) {
-    console.log("onConnectionLost:"+responseObject.errorMessage);
-
-  }
-  
-}
-
-//const scheduleName=0,days=0,scheduleTime=0,date=0;
-function display(id1,id2)
+function navfun(id1,id2)
 {
-    document.getElementById(id1).style.display='inline';
-    document.getElementById(id2).style.display='none';
+  if(id1 == 'device_div')
+  {
+    document.getElementById('device-button').style.backgroundColor='#68B581';
+    document.getElementById('scene-button').style.backgroundColor='#9B9B9B';
+
+  }
+  else if(id1 == "scene-div")
+  {
+    document.getElementById('scene-button').style.backgroundColor='#7D63BE';
+    document.getElementById('device-button').style.backgroundColor='#9B9B9B';
+  }
+
+  document.getElementById(id1).style.display="inline";
+  document.getElementById(id2).style.display="none";
 }
 
-function scheduleCronTime(id) {
-    event.preventDefault();
-    if(id == 'scheduleRepeat'){
-     scheduleName = document.getElementById('scheduleRepeatName').value;
-     Daystotal = Array.from(document.querySelectorAll('input[name="scheduleRepeatDays"]:checked'))
-                 .map(day => parseInt(day.value, 10)) 
-                 .reduce((sum, value) => sum + value, 0);  
-      date = "*";
-      month = "*"; 
-      
-   scheduleTime = document.getElementById('scheduleRepeatTime').value;
-   [hour, minute] = scheduleTime.split(':');
-   seconds = 0;
-      const scheduleArry = [date,month,minute,hour,seconds,Daystotal,scheduleName];
-      sendCommandToDevice(publish_topic+'set', JSON.stringify(scheduleArry));
 
-    }
-    if(id == 'schedulOnece'){
-     scheduleName = document.getElementById('scheduleOneceName').value;
-     Daystotal = "*";
-     scheduleTime = document.getElementById('scheduleOneceTime').value;
-     [hour, minute] = scheduleTime.split(':');   
-        d = new Date();
-      date = d.getDate();
-      month = d.getMonth() + 1; 
-      seconds = 0;
-      const scheduleArry = [date,month,minute,hour,seconds,Daystotal,scheduleName];
-      sendCommandToDevice(publish_topic+'set', JSON.stringify(scheduleArry));
 
+
+
+
+         var payload, topic,topicsArray,stat1=0,stat2=0,stat3=0,stat4=0,sum_stat=0,
+         companyID="node", 
+         // Device type..........
+         deviceTypePump="spc",
+         deviceTypeFlood="lls2",
+		     deviceTypeSiren="bsa",
+        // Device Id.................
+         deviceIDPump="7469308fcf871dad4d4",
+         deviceIDFlood="923714-42180e2de6b4",
+		    deviceIDSiren="8983514-da13896f6480",
+
+     device_id_siren = ['16351370-8a80f94dffbc','16334980-8440f94dffbc', '16337445-254af94dffbc', '16336187-3b45f94dffbc'],
+/*
+ '14028845-2d10d6e768e8',
+  '8973248-c0eb886f6480',
+  '8983514-da13896f6480',
+  '8955008-80a4886f6480'
+*/
+
+         // Device Topic.....................
+          pumpTopic= companyID+"/"+deviceTypePump+"/"+"n2b/"+deviceIDPump+"/+",
+         floodTopic= companyID+"/"+deviceTypeFlood+"/"+"n2b/"+deviceIDFlood+"/+",
+		      SirenTopic= companyID+"/"+deviceTypeSiren+"/"+"+/"+"+"+"/+";
+    
+
+        function connect(){    
+            try{
+        client.connect({ onSuccess: onConnect,useSSL:mqttUseSSL,userName,password});
+        client.onConnectionLost = onConnectionLost;
+        client.onMessageArrived = onMessageArrived;
+            }catch(error)
+            {
+          
+        
+            }
+        }
+        //............................................................................................
+          function onConnect() {
+          console.log("onConnect");
+          document.getElementById('page1').style.backgroundColor="green";
+           getDataFromDevice(pumpTopic); 
+           getDataFromDevice(floodTopic); 
+		        getDataFromDevice(SirenTopic); 
+ 
+        }
+        
+        function onConnectionLost(responseObject) {
+          if (responseObject.errorCode !== 0) {
+            console.log("onConnectionLost:"+responseObject.errorMessage);
+            document.getElementById('page1').style.backgroundColor="#FF3827"
+          document.getElementById('node/spc/7469308fcf871dad4d4').style.backgroundColor="#b4b4b0";
+          document.getElementById('node/lls2/923714-42180e2de6b4').style.backgroundColor="#b4b4b0";
+          document.getElementById('bsa').style.backgroundColor="#b4b4b0";
+        }  setInterval(connect, 1000); }
+
+        function onMessageArrived(message) {
+            topic = message.destinationName;
+            payload=message.payloadString;
+        console.log("Payload:" + payload);
+        console.log("Topic:", topic);
+        displayFunction(payload,topic);}
+
+    function getDataFromDevice(topic) {
+     try{
+    console.log("getDataFromDevice "+topic);
+    client.subscribe(topic);}
+    catch(error){
+        console.log(error);}
     }
+
+    
+
+function displayFunction(payload,topic) {
+     topicsArray = topic.split("/");
+      payload = JSON.parse(payload);
    
-  }
-
-  function displayResult(elementId, message) {
-    const resultElement = document.getElementById(elementId);
-    resultElement.innerHTML = `<p>${message}</p>`;
-  }
-
-
-  document.getElementById('updateScheduleForm').addEventListener('submit', function(event) {
-  event.preventDefault();
-  
-  const scheduleId = document.getElementById('updateScheduleId').value;
-  scheduleName = document.getElementById('updateScheduleName').value;
-     Daystotal = Array.from(document.querySelectorAll('input[name="updateScheduleDays"]:checked'))
-                 .map(day => parseInt(day.value, 10)) 
-                 .reduce((sum, value) => sum + value, 0);  
-      date = "*";
-      month = "*"; 
+try{
+      if (payload['stat'] == 'online')
+      {   
+        if      (topicsArray[3] == device_id_siren[0]) {stat1 = 1;}
+        else if (topicsArray[3] == device_id_siren[1]) {stat2=  1;}
+        else if (topicsArray[3] == device_id_siren[2]) {stat3 = 1;}
+        else if (topicsArray[3] == device_id_siren[3]) {stat4 = 1;}
+        sum_stat=(stat1+stat2+stat3+stat4);
+        console.log("s:"+sum_stat);
+ 
+       document.getElementById(topicsArray[0]+'/'+topicsArray[1]+'/'+topicsArray[3]).style.backgroundColor="#7BDD0A";
+ 
+      }
+      else if(payload['stat'] == 'offline')
+      {
+        if      (topicsArray[3] == device_id_siren[0]) {stat1 = 0;}
+        else if (topicsArray[3] == device_id_siren[1]) {stat2=  0;}
+        else if (topicsArray[3] == device_id_siren[2]) {stat3 = 0;}
+        else if (topicsArray[3] == device_id_siren[3]) {stat4 = 0;}
+        sum_stat2=(stat1+stat2+stat3+stat4);
+        console.log("s2:"+sum_stat);
       
-   scheduleTime = document.getElementById('updateScheduleTime').value;
-   [hour, minute] = scheduleTime.split(':');
-   seconds = 0;
-   const scheduleArry = [date,month,minute,hour,seconds,Daystotal,scheduleName];
-   sendCommandToDevice(publish_topic+'update/'+scheduleId, JSON.stringify(scheduleArry));
-   console.log('up'+scheduleArry);
+       
+        document.getElementById(topicsArray[0]+'/'+topicsArray[1]+'/'+topicsArray[3]).style.backgroundColor="#FF3827";
+      
+     
+      }
+    }
+      catch(error){
+       console.log(error);}
+      
+       if(sum_stat != device_id_siren.length)
+        {
+          document.getElementById('bsa').style.backgroundColor="#FF3827";
 
-});
+        }
+        else if(sum_stat == device_id_siren.length)
+        {
+          document.getElementById('bsa').style.backgroundColor="#7BDD0A";
+          console.log('doni')
 
+        }
+     
+      }
+         
+    
 
+        
+document.getElementById("waterpump").onclick=function(){location.href="controller/waterpump.html"}
+document.getElementById("powerSource").onclick=function(){location.href="controller/powerSource.html"}
+document.getElementById("flood").onclick=function(){location.href="controller/flood.html"}
+document.getElementById("siren").onclick=function(){location.href="controller/siren.html"}
+document.getElementById("smoke").onclick=function(){location.href="controller/smoke.html"}
+document.getElementById("cctv").onclick=function(){location.href="controller/cctv.html"}
 
-    function displayJobs(jobs) {
-      jobs = JSON.parse(jobs);
-    const jobsList = document.getElementById('scheduleJobsList');
-    jobsList.innerHTML = ''; // Clear previous jobs
-    jobs.forEach(job => {
-        const jobElement = document.createElement('div');
-        jobElement.innerHTML = `
-            <h3>${job.scheduleName}</h3>
-            <button onclick="populateUpdateForm(${job.id}, '${job.scheduleName}', '${job.cronTimes.join(', ')}')">Update</button>
-              <button onclick="deleteJob(${job.id})">Delete</button>
-        `;
-        jobsList.appendChild(jobElement);
-    });
-}
-//     <p>Cron Times: ${job.cronTimes.join(', ')}</p>
-
-function populateUpdateForm(id, scheduleName, cronTimes) {
-    document.getElementById('updateScheduleId').value = id;
-    document.getElementById('updateScheduleName').value = scheduleName;
-
-    const days = cronTimes.split(',').map(time => parseInt(time.trim().split(' ')[4], 10));
-
-  const totalDays = days.reduce((acc, day) => acc + Math.pow(2, day), 0);
-
-  document.querySelectorAll('input[name="updateScheduleDays"]').forEach(checkbox => {
-      const value = parseInt(checkbox.value, 10);
-      checkbox.checked = (totalDays & value) !== 0;
-  });
-    const firstCronTime = cronTimes.split(',')[0];
-    const [minute, hour] = firstCronTime.split(' ').slice(0, 2);
-    const time = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
-    document.getElementById('updateScheduleTime').value = time;
-
+   function addHoverClass(id) {
+    document.getElementById(id).classList.add('hover-effect');
 }
 
-    function deleteJob(id) {
+function removeHoverClass() {
+    document.getElementById(id).classList.remove('hover-effect');
+}
 
-      sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));}
+// Function to opne the popup
+function openPopup() {
+  var popup = document.getElementById("popup");
+  popup.style.display = "block";
 
+  setTimeout(function() {
+    popup.style.display = "none";
+  }, 1300); 
+  
+}
+
+setInterval(connect, 3000);      
 connect();
-    </script>
+ </script>
 </body>
 </html>

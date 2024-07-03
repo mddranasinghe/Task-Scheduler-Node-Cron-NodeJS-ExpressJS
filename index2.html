@@ -1,0 +1,531 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cron Job Scheduler</title>
+    <script src="paho.javascript-1.0.3/paho-mqtt-min.js"></script>
+    <script src="connection.js"></script>
+    <style>
+              * {
+
+    font-family: 'Avenir', sans-serif;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+      #deleimg{
+
+        width:20px;
+        height: 20px;
+        
+      }
+      #editimg
+      {
+        width:20px;
+        height: 20px;
+      }
+#clockimg{ 
+ 
+  width: 30px;
+  height: 30px;}
+
+
+      
+#scene-list{
+  width: 95%; margin: 0 auto; overflow: hidden;color:black;font-size: 13px; margin-top: 2vw; margin-bottom: 3vw;
+  border: 1.5px solid #3091E5; border-radius: 6px;
+}
+#left-box{
+  width: 50%; margin-top: 1vw; margin-bottom: 1vw; float: left; display: flex;
+}
+#right-box{
+  width: 50%;margin-top: 3vw; float: right; display: flex; justify-content: right; 
+}
+.add-button {
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+           
+        }
+
+        #center-button,#scheduleOnceButton {
+            width: 95%;
+            height: 40px;
+            text-align: center;
+            color: white;
+            background-color: #3091E5;
+            border-radius: 5px;
+            border: none;
+        }
+.cricle{
+
+  width: 40px;
+  height: 40px;
+  border: 3px solid gray;
+  border-radius: 50%;
+  margin-right: 5vw;
+  margin: 0 auto;
+}
+.cricle-box{ display:inline-block; text-align: center;}
+
+
+input[type="text"]:focus, input[type="time"]:focus {
+    border: none;
+    outline: none;
+ 
+}
+.elementBox{
+border:1.5px solid rgb(179, 176, 176);
+border-top: none;
+border-left: none;
+border-right: none;
+padding-bottom: 8px;
+display: block;
+
+}
+
+.popup {
+             width: 60%;
+            display: none;
+            position: fixed;
+            padding: 15px 15px 1px 15px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            z-index: 9999;
+         }
+
+
+
+   .cricle-box input[type="checkbox"] {
+    width: 50px;
+    height: 50px; 
+    border:2px solid gray; 
+    background-color: white; 
+    appearance: none;
+    position: relative; 
+   margin-top: 15px;
+   border-radius: 50%;
+
+  
+}
+
+.cricle-box input[type="checkbox"]:checked::after {
+    content: ''; 
+    position: absolute; 
+    left: 16px; 
+    top: 9px; 
+    width: 10px;
+    height: 20px; 
+    border: 2px solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+  
+
+}
+.cricle-box input[type="checkbox"]:checked {
+  background-color: #7D63BE;
+    border: 2px solid  #7D63BE;
+}
+
+        /* Style for checkboxes */
+ input[type="checkbox"] {
+    width: 20px;
+    height: 20px; 
+    border:2px solid #3091E5; 
+    background-color: white; 
+    appearance: none;
+    position: relative; 
+   margin-top: 15px;
+  
+  
+}
+
+input[type="checkbox"]:checked::after {
+    content: ''; 
+    position: absolute; 
+    left: 5px; 
+    top: 2.5px; 
+    width: 4px;
+    height: 8px; 
+    border: 2px solid #3091E5;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+
+}
+
+.popupButton{
+  float: right;
+}
+#CancelButton,#OkButton
+{
+   color: #3091E5;
+   display:inline-block ;
+   margin-right: 10px;
+     
+}
+#scheduleTime
+{
+  border: none; background-color: rgb(227, 237, 245);padding:5px ;
+  border-radius: 5px;
+}
+
+#overlay {
+     position: fixed;
+     display: none;
+     width: 100%;
+     height: 100%;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background-color: rgba(0,0,0,0.5);
+     z-index: 9998;
+     cursor: pointer;
+    }
+
+</style>
+</head>
+<body>
+  <div id="list" style="display: non;">
+  <h2>Schedule List</h2>
+  <div id="scheduleJobsList"></div>
+  <div class="add-button">
+    <button id="center-button" onclick="controlOption('add')">Add New Schedule</button>
+</div>
+</div>
+
+
+
+<div id="add" style="display: none;">
+
+    <h1> Schedule</h1>
+    <p style="font-size: 15px;">Execute only once at a given time of the day or Repeat after given time of the day.</p>
+    <div  class="cricle-box" >
+     <input type="checkbox" id="onece" value="4" checked>
+     <div>Onece </div>
+    </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <div  class="cricle-box">
+      <input type="checkbox" id="repeat" value="4">
+
+    <div>Repeat </div>
+
+
+    </div>
+    <div>   <br>   <br>
+      <form id="scheduleForm" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="actionType" name="actionType" value="create">
+        <input type="hidden" id="scheduleId" name="scheduleId" value="">
+    <div class="elementBox">
+      <input style="border: none;"type="text" id="scheduleName" name="scheduleName" required placeholder="Add Timer Name" value="">
+    </div>
+
+    <div class="elementBox" id="everydays" onclick="SetDays()" style="display: none;">
+      <br>
+      <samll>Everyday</samll>
+   
+  </div>
+    <div id="popup" class="popup">
+      <label for="scheduleDays"><b>Set Days of Week</b></label><br><br>
+      <div>
+        <input type="checkbox" id="monday" name="scheduleDays" value="2" checked>
+        <label for="monday">Monday</label><br>
+    
+   
+      <input type="checkbox" id="tuesday" name="scheduleDays" value="4" checked>
+      <label for="tuesday">Tuesday</label><br>
+      <input type="checkbox" id="wednesday" name="scheduleDays" value="8" checked>
+      <label for="wednesday">Wednesday</label><br>
+      <input type="checkbox" id="thursday" name="scheduleDays" value="16">
+      <label for="thursday">Thursday</label><br>
+      <input type="checkbox" id="friday" name="scheduleDays" value="32">
+      <label for="friday">Friday</label><br>
+      <input type="checkbox" id="saturday" name="scheduleDays" value="64">
+      <label for="saturday" >Saturday</label><br>
+      <input type="checkbox" id="sunday" name="scheduleDays" value="1">
+      <label for="sunday">Sunday</label><br><br>
+   <div class="popupButton">
+        <div id="CancelButton"><p>Cancel</p></div>
+        <div id="OkButton"><p>Ok</p></div></div>
+      </div>
+      </div><br>
+      <div class="elementBox">
+          <label for="scheduleTime">Set Time:</label>
+          <input  type="time" id="scheduleTime" name="scheduleTime" required value="">
+         </div> <br><br>
+       <!-- <button  onclick="scheduleCronTime()">Create Schedule</button>-->  
+          <div class="add-button">
+            <button  type="submit" id="scheduleOnceButton" > Save and Enable</button>
+        </div>
+
+        </form>
+       
+
+  </div>
+
+</div>
+
+<div id="overlay"></div>
+<script>
+
+var scheduleType = 0;
+
+
+function handleFormSubmit(event) {
+  event.preventDefault();
+
+  const form = event.target;
+  const actionType = form.querySelector('input[name="actionType"]').value;
+  const scheduleId = form.querySelector('input[name="scheduleId"]').value;
+  const scheduleName = form.querySelector('input[name="scheduleName"]').value;
+  const scheduleDays =  Array.from(document.querySelectorAll('input[name="scheduleDays"]:checked'))
+                 .map(day => parseInt(day.value, 10)) 
+                 .reduce((sum, value) => sum + value, 0); 
+  const scheduleTime = form.querySelector('input[name="scheduleTime"]').value;
+
+  if (actionType === 'create') {
+    scheduleCronTime(scheduleName, scheduleDays, scheduleTime);
+  } else if (actionType === 'update') {
+    updateSchedule(scheduleId, scheduleName, scheduleDays, scheduleTime);
+  }
+}
+
+
+function controlOption(id)
+{
+  document.getElementById(id).style.display='block';
+  document.getElementById('list').style.display='none';
+
+
+}
+function setCurrentTime() {
+            const inputElement = document.getElementById('scheduleTime');
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const currentTime = `${hours}:${minutes}`;
+            inputElement.value = currentTime;
+        }
+
+        setCurrentTime();
+
+function SetDays()
+{
+   document.getElementById('popup').style.display="block";
+   document.getElementById('overlay').style.display="block";
+
+}
+
+
+document.getElementById('overlay').addEventListener('click', (event) => {
+  document.getElementById('popup').style.display="none";
+  document.getElementById('overlay').style.display="none";
+});
+const subTopic="v2jlcwytpqaufx/scene/#",
+publish_topic="v2jlcwytpqaufx/scene/timer/";
+
+
+document.getElementById('repeat').addEventListener('change', function() {
+  if (this.checked)
+  {
+    document.getElementById('onece').checked = false;
+    document.getElementById('everydays').style.display='block';
+    scheduleType = 1;
+  }
+});
+document.getElementById('onece').addEventListener('change', function() {
+  if (this.checked)
+  {
+    document.getElementById('repeat').checked = false;
+    document.getElementById('everydays').style.display='none';
+    scheduleType = 0;
+  }
+});
+
+function connect(){//connect------------------------------------------------------------------
+try{
+client.connect({ onSuccess: onConnect,useSSL: mqttUseSSL,userName,password });
+client.onConnectionLost = onConnectionLost;
+client.onMessageArrived = onMessageArrived;
+
+}catch{}}
+
+function onConnect() {
+try{
+    console.log("onConnect");    
+    client.subscribe(subTopic);
+    sendCommandToDevice(publish_topic+"list","read");
+}
+catch{}
+}
+
+function sendCommandToDevice(topic,payload) {
+  try{
+    if (client.isConnected()) {
+        console.log("sendCommandToDevice: " + topic + ", Payload: " + payload);
+        var message = new Paho.MQTT.Message(payload);
+        message.destinationName = topic;
+        client.send(message);
+    }}
+    catch(error)
+    {
+      console.log(error);
+    }
+}
+
+
+function onMessageArrived(message) {
+  try{
+  topic = message.destinationName;
+  payload=message.payloadString;
+    console.log("Payload:" + payload);
+    console.log("Topic:", topic);
+   
+    displayJobs(payload);
+
+
+  }
+  catch(error)
+  {
+    console.log(error);
+  } 
+}
+
+function onConnectionLost(responseObject) {
+  if (responseObject.errorCode !== 0) {
+    console.log("onConnectionLost:"+responseObject.errorMessage);
+
+  }
+  
+}
+
+
+function scheduleCronTime(scheduleName, scheduleDays, scheduleTime) {
+  
+    //event.preventDefault();
+    if(scheduleType == 1){
+ 
+      date = "*";
+      month = "*"; 
+      
+
+   [hour, minute] = scheduleTime.split(':');
+   seconds = 0;
+      const scheduleArry = [date,month,minute,hour,seconds,scheduleDays,scheduleName];
+      sendCommandToDevice(publish_topic+'set', JSON.stringify(scheduleArry));
+      
+    }
+   else if(scheduleType == 0){
+    scheduleDays = "*";
+     [hour, minute] = scheduleTime.split(':');   
+        d = new Date();
+      date = d.getDate();
+      month = d.getMonth() + 1; 
+      seconds = "0";
+      const scheduleArry = [date,month,minute,hour,seconds,scheduleDays,scheduleName];
+      sendCommandToDevice(publish_topic+'set', JSON.stringify(scheduleArry));
+      
+    }
+   
+  }
+
+  function displayResult(elementId, message) {
+    const resultElement = document.getElementById(elementId);
+    resultElement.innerHTML = `<p>${message}</p>`;
+  }
+
+
+ function updateSchedule(scheduleId, scheduleName, scheduleDays, scheduleTime) {
+  event.preventDefault();
+  if(scheduleType == 1){
+  
+      date = "*";
+      month = "*"; 
+      
+ 
+   [hour, minute] = scheduleTime.split(':');
+   seconds = 0;
+      const scheduleArry = [date,month,minute,hour,seconds,scheduleDays,scheduleName];
+    sendCommandToDevice(publish_topic+'update/'+scheduleId, JSON.stringify(scheduleArry));
+      
+    }
+   else if(scheduleType == 0){
+    scheduleDays = "*";
+     [hour, minute] = scheduleTime.split(':');   
+        d = new Date();
+      date = d.getDate();
+      month = d.getMonth() + 1; 
+      seconds = "0";
+      const scheduleArry = [date,month,minute,hour,seconds,scheduleDays,scheduleName];
+      sendCommandToDevice(publish_topic+'update/'+scheduleId, JSON.stringify(scheduleArry));
+      
+    }
+}
+
+    function displayJobs(jobs) {
+      jobs = JSON.parse(jobs);
+    const jobsList = document.getElementById('scheduleJobsList');
+    jobsList.innerHTML = ''; // Clear previous jobs
+    jobs.forEach(job => {
+        const jobElement = document.createElement('div');
+        jobElement.innerHTML = `
+
+   
+  <div id="scene-div">
+    <div id="scene-list">
+      <div id="left-box">  &nbsp&nbsp&nbsp&nbsp
+        <img src="../image/clock.png" id="clockimg">&nbsp&nbsp&nbsp&nbsp
+         <p >${job.scheduleName}</p>
+      </div>
+      <div id="right-box" >    
+           <div onclick="populateUpdateForm(${job.id}, '${job.scheduleName}', '${job.cronTimes.join(', ')}')"><img src="../image/edit.png"id='editimg' onclick="controlOption('add')"></div>&nbsp&nbsp&nbsp&nbsp
+            <div onclick="deleteJob(${job.id})"><img src="../image/delete.png" id='deleimg'></div>&nbsp&nbsp&nbsp&nbsp
+      </div>
+     </div>
+
+  </div>            
+        `;
+        jobsList.appendChild(jobElement);
+    });
+}
+
+function populateUpdateForm(id, scheduleName, cronTimes) {
+  document.getElementById('actionType').value = 'update';
+  document.getElementById('scheduleId').value = id;
+  document.getElementById('scheduleName').value = scheduleName;
+
+  const days = cronTimes.split(',').map(time => parseInt(time.trim().split(' ')[4], 10));
+  const totalDays = days.reduce((acc, day) => acc + Math.pow(2, day), 0);
+
+  document.querySelectorAll('input[name="scheduleDays"]').forEach(checkbox => {
+    const value = parseInt(checkbox.value, 10);
+    checkbox.checked = (totalDays & value) !== 0;
+
+  if (totalDays >= 1 )
+  {
+    document.getElementById('onece').checked = false;
+    document.getElementById('repeat').checked = true;
+    document.getElementById('everydays').style.display='block';
+
+  }
+   
+  });
+
+  const firstCronTime = cronTimes.split(',')[0];
+  const [minute, hour] = firstCronTime.split(' ').slice(0, 2);
+  const time = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
+  document.getElementById('scheduleTime').value = time;
+}
+    function deleteJob(id) {
+
+      sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));}
+
+connect();
+    </script>
+</body>
+</html>

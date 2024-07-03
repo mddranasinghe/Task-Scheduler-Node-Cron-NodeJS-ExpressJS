@@ -56,6 +56,7 @@ try{
     if (topicsArray[3] === 'list') {
       getList();
     } else if (topicsArray[3] === 'set') {
+     // const jobId = 0;
       AddSchedule(payload);
     } else if (topicsArray[3] === 'update') {
       const jobId = topicsArray[4];
@@ -117,6 +118,7 @@ function loadSchedules() {
   }
 }
 
+
 function AddSchedule(payload) {
   try {
     payload = JSON.parse(payload);
@@ -126,39 +128,52 @@ function AddSchedule(payload) {
     const cronTimes = [];
     const tasks = [];
     const scheduleName = payload[6];
-    daysArray = DayList(payload[5])
-   
-   // const daysArray = indices;
 
-    daysArray.forEach(day => {
-      const pattern = `${payload[2]} ${payload[3]} ${payload[0]} ${payload[1]} ${day}`;
+    const daysArray = (payload[5] === '*') ? '*' : getIndicesFromBinary(payload[5]);
+
+    if (daysArray === '*') {
+      const pattern = `${payload[2]} ${payload[3]} ${payload[0]} ${payload[1]} *`;
 
       if (!cron.validate(pattern)) {
         throw new Error(`Invalid cron pattern: ${pattern}`);
       }
 
       const task = cron.schedule(pattern, () => {
-        console.log(`Running scheduled job: ${scheduleName} on day ${day}`);
+        console.log(`Running scheduled job every day`);
       });
 
       cronTimes.push(pattern);
       tasks.push(task);
-    });
+    } else {
+      daysArray.forEach(day => {
+        const pattern = `${payload[2]} ${payload[3]} ${payload[0]} ${payload[1]} ${day}`;
+
+        if (!cron.validate(pattern)) {
+          throw new Error(`Invalid cron pattern: ${pattern}`);
+        }
+
+        const task = cron.schedule(pattern, () => {
+          console.log(`Running scheduled job on day ${day}`);
+        });
+
+        cronTimes.push(pattern);
+        tasks.push(task);
+      });
+    }
 
     const job = { id, scheduleName, cronTimes, tasks };
     schedules.push(job);
     saveSchedules(schedules);
 
-    console.log(`Schedule "${scheduleName}" set for days ${payload[5]} with cron times: ${cronTimes.join(', ')}`);
+    console.log(`Schedule "${scheduleName}" set for ${payload[5]} at ${payload[2]}:${payload[3]}`);
   } catch (error) {
     console.error('Error scheduling job:', error);
+    console.log(`Error scheduling job: ${error.message}`);
   }
 }
 
-function DayList(list)
-{
+function getIndicesFromBinary(v) {
   let mod = 0;
-  let v = list;
   let factor = 1;
 
   while (v > 0) {
@@ -168,15 +183,18 @@ function DayList(list)
     factor *= 10;
   }
 
+
   mod = mod.toString();
   let indices = [];
+
 
   for (let i = mod.length - 1; i >= 0; i--) {
     if (mod[i] === "1") {
       indices.push((mod.length - 1) - i);
     }
   }
- return indices;
+
+  return indices;
 }
 
 
@@ -218,32 +236,46 @@ function updateJob(payload,jobid)
   const tasks = [];
    const id = jobid;
    const scheduleName = payload[6];
-    daysArray = DayList(payload[5])
+ 
 
    const scheduleIndex = schedules.findIndex(schedule => schedule.id == id);
   
   if (scheduleIndex === -1) {
-   // return res.status(404).send(`Schedule with ID ${id} not found`);
+ 
    console.log(`Schedule with ID ${id} not found`)
   }
- 
- // const daysArray = indices;
+  const daysArray = (payload[5] === '*') ? '*' : getIndicesFromBinary(payload[5]);
 
-  daysArray.forEach(day => {
-    const pattern = `${payload[2]} ${payload[3]} ${payload[0]} ${payload[1]} ${day}`;
+  if (daysArray === '*') {
+    const pattern = `${payload[2]} ${payload[3]} ${payload[0]} ${payload[1]} *`;
 
     if (!cron.validate(pattern)) {
       throw new Error(`Invalid cron pattern: ${pattern}`);
     }
 
     const task = cron.schedule(pattern, () => {
-      console.log(`Running scheduled job: ${scheduleName} on day ${day}`);
+      console.log(`Running scheduled job every day`);
     });
 
     cronTimes.push(pattern);
     tasks.push(task);
-  });
+  } else {
+    daysArray.forEach(day => {
+      const pattern = `${payload[2]} ${payload[3]} ${payload[0]} ${payload[1]} ${day}`;
 
+      if (!cron.validate(pattern)) {
+        throw new Error(`Invalid cron pattern: ${pattern}`);
+      }
+
+      const task = cron.schedule(pattern, () => {
+        console.log(`Running scheduled job on day ${day}`);
+      });
+
+      cronTimes.push(pattern);
+      tasks.push(task);
+    });
+
+  }
    // Clear existing tasks
    schedules[scheduleIndex].tasks.forEach(task => task.stop());
     
@@ -254,11 +286,10 @@ function updateJob(payload,jobid)
 
    saveSchedules(schedules);
 
-   //res.send(`Schedule "${scheduleName}" updated for ${days} at ${scheduleTime}`);
+  
    console.log(`Schedule updateded `)
  } catch (error) {
-   //console.error('Error updating job:', error);
-   //res.status(400).send(`Error updating job: ${error.message}`);
+
    console.log(`Error updating job: ${error.message}`)
  }
 }
@@ -280,7 +311,7 @@ function jobdelete(payload)
   schedules.splice(scheduleIndex, 1);
   saveSchedules(schedules);
 
-  //res.send(`Schedule with ID ${id} deleted`);
+
   console.log(`Schedule with ID ${id} deleted`)
 }
 
