@@ -29,12 +29,19 @@
 #clockimg{ 
  
   width: 30px;
-  height: 30px;}
+  height: 30px;
+}
 
+#list{ width: 100%; margin: 0 auto;  position: relative; }
+#backicon{
 
-      
+width: 20px;
+height: 30px;
+}
+#list h2{width: 95%;margin-left: 8px;}
+    
 #scene-list{
-  width: 95%; margin: 0 auto; overflow: hidden;color:black;font-size: 13px; margin-top: 2vw; margin-bottom: 3vw;
+  width: 98%; margin: 0 auto; overflow: hidden;color:black;font-size: 13px; margin-top: 2vw; margin-bottom: 3vw;
   border: 1.5px solid #3091E5; border-radius: 6px;
 }
 #left-box{
@@ -46,20 +53,34 @@
 .add-button {
             width: 100%;
             margin: 0 auto;
-            display: flex;
             justify-content: center;
-           
+            position: fixed;
+            /* Adjust as needed */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            text-align: center;
+            height: 100%;
+           top:90%;
+           z-index: 9990;
+           background-color: white;
+            
         }
 
         #center-button,#scheduleOnceButton {
-            width: 95%;
+         
+            width: 98%;
             height: 40px;
             text-align: center;
             color: white;
             background-color: #3091E5;
             border-radius: 5px;
             border: none;
+            bottom:20px; 
+            left: 50%;
+            
         }
+
 .cricle{
 
   width: 40px;
@@ -167,6 +188,7 @@ input[type="checkbox"]:checked::after {
    color: #3091E5;
    display:inline-block ;
    margin-right: 10px;
+   width: 100%;
      
 }
 #scheduleTime
@@ -193,7 +215,8 @@ input[type="checkbox"]:checked::after {
 </head>
 <body>
   <div id="list" style="display: non;">
-  <h2>Schedule List</h2>
+    <img src="../image/less-than.png"  id="backicon" onclick="location.href='index.html'">
+    <h2> Schedule List</h2>
   <div id="scheduleJobsList"></div>
   <div class="add-button">
     <button id="center-button" onclick="controlOption('add')">Add New Schedule</button>
@@ -202,8 +225,9 @@ input[type="checkbox"]:checked::after {
 
 
 
-<div id="add" style="display: none;">
-
+<div id="add" style="display: none; ">
+  <img src="../image/less-than.png"  id="backicon" onclick="backFun();">
+  <div style="width: 98%;margin: 0 auto;">
     <h1> Schedule</h1>
     <p style="font-size: 15px;">Execute only once at a given time of the day or Repeat after given time of the day.</p>
     <div  class="cricle-box" >
@@ -262,12 +286,9 @@ input[type="checkbox"]:checked::after {
           <div class="add-button">
             <button  type="submit" id="scheduleOnceButton" > Save and Enable</button>
         </div>
-
         </form>
-       
-
   </div>
-
+</div>
 </div>
 
 <div id="overlay"></div>
@@ -347,6 +368,12 @@ document.getElementById('onece').addEventListener('change', function() {
   }
 });
 
+function backFun()
+{
+  document.getElementById('add').style.display='none';
+
+  document.getElementById('list').style.display='block';
+}
 function connect(){//connect------------------------------------------------------------------
 try{
 client.connect({ onSuccess: onConnect,useSSL: mqttUseSSL,userName,password });

@@ -168,7 +168,7 @@ p.zone{ font-size: 10px; padding-top: 3px;}
 
 
   </div>
-  <div id="device_div" style="display : none">
+  <div id="device_div" style="display : non">
     <table> 
     
         <tr><td id="waterpump" ontouchstart="addHoverClass('waterpump')" ontouchend="removeHoverClass('waterpump')" style="cursor:pointer;"> <div class="dot" id="node/spc/7469308fcf871dad4d4"style="width: 5px; height: 5px; float:left;"></div>  <div class="img-container">
@@ -216,7 +216,7 @@ p.zone{ font-size: 10px; padding-top: 3px;}
 
 
 
-  <div id="scene-div">
+  <div id="scene-div" style="display: none;">
     <div id="scene-list">
       <div id="left-box">  
           <div id="block-L" onclick="location.href='index2.html'">scene 01</div>
@@ -256,7 +256,8 @@ function navfun(id1,id2)
   {
     document.getElementById('device-button').style.backgroundColor='#68B581';
     document.getElementById('scene-button').style.backgroundColor='#9B9B9B';
-
+  document.getElementById(id1).style.display="inline";
+  document.getElementById(id2).style.display="none"
   }
   else if(id1 == "scene-div")
   {
