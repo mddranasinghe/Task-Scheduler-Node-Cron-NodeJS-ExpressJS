@@ -282,7 +282,7 @@ input[type="checkbox"]:checked::after {
           <label for="scheduleTime">Set Time:</label>
           <input  type="time" id="scheduleTime" name="scheduleTime" required value="">
          </div> <br><br>
-       <!-- <button  onclick="scheduleCronTime()">Create Schedule</button>-->  
+     
           <div class="add-button">
             <button  type="submit" id="schedulButton" > Save and Enable</button>
         </div>
@@ -314,11 +314,26 @@ function handleFormSubmit(event) {
   } else if (actionType === 'update') {
     updateSchedule(scheduleId, scheduleName, scheduleDays, scheduleTime);
   }
+
+  backfun();
 }
 
+function backfun() {
+  document.getElementById('add').style.display='none';
+  document.getElementById('list').style.display='block';
+}
 
 function controlOption(id)
 {
+  document.getElementById('scheduleForm').reset();
+  document.getElementById('actionType').value = 'create';
+  document.getElementById('scheduleId').value = '';
+  document.getElementById('onece').checked = true;
+  document.getElementById('repeat').checked = false;
+  document.getElementById('everydays').style.display = 'none';
+
+  setCurrentTime(); 
+
   document.getElementById(id).style.display='block';
   document.getElementById('list').style.display='none';
 
@@ -461,10 +476,6 @@ function scheduleCronTime(scheduleName, scheduleDays, scheduleTime) {
    
   }
 
-  function displayResult(elementId, message) {
-    const resultElement = document.getElementById(elementId);
-    resultElement.innerHTML = `<p>${message}</p>`;
-  }
 
 
  function updateSchedule(scheduleId, scheduleName, scheduleDays, scheduleTime) {
@@ -494,7 +505,7 @@ function scheduleCronTime(scheduleName, scheduleDays, scheduleTime) {
     }
 }
 
-    function displayJobs(jobs) {
+    /*function displayJobs(jobs) {
       jobs = JSON.parse(jobs);
     const jobsList = document.getElementById('scheduleJobsList');
     jobsList.innerHTML = ''; // Clear previous jobs
@@ -519,7 +530,36 @@ function scheduleCronTime(scheduleName, scheduleDays, scheduleTime) {
         `;
         jobsList.appendChild(jobElement);
     });
+}*/SetDays
+function displayJobs(jobs) {
+    jobs = JSON.parse(jobs);
+    const jobsList = document.getElementById('scheduleJobsList');
+    jobsList.innerHTML = ''; // Clear previous jobs
+    jobs.forEach(job => {
+        const cronTimes = job.cronTimes ? job.cronTimes.join(', ') : ''; // Check if cronTimes is defined
+        const jobElement = document.createElement('div');
+        jobElement.innerHTML = `
+            <div id="scene-div">
+                <div id="scene-list">
+                    <div id="left-box">  &nbsp&nbsp&nbsp&nbsp
+                        <img src="image/clock.png" id="clockimg">&nbsp&nbsp&nbsp&nbsp
+                        <p>${job.scheduleName}</p>
+                    </div>
+                    <div id="right-box">
+                        <div onclick="populateUpdateForm(${job.id}, '${job.scheduleName}', '${cronTimes}')">
+                            <img src="image/edit.png" id='editimg' onclick="controlOption('add')">
+                        </div>&nbsp&nbsp&nbsp&nbsp
+                        <div onclick="deleteJob(${job.id})">
+                            <img src="image/delete.png" id='deleimg'>
+                        </div>&nbsp&nbsp&nbsp&nbsp
+                    </div>
+                </div>
+            </div>
+        `;
+        jobsList.appendChild(jobElement);
+    });
 }
+
 
 function populateUpdateForm(id, scheduleName, cronTimes) {
   document.getElementById('actionType').value = 'update';
@@ -550,7 +590,10 @@ function populateUpdateForm(id, scheduleName, cronTimes) {
 }
     function deleteJob(id) {
 
-      sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));}
+      sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
+    
+    
+    }
 
 connect();
     </script>

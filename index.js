@@ -170,7 +170,12 @@ function AddSchedule(payload) {
     console.error('Error scheduling job:', error);
     console.log(`Error scheduling job: ${error.message}`);
   }
+
+  getList();
+
+
 }
+
 
 function getIndicesFromBinary(v) {
   let mod = 0;
@@ -292,6 +297,9 @@ function updateJob(payload,jobid)
 
    console.log(`Error updating job: ${error.message}`)
  }
+
+ getList();
+ 
 }
 
 
@@ -301,7 +309,7 @@ function jobdelete(payload)
   const scheduleIndex = schedules.findIndex(schedule => schedule.id == payload);
 
   if (scheduleIndex === -1) {
-    return res.status(404).send(`Schedule with ID ${id} not found`);
+    return res.status(404).send(`Schedule with ID ${scheduleIndex} not found`);
   }
 
   // Stop all tasks for the schedule
@@ -312,7 +320,10 @@ function jobdelete(payload)
   saveSchedules(schedules);
 
 
-  console.log(`Schedule with ID ${id} deleted`)
+  console.log(`Schedule with ID ${scheduleIndex} deleted`);
+
+  getList();
+
 }
 
 
