@@ -33,16 +33,9 @@
   },
   {
     "id": 5,
-    "scheduleName": "dd",
+    "scheduleName": "Dinukaydinuka",
     "cronTimes": [
-      "29 12 4 7 *"
-    ]
-  },
-  {
-    "id": 6,
-    "scheduleName": "kk",
-    "cronTimes": [
-      "37 12 4 7 *"
+      "54 12 4 7 *"
     ]
   }
 ]
