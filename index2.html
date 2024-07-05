@@ -184,60 +184,83 @@ input[type="checkbox"]:checked::after {
      z-index: 9998;
      cursor: pointer;
     }
-#scheduleJobsList{
-  border: none;
-  overflow-x: hidden;
-  width: 96%;
-  height: 60vh;
-  overflow-y:auto;
-  border: 1px solid #ccc;
-  margin-top: 30%;
-  position: fixed;
-
-}
-.add-button {
+    #list {
             width: 100%;
-            margin: 0 auto;
-            justify-content: center;
+            height: 100%;
+            position: relative;
+        }
+
+        header {
+            height: 120px; /* Adjusted to accommodate image and caption */
+            top: 0;
             position: fixed;
-            /* Adjust as needed */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+          
+          
+            padding: 10px;
+            background: white; /* Add background to ensure visibility */
+        }
+
+        header img {
+            cursor: pointer;
+            height: 50px; /* Adjust image size as needed */
+            margin-bottom: 10px;
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        #scheduleJobsList {
+            border: 1px solid #ccc;
+            width: 96%;
+            height: 60%;
+            overflow-y: auto;
+            position: fixed;
+            top: 140px; /* Positioned below the header */
             left: 50%;
             transform: translateX(-50%);
-       
-            text-align: center;
-            height: 30vh;
-           top:70%;
-       
-            
+            margin: 0;
         }
-        
-        #center-button,#schedulButton {
-         position: absolute;
-         width: 98%;
-         height: 40px;
-         text-align: center;
-         color: white;
-         background-color: #3091E5;
-         border-radius: 5px;
-         border: none;
-         bottom:40px; 
-         left: 50%;
-         transform: translateX(-50%);
-         font-size: 15px;
 
-     }
+        .add-button {
+            width: 98%;
+            display: flex;
+            justify-content: center;
+            position: fixed;
+            bottom: 20px; /* Positioned at the bottom */
+       
+        }
+
+        #center-button, #schedulButton {
+            width: 98%;
+            height: 40px;
+            margin: 0;
+            color: white;
+            background-color: #3091E5;
+            border-radius: 5px;
+            border: none;
+            font-size: 15px;
+        }
+
+  
 </style>
 </head>
 <body>
-  <div id="list" style="display: non;">
-    <div style="height: 20vh;top:2%;position: fixed;width: 100%;" >
-    <img src="image/less-than.png"  id="backicon" onclick="location.href='index.html'">
-    <h2> Schedule List</h2>
+  <div id="list">
+    <header>
+        <img src="image/less-than.png" id="backicon" onclick="location.href='index.html'"><br>
+        <h2>Schedule List</h2>
+        
+    </header>
+    <div id="scheduleJobsList">
+        <!-- Your list content goes here -->
     </div>
-  <div id="scheduleJobsList"></div>
-  <div class="add-button">
-    <button id="center-button" onclick="controlOption('add')">Add New Schedule</button>
-</div>
+    <div class="add-button">
+        <button id="center-button" onclick="controlOption('add')">Add New Schedule</button>
+    </div>
 </div>
 
 
