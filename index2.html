@@ -16,6 +16,37 @@
 	box-sizing: border-box;
 
 }
+
+#add
+{
+  width: 100%;
+padding: 10px;
+height: 100%;
+justify-content: center;
+            align-items: center;
+          
+
+}
+.add-button2
+{
+           width: 100%;
+           margin: 0 auto;
+           
+         
+           margin-top: 25%; 
+}
+#schedulButton
+{
+ width: 100%;
+            height: 40px;
+            text-align: center;
+            color: white;
+            background-color: #3091E5;
+            border-radius: 5px;
+            border: none;
+            font-size: 15px;
+}
+
       #deleimg{
 
         width:20px;
@@ -51,9 +82,6 @@ height: 30px;
 #right-box{
   width: 50%;margin-top: 3vw; float: right; display: flex; justify-content: right; 
 }
-
-
-
 
 
 .cricle{
@@ -158,13 +186,15 @@ input[type="checkbox"]:checked::after {
 
 .popupButton{
   float: right;
+  padding-bottom: 20px;
 }
 #CancelButton,#OkButton
 {
    color: #3091E5;
-   display:inline-block ;
+  
    margin-right: 10px;
    width: 100%;
+  
      
 }
 #scheduleTime
@@ -186,14 +216,16 @@ input[type="checkbox"]:checked::after {
      z-index: 9998;
      cursor: pointer;
     }
-    body, html {
+
+
+    body{
             height: 100%;
             margin: 0;
-            overflow: hidden; /* Prevents scrolling */
-            display: flex;
+           
+          
             justify-content: center;
             align-items: center;
-            flex-direction: column;
+          
         }
 
         #list {
@@ -203,12 +235,13 @@ input[type="checkbox"]:checked::after {
             display: flex;
             flex-direction: column;
             align-items: center;
+            
         }
 
         header {
             width: 100%;
-            max-width: 800px; 
-            height: 80px;
+         
+            height: 100px;
             display: flex;
             flex-direction: column;
           
@@ -232,24 +265,24 @@ input[type="checkbox"]:checked::after {
             border: none;
             overflow-x: hidden;
             overflow-y: auto;
-            width: 96%;
-            max-width: 800px; 
+            width: 98%;
+        
             height: 70%;
             margin-top: 1px; 
             position: fixed;
-            top: 100px;
+            top: 110px;
         }
 
         .add-button {
             width: 100%;
-            max-width: 800px;
+           
             display: flex;
             justify-content: center;
             position: fixed;
             bottom: 20px; 
         }
 
-        #center-button, #schedulButton {
+        #list-button {
             width: 98%;
             height: 40px;
             text-align: center;
@@ -273,7 +306,7 @@ input[type="checkbox"]:checked::after {
         <!-- Your list content goes here -->
     </div>
     <div class="add-button">
-        <button id="center-button" onclick="controlOption('add')">Add New Schedule</button>
+        <button id="list-button" onclick="controlOption('add')">Add New Schedule</button>
     </div>
 </div>
 
@@ -328,8 +361,9 @@ input[type="checkbox"]:checked::after {
       <input type="checkbox" id="sunday" name="scheduleDays" value="1">
       <label for="sunday">Sunday</label><br><br>
    <div class="popupButton">
-        <div id="CancelButton"><p>Cancel</p></div>
-        <div id="OkButton"><p>Ok</p></div></div>
+        <small id="CancelButton">Cancel</small>
+        <small id="OkButton">Ok</small>
+      </div>
       </div>
       </div><br>
       <div class="elementBox">
@@ -337,7 +371,7 @@ input[type="checkbox"]:checked::after {
           <input  type="time" id="scheduleTime" name="scheduleTime" required value="">
          </div> <br><br>
      
-          <div class="add-button">
+          <div class="add-button2">
             <button  type="submit" id="schedulButton" > Save and Enable</button>
         </div>
         </form>
