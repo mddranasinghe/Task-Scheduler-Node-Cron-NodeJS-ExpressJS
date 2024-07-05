@@ -18,13 +18,6 @@
     ]
   },
   {
-    "id": 9,
-    "scheduleName": "mmk",
-    "cronTimes": [
-      "46 16 4 7 *"
-    ]
-  },
-  {
     "id": 7,
     "scheduleName": "g",
     "cronTimes": [
@@ -32,13 +25,6 @@
     ]
   },
   {
-    "id": 8,
-    "scheduleName": "g",
-    "cronTimes": [
-      "02 17 4 7 *"
-    ]
-  },
-  {
     "id": 9,
     "scheduleName": "g",
     "cronTimes": [
@@ -46,24 +32,40 @@
     ]
   },
   {
-    "id": 10,
-    "scheduleName": "g",
+    "id": 5,
+    "scheduleName": "Dinu",
     "cronTimes": [
-      "02 17 4 7 *"
+      "34 10 * * 0",
+      "34 10 * * 1",
+      "34 10 * * 2",
+      "34 10 * * 3"
     ]
   },
   {
-    "id": 11,
-    "scheduleName": "f",
+    "id": 6,
+    "scheduleName": "Rr",
     "cronTimes": [
-      "02 17 4 7 *"
+      "35 10 * * 1",
+      "35 10 * * 2",
+      "35 10 * * 3"
     ]
   },
   {
-    "id": 12,
-    "scheduleName": "y",
+    "id": 7,
+    "scheduleName": "T",
     "cronTimes": [
-      "02 17 4 7 *"
+      "35 10 * * 1",
+      "35 10 * * 2",
+      "35 10 * * 3"
+    ]
+  },
+  {
+    "id": 8,
+    "scheduleName": "G",
+    "cronTimes": [
+      "35 10 * * 1",
+      "35 10 * * 2",
+      "35 10 * * 3"
     ]
   }
 ]
