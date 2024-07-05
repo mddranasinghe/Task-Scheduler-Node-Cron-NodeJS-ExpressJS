@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cron Job Scheduler</title>
     <script src="paho.javascript-1.0.3/paho-mqtt-min.js"></script>
     <script src="connection.js"></script>
@@ -19,6 +19,16 @@
 
 
 
+body{
+      touch-action: pan-y;
+            height: 100%;
+            margin: 0;
+           
+          
+            justify-content: center;
+            align-items: center;
+          
+        }
       #deleimg{
 
         width:20px;
@@ -190,15 +200,6 @@ input[type="checkbox"]:checked::after {
     }
 
 
-    body{
-            height: 100%;
-            margin: 0;
-           
-          
-            justify-content: center;
-            align-items: center;
-          
-        }
 
         #list ,#add {
             width: 100%;
@@ -249,7 +250,7 @@ input[type="checkbox"]:checked::after {
         #addContent {
             margin-top: 100px; /* Positioned below the header */
             width: 96%;
-            max-width: 600px; /* Adjust as needed */
+      /* Adjust as needed */
             position: fixed;
             top: 14px;
             left: 50%;
