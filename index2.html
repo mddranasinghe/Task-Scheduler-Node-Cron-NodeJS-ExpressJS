@@ -52,36 +52,8 @@ height: 30px;
 }
 
 
-.add-button {
-            width: 100%;
-            margin: 0 auto;
-            justify-content: center;
-            position: fixed;
-            /* Adjust as needed */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            text-align: center;
-            height: 100%;
-           top:90%;
-           z-index: 9990;
-           background-color: white;
-            
-        }
 
-        #center-button,#schedulButton {
-         
-            width: 98%;
-            height: 40px;
-            text-align: center;
-            color: white;
-            background-color: #3091E5;
-            border-radius: 5px;
-            border: none;
-            bottom:20px; 
-            left: 50%;
-            font-size: 15px;
-        }
+
 
 .cricle{
 
@@ -213,19 +185,55 @@ input[type="checkbox"]:checked::after {
      cursor: pointer;
     }
 #scheduleJobsList{
-
-
-  width: 100%;
+  border: none;
+  overflow-x: hidden;
+  width: 96%;
   height: 60vh;
   overflow-y:auto;
   border: 1px solid #ccc;
+  margin-top: 30%;
+  position: fixed;
+
 }
+.add-button {
+            width: 100%;
+            margin: 0 auto;
+            justify-content: center;
+            position: fixed;
+            /* Adjust as needed */
+            left: 50%;
+            transform: translateX(-50%);
+       
+            text-align: center;
+            height: 30vh;
+           top:70%;
+       
+            
+        }
+        
+        #center-button,#schedulButton {
+         position: absolute;
+         width: 98%;
+         height: 40px;
+         text-align: center;
+         color: white;
+         background-color: #3091E5;
+         border-radius: 5px;
+         border: none;
+         bottom:40px; 
+         left: 50%;
+         transform: translateX(-50%);
+         font-size: 15px;
+
+     }
 </style>
 </head>
 <body>
   <div id="list" style="display: non;">
+    <div style="height: 20vh;top:2%;position: fixed;width: 100%;" >
     <img src="image/less-than.png"  id="backicon" onclick="location.href='index.html'">
     <h2> Schedule List</h2>
+    </div>
   <div id="scheduleJobsList"></div>
   <div class="add-button">
     <button id="center-button" onclick="controlOption('add')">Add New Schedule</button>
