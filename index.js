@@ -221,6 +221,7 @@ function saveSchedules(schedules) {
 }
 
 
+
 function getList()
 {
   const jobList = schedules.map(schedule => ({
