@@ -19,7 +19,7 @@
 
 
 
-  
+
 }
 #device_div { width: 100%;margin: 0 auto;}
 
@@ -252,6 +252,16 @@ p.zone{ font-size: 10px; padding-top: 3px;}
 
 <script>
 
+const urlParams = new URLSearchParams(window.location.search);
+const value = urlParams.get('value');
+
+      if (value == 'scene-div') {
+        navfun('scene-div','device_div');
+        value = 0;
+      } else {
+        navfun('device_div','scene-div');
+      }
+   
 
 
 function navfun(id1,id2)

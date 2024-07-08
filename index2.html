@@ -206,17 +206,14 @@ input[type="checkbox"]:checked::after {
             flex-direction: column;
             align-items: center;
             
-            
         }
 
         header,.header-add {
             width: 100%;
-         
             height: 100px;
             display: flex;
             flex-direction: column;
-          
-            padding: 10px;
+            padding: 9px;
             background: white;
             position: fixed;
             top: 0;
@@ -358,7 +355,7 @@ color:blue;
 <body>
   <div id="list" style="display:non">
     <header>
-        <img src="image/less-than.png" id="backicon" onclick="location.href='index.html'"><br>
+        <img src="image/less-than.png" id="backicon" onclick="location.href='index.html?value=scene-div'"><br>
         <h2>Schedule List</h2>
         
     </header>
@@ -374,7 +371,7 @@ color:blue;
 
 <div id="add" style="display: none; ">
  
-  &nbsp;&nbsp; <img src="image/less-than.png"  id="backicon" onclick="backFun();">
+  &nbsp; <img src="image/less-than.png"  id="backicon" onclick="backFun();">
   <div style="width: 95%;margin: 0 auto;" >
  
     <h1> Schedule</h1>
@@ -644,26 +641,6 @@ document.getElementById('popupConfirmid').style.display = 'none';
 document.getElementById("overlay2").style.display = "none";
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function connect(){//connect------------------------------------------------------------------
 try{
