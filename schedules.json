@@ -3,21 +3,16 @@
     "id": 1,
     "scheduleName": "job 01",
     "cronTimes": [
-      "14 10 8 7 *"
+      "02 13 * * 2",
+      "02 13 * * 4",
+      "02 13 * * 5"
     ]
   },
   {
     "id": 2,
     "scheduleName": "job 02",
     "cronTimes": [
-      "15 10 8 7 *"
-    ]
-  },
-  {
-    "id": 3,
-    "scheduleName": "",
-    "cronTimes": [
-      "54 13 8 7 *"
+      "01 11 * * 6"
     ]
   }
 ]

@@ -159,7 +159,7 @@ input[type="checkbox"]:checked::after {
 {
    color: #3091E5;
   
-   margin-right: 10px;
+   margin-right: 40px;
    width: 100%;
   
      
@@ -222,7 +222,7 @@ input[type="checkbox"]:checked::after {
         header img ,.header-add img {
             cursor: pointer;
             height: 50px; 
-            margin-bottom: 10px;
+            margin-bottom: -5px;
         }
 
         header h2,.header-add h1 {
@@ -262,8 +262,9 @@ input[type="checkbox"]:checked::after {
             display: flex;
             justify-content: space-between;
             float: right;
-  padding-bottom: 20px;
-        }
+            padding-bottom: 20px;
+            font-size: 18px;
+         }
 
         .add-button {
             width: 100%;
@@ -335,7 +336,7 @@ input[type="checkbox"]:checked::after {
 .popup-content {
     text-align: center;
 }
-.pop_button{width: 100%; border-top:solid; border-width: .5px; border-color:gray; position:relative;}
+.pop_button{width: 100%; border-top:solid; border-width: .5px; border-color:gray; position:relative; margin-left: -10px;}
 
 #yesButton, #noButton {
 width: 49%;  
@@ -356,7 +357,7 @@ color:blue;
   <div id="list" style="display:non">
     <header>
         <img src="image/less-than.png" id="backicon" onclick="location.href='index.html?value=scene-div'"><br>
-        <h2>Schedule List</h2>
+        <h1>Schedule List</h1>
         
     </header>
     <div id="scheduleJobsList">
@@ -397,7 +398,7 @@ color:blue;
 
     <div class="elementBox" id="everydays" onclick="SetDays()" style="display: none;">
       <br>
-      <samll>Everyday</samll>
+      <div>Everyday</div>
    
   </div>
     <div id="popup" class="popup">
@@ -411,17 +412,17 @@ color:blue;
       <label for="tuesday">Tuesday</label><br>
       <input type="checkbox" id="wednesday" name="scheduleDays" value="8" checked>
       <label for="wednesday">Wednesday</label><br>
-      <input type="checkbox" id="thursday" name="scheduleDays" value="16">
+      <input type="checkbox" id="thursday" name="scheduleDays" value="16" checked>
       <label for="thursday">Thursday</label><br>
-      <input type="checkbox" id="friday" name="scheduleDays" value="32">
+      <input type="checkbox" id="friday" name="scheduleDays" value="32" checked>
       <label for="friday">Friday</label><br>
-      <input type="checkbox" id="saturday" name="scheduleDays" value="64">
+      <input type="checkbox" id="saturday" name="scheduleDays" value="64" checked>
       <label for="saturday" >Saturday</label><br>
-      <input type="checkbox" id="sunday" name="scheduleDays" value="1">
+      <input type="checkbox" id="sunday" name="scheduleDays" value="1" checked>
       <label for="sunday">Sunday</label><br><br>
    <div class="popupButton">
-        <small id="CancelButton">Cancel</small>
-        <small id="OkButton">Ok</small>
+        <div id="CancelButton"  onclick="resetChanges()">Cancel</div> &nbsp;
+        <div id="OkButton"   onclick="removePopup()">Ok</div>
       </div>
       </div>
       </div><br>
@@ -512,14 +513,32 @@ color:blue;
 </div>
 
 
-<div id="overlay"></div>
+<div id="overlay" onclick="removePopup()"></div>
 
 <div id="overlay2"></div>
 <script>
 
-var scheduleType = 0;
+var totalDays = 0,scheduleType=0,
+subTopic="v2jlcwytpqaufx/scene/#",
+publish_topic="v2jlcwytpqaufx/scene/timer/";
 
-function callForm() {
+function resetChanges() { //popup  cancle button 
+document.querySelectorAll('input[name="scheduleDays"]').forEach(checkbox => {
+  const value = parseInt(checkbox.value, 10);
+  checkbox.checked = (totalDays & value) !== 0;
+});
+removePopup();
+
+ }
+
+ function removePopup()
+{
+  document.getElementById('popup').style.display="none";
+  document.getElementById('overlay').style.display="none";
+} 
+
+
+function callForm() { // save and enble button 
     const form = document.getElementById('scheduleForm');
     const event = new Event('submit', { cancelable: true });
     form.dispatchEvent(event);
@@ -547,12 +566,12 @@ function handleFormSubmit(event) {
   backfun();
 }
 
-function backfun() {
+function backfun() {  // backbutton 
   document.getElementById('add').style.display='none';
   document.getElementById('list').style.display='block';
 }
 
-function controlOption(id)
+function controlOption(id)  //for add new schedule button
 {
   document.getElementById('scheduleForm').reset();
   document.getElementById('actionType').value = 'create';
@@ -568,6 +587,7 @@ function controlOption(id)
 
 
 }
+
 function setCurrentTime() {
             const inputElement = document.getElementById('scheduleTime');
             const now = new Date();
@@ -575,9 +595,8 @@ function setCurrentTime() {
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const currentTime = `${hours}:${minutes}`;
             inputElement.value = currentTime;
-        }
-
-        setCurrentTime();
+}
+setCurrentTime();
 
 function SetDays()
 {
@@ -585,15 +604,6 @@ function SetDays()
    document.getElementById('overlay').style.display="block";
 
 }
-
-
-document.getElementById('overlay').addEventListener('click', (event) => {
-  document.getElementById('popup').style.display="none";
-  document.getElementById('overlay').style.display="none";
-});
-const subTopic="v2jlcwytpqaufx/scene/#",
-publish_topic="v2jlcwytpqaufx/scene/timer/";
-
 
 document.getElementById('repeat').addEventListener('change', function() {
   if (this.checked)
@@ -642,62 +652,7 @@ document.getElementById("overlay2").style.display = "none";
 
 });
 
-function connect(){//connect------------------------------------------------------------------
-try{
-client.connect({ onSuccess: onConnect,useSSL: mqttUseSSL,userName,password });
-client.onConnectionLost = onConnectionLost;
-client.onMessageArrived = onMessageArrived;
 
-}catch{}}
-
-function onConnect() {
-try{
-    console.log("onConnect");    
-    client.subscribe(subTopic);
-    sendCommandToDevice(publish_topic+"list","read");
-}
-catch{}
-}
-
-function sendCommandToDevice(topic,payload) {
-  try{
-    if (client.isConnected()) {
-        console.log("sendCommandToDevice: " + topic + ", Payload: " + payload);
-        var message = new Paho.MQTT.Message(payload);
-        message.destinationName = topic;
-        client.send(message);
-    }}
-    catch(error)
-    {
-      console.log(error);
-    }
-}
-
-
-function onMessageArrived(message) {
-  try{
-  topic = message.destinationName;
-  payload=message.payloadString;
-    console.log("Payload:" + payload);
-    console.log("Topic:", topic);
-   
-    displayJobs(payload);
-
-
-  }
-  catch(error)
-  {
-    console.log(error);
-  } 
-}
-
-function onConnectionLost(responseObject) {
-  if (responseObject.errorCode !== 0) {
-    console.log("onConnectionLost:"+responseObject.errorMessage);
-
-  }
-  
-}
 
 
 function scheduleCronTime(scheduleName, scheduleDays, scheduleTime) {
@@ -758,32 +713,7 @@ function scheduleCronTime(scheduleName, scheduleDays, scheduleTime) {
     }
 }
 
-    /*function displayJobs(jobs) {
-      jobs = JSON.parse(jobs);
-    const jobsList = document.getElementById('scheduleJobsList');
-    jobsList.innerHTML = ''; // Clear previous jobs
-    jobs.forEach(job => {
-        const jobElement = document.createElement('div');
-        jobElement.innerHTML = `
-
-   
-  <div id="scene-div">
-    <div id="scene-list">
-      <div id="left-box">  &nbsp&nbsp&nbsp&nbsp
-        <img src="image/clock.png" id="clockimg">&nbsp&nbsp&nbsp&nbsp
-         <p >${job.scheduleName}</p>
-      </div>
-      <div id="right-box" >    
-           <div onclick="populateUpdateForm(${job.id}, '${job.scheduleName}', '${job.cronTimes.join(', ')}')"><img src="image/edit.png"id='editimg' onclick="controlOption('add')"></div>&nbsp&nbsp&nbsp&nbsp
-            <div onclick="deleteJob(${job.id})"><img src="image/delete.png" id='deleimg'></div>&nbsp&nbsp&nbsp&nbsp
-      </div>
-     </div>
-
-  </div>            
-        `;
-        jobsList.appendChild(jobElement);
-    });
-}*/SetDays
+  
 function displayJobs(jobs) {
     jobs = JSON.parse(jobs);
     const jobsList = document.getElementById('scheduleJobsList');
@@ -820,7 +750,7 @@ function populateUpdateForm(id, scheduleName, cronTimes) {
   document.getElementById('scheduleName').value = scheduleName;
 
   const days = cronTimes.split(',').map(time => parseInt(time.trim().split(' ')[4], 10));
-  const totalDays = days.reduce((acc, day) => acc + Math.pow(2, day), 0);
+   totalDays = days.reduce((acc, day) => acc + Math.pow(2, day), 0);
 
   document.querySelectorAll('input[name="scheduleDays"]').forEach(checkbox => {
     const value = parseInt(checkbox.value, 10);
@@ -843,10 +773,76 @@ function populateUpdateForm(id, scheduleName, cronTimes) {
 }
     function deleteJob(id) {
 
-      sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
+ sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
     
     
     }
+
+
+
+
+
+
+
+
+
+
+function connect(){//connect------------------------------------------------------------------
+try{
+client.connect({ onSuccess: onConnect,useSSL: mqttUseSSL,userName,password });
+client.onConnectionLost = onConnectionLost;
+client.onMessageArrived = onMessageArrived;
+
+}catch{}}
+
+function onConnect() {
+try{
+    console.log("onConnect");    
+    client.subscribe(subTopic);
+    sendCommandToDevice(publish_topic+"list","read");
+}
+catch{}
+}
+
+function sendCommandToDevice(topic,payload) {
+  try{
+    if (client.isConnected()) {
+        console.log("sendCommandToDevice: " + topic + ", Payload: " + payload);
+        var message = new Paho.MQTT.Message(payload);
+        message.destinationName = topic;
+        client.send(message);
+    }}
+    catch(error)
+    {
+      console.log(error);
+    }
+}
+
+
+function onMessageArrived(message) {
+  try{
+  topic = message.destinationName;
+  payload=message.payloadString;
+    console.log("Payload:" + payload);
+    console.log("Topic:", topic);
+   
+    displayJobs(payload);
+
+
+  }
+  catch(error)
+  {
+    console.log(error);
+  } 
+}
+
+function onConnectionLost(responseObject) {
+  if (responseObject.errorCode !== 0) {
+    console.log("onConnectionLost:"+responseObject.errorMessage);
+
+  }
+  
+}
 
 connect();
     </script>
