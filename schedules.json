@@ -14,5 +14,54 @@
     "cronTimes": [
       "01 11 * * 6"
     ]
+  },
+  {
+    "id": 3,
+    "scheduleName": "J3",
+    "cronTimes": [
+      "48 14 9 7 *"
+    ]
+  },
+  {
+    "id": 4,
+    "scheduleName": "Job 4",
+    "cronTimes": [
+      "49 14 9 7 *"
+    ]
+  },
+  {
+    "id": 5,
+    "scheduleName": "",
+    "cronTimes": [
+      "49 14 9 7 *"
+    ]
+  },
+  {
+    "id": 6,
+    "scheduleName": "T",
+    "cronTimes": [
+      "49 14 9 7 *"
+    ]
+  },
+  {
+    "id": 7,
+    "scheduleName": "I",
+    "cronTimes": [
+      "49 14 9 7 *"
+    ]
+  },
+  {
+    "id": 8,
+    "scheduleName": "T",
+    "cronTimes": [
+      "49 14 9 7 *"
+    ]
+  },
+  {
+    "id": 9,
+    "scheduleName": "R",
+    "cronTimes": [
+      "50 14 9 7 *"
+    ]
   }
 ]
