@@ -268,10 +268,9 @@ input[type="checkbox"]:checked::after {
             border: none;
             overflow-x: hidden;
             overflow-y: auto;
-            height: 60%;
-       
+            height: 100%;
             z-index: 9992;
-            top: 115px;
+           
             margin-left: 10px;
             margin-top: 120px;
         }
@@ -341,6 +340,7 @@ input[type="time"]{
   position: fixed;
   bottom: 20px;
   height: 20%;
+  background-color: white;
 }
 
 #schedulButton {
@@ -440,8 +440,9 @@ color:blue;
     <div class="elementBox" id="everydays" onclick="SetDays()" style="display: none;">
       <br>
       <div>Everyday</div>
-   
+
   </div>
+ 
     <div id="popup" class="popup">
       <label for="scheduleDays"><b>Set Days of Week</b></label><br><br>
       <div>
