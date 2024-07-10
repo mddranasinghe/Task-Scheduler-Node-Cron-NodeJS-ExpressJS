@@ -264,16 +264,19 @@ input[type="checkbox"]:checked::after {
 
         .schdule_body
         {
-          overflow-y: auto; 
-            height: 60%;
-            position: fixed;
-            top: 115px;
-            margin-left: 10px;
             width: 95%;
             border: none;
-            padding: 15px; /* Optional padding for better look */
-            box-sizing: border-box; 
+          position: fixed;
+            overflow-y:auto;
+
+            height: 60%;
+     
+           
+            margin-left: 10px;
+            margin-top: 120px;
         }
+
+       
     
 .popup {
             width: 80%;
@@ -410,13 +413,13 @@ color:blue;
 
 
 <div id="add" style="display: none; ">
-<div class="head_schedule">
-  <img src="image/less-than.png"  id="backicon" onclick="backFun();">
   
- 
+<div class="head_schedule"  style="z-index: 9990;">
+  <img src="image/less-than.png"  id="backicon" onclick="backFun();">
     <h1> Schedule</h1>
   </div>
-  <div class="schdule_body"  >
+  <div class="schdule_body">
+
     <p style="font-size: 15px;">Execute only once at a given time of the day or Repeat after given time of the day.</p>
     <div  class="cricle-box" >
      <input type="checkbox" id="onece" value="4" checked>
@@ -429,7 +432,7 @@ color:blue;
 
 
     </div>
-    <div>   <br>   <br>
+     <br><br><br>
       <form id="scheduleForm" onsubmit="handleFormSubmit(event)">
         <input type="hidden" id="actionType" name="actionType" value="create">
         <input type="hidden" id="scheduleId" name="scheduleId" value="">
@@ -440,12 +443,17 @@ color:blue;
     <div class="elementBox" id="everydays" onclick="SetDays()" style="display: none;">
       <br>
       <div>Everyday</div>
-
   </div>
- 
-    <div id="popup" class="popup">
+  <br>
+  <div class="elementBox">
+    <label for="scheduleTime">Set Time:</label>
+    <input  type="time" id="scheduleTime" name="scheduleTime" required value="">
+   </div> <br>
+</div>
+
+    <div id="popup" class="popup" style="z-index: 9999;">
       <label for="scheduleDays"><b>Set Days of Week</b></label><br><br>
-      <div>
+     
         <input type="checkbox" id="monday" name="scheduleDays" value="2" checked>
         <label for="monday">Monday</label><br>
     
@@ -465,19 +473,16 @@ color:blue;
    <div class="popupButton">
         <div id="CancelButton"  onclick="resetChanges()">Cancel</div> &nbsp;
         <div id="OkButton"   onclick="removePopup()">Ok</div>
+   </div>
       </div>
-      </div>
-      </div><br>
-      <div class="elementBox">
-          <label for="scheduleTime">Set Time:</label>
-          <input  type="time" id="scheduleTime" name="scheduleTime" required value="">
-         </div> <br><br>
+      
+    
         </form>
      
         
-  </div>
-</div>
-<div class="add-button2">
+
+
+<div class="add-button2" style="z-index: 9990;">
   <button  type="submit" id="schedulButton"  onclick="callForm()"> Save and Enable</button></div>
 
 
