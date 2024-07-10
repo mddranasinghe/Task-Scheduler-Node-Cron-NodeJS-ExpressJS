@@ -28,5 +28,19 @@
     "cronTimes": [
       "49 14 9 7 *"
     ]
+  },
+  {
+    "id": 5,
+    "scheduleName": "",
+    "cronTimes": [
+      "46 12 10 7 *"
+    ]
+  },
+  {
+    "id": 6,
+    "scheduleName": "",
+    "cronTimes": [
+      "46 12 10 7 *"
+    ]
   }
 ]
