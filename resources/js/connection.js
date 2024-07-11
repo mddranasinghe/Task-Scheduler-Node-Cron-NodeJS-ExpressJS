@@ -1,4 +1,3 @@
-
 var protocol = window.location.protocol;
  
  var mqttBroker='home.onesmartapi.com';
@@ -16,6 +15,7 @@ if(protocol === 'https')
      mqttClientId ='ws/'+mqttClientId;
 }
 
-var client = new Paho.MQTT.Client(mqttBroker, port, mqttClientId);
+var client = new Paho.MQTT.Client(mqttBroker, port,mqttClientId);
 
 console.log("client ID:-"+mqttClientId);
+

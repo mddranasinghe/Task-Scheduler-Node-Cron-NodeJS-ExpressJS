@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cron Job Scheduler</title>
-    <script src="paho.javascript-1.0.3/paho-mqtt-min.js"></script>
-    <script src="connection.js"></script>
+  <script src="../resources/js/paho.javascript-1.0.3/paho-mqtt-min.js"></script>
+    <script src="../resources/js/connection.js"></script>
     <style>
               * {
 
@@ -269,7 +269,7 @@ input[type="checkbox"]:checked::after {
           position: fixed;
             overflow-y:auto;
 
-            height: 60%;
+            height: 40%;
      
            
             margin-left: 10px;
@@ -398,7 +398,7 @@ color:blue;
 <body>
   <div id="list" style="display:non">
     <header>
-        <img src="image/less-than.png" id="backicon" onclick="location.href='index.html?value=scene-div'">
+        <img src="image/less-than.png" id="backicon" onclick="location.href='../index.html?value=scene-div'">
         <h1>Schedule List</h1>
         
     </header>
@@ -488,68 +488,6 @@ color:blue;
 
 </div>
 
-<!--<div id="add" style="display: none;">
-  <div class="header-add">
-      <img src="image/less-than.png" id="backicon" onclick="backFun();">
-      <h1>Schedule</h1>
-  </div>
-  <div id="addContent">
-      <p style="font-size: 15px;">Execute only once at a given time of the day or Repeat after given time of the day.</p>
-      <div class="cricle-box">
-          <input type="checkbox" id="onece" value="4" checked>
-          <div>Once</div>
-      </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <div class="cricle-box">
-          <input type="checkbox" id="repeat" value="4">
-          <div>Repeat</div>
-      </div>
-      <br><br>
-      <form id="scheduleForm" onsubmit="handleFormSubmit(event)" >
-          <input type="hidden" id="actionType" name="actionType" value="create">
-          <input type="hidden" id="scheduleId" name="scheduleId" value="">
-          <div class="elementBox">
-              <input style="border: none;" type="text" id="scheduleName" name="scheduleName" required placeholder="Add Timer Name" value="">
-          </div>
-          <div class="elementBox" id="everydays" onclick="SetDays()" style="display: none;">
-              <br>
-              <small>Everyday</small>
-          </div>
-          <div id="popup" class="popup">
-              <label for="scheduleDays"><b>Set Days of Week</b></label><br><br>
-              <div>
-                  <input type="checkbox" id="monday" name="scheduleDays" value="2" checked>
-                  <label for="monday">Monday</label><br>
-                  <input type="checkbox" id="tuesday" name="scheduleDays" value="4" checked>
-                  <label for="tuesday">Tuesday</label><br>
-                  <input type="checkbox" id="wednesday" name="scheduleDays" value="8" checked>
-                  <label for="wednesday">Wednesday</label><br>
-                  <input type="checkbox" id="thursday" name="scheduleDays" value="16">
-                  <label for="thursday">Thursday</label><br>
-                  <input type="checkbox" id="friday" name="scheduleDays" value="32">
-                  <label for="friday">Friday</label><br>
-                  <input type="checkbox" id="saturday" name="scheduleDays" value="64">
-                  <label for="saturday">Saturday</label><br>
-                  <input type="checkbox" id="sunday" name="scheduleDays" value="1">
-                  <label for="sunday">Sunday</label><br><br>
-                  <div class="popupButton">
-                      <small id="CancelButton">Cancel</small>
-                      <small id="OkButton">Ok</small>
-                  </div>
-              </div>
-          </div><br>
-          <div class="elementBox">
-              <label for="scheduleTime">Set Time:</label>
-              <input type="time" id="scheduleTime" name="scheduleTime" required value="">
-          </div>
-          <br><br>
-          <div class="add-button2">
-            <button type="submit" id="schedulButton" >Save and Enable</button>
-        </div>
-      </form>
-      
-  </div>
-
-</div>-->
 
 <div id="popupConfirmid" class="popupConfirm">
   <div style="padding: 20px;">   <div class="popup-content">
@@ -895,3 +833,7 @@ connect();
     </script>
 </body>
 </html>
+
+
+
+

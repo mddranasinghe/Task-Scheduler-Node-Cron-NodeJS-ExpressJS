@@ -1,0 +1,362 @@
+* {
+	margin: 0;
+	padding: 0;
+    font-family: 'Avenir', sans-serif;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+/*
+body{
+    position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 100%;
+
+animation: loadingAnimation 0.5s linear forwards; }*/
+/*
+@keyframes loadingAnimation {
+from { width: 0; } 
+to { width: 100%; } }
+*/
+
+.container {
+	width: 1000px;
+    margin: 0 auto;
+ 
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    flex-wrap: wrap; 
+  
+
+}
+
+main{
+
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    flex-wrap: wrap; 
+
+    /*scroll menu*.........................................*/
+}
+div.scrollmenu {
+    background-color: white;
+    overflow: auto;
+    border-style: none;
+    border-radius: 5px 5px;
+    white-space: nowrap;
+    width: 100%;
+    margin-top: 2%; /* Remove negative margin */
+
+    top: 0; /* Set to the top of the screen */
+
+}
+
+  .scrollmenu::-webkit-scrollbar /* remove the scrollbar*/
+  {
+  
+  width: 0;
+  
+  }
+  div.scrollmenu a {
+    display: inline-block;
+    color: rgb(12, 12, 12);
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+    width: 100px;
+ 
+ 
+;
+  }
+  
+  div.scrollmenu a:hover {
+      background-color:rgb(70, 184, 110);
+      border-radius:5px 5px;
+  }
+
+.b1{
+	width: 490px;
+	float: left;
+    display:flex;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.b1:first-of-type {
+	margin-right: 10px;
+}
+
+#dashboardsbutton,  #scenebutton{
+
+padding-top: 10px;
+padding-bottom: 10px;
+    margin: 0 auto; 
+    border: none;   color: white; 
+    background-color:rgb(70, 184, 110) ; 
+    border-radius: 20px  20px;
+    width: 490px;
+    text-align: center;
+    float: left;
+}
+
+#dashboardsbutton
+{
+    margin-right: 10px;
+    background-color:rgb(70, 184, 110) ; 
+}
+ 
+#scenebutton{
+
+    margin-right: 10px;
+    background-color:rgb(156, 156, 156) ;
+}
+
+.circle{
+height: 70px;
+width:70px ;
+border-radius:50%;
+display:inline-block;
+margin-top:-5%;
+margin-left: -80%;
+
+
+
+}
+ .img{
+    width:55px;
+     height:45px;
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:10%;
+    
+ }
+
+  .box1,.box2{
+
+      width: 490px;
+     
+      background-color:white;
+       text-align:center;
+       box-shadow: 0.5px 0.5px 3px 0.5px gray;
+       
+       padding:40px;
+       border-radius:  10px 10px;
+       float: left;
+       margin-left: 10px;
+     
+  
+       
+   
+     
+  }
+  
+.box1{
+  margin-right: 10px;
+  
+
+
+}
+   
+.box2 {
+  margin-right: 10px;
+
+
+}
+.box1 h4{
+    margin-top: -0px;
+    margin-left: -80%;
+}
+.box1 p{
+    margin-top: 5px;
+    margin-left: -80%;
+}
+
+.box2 h4{
+    margin-top: -0px;
+    margin-left: -80%;
+}
+.box2 p{
+    margin-top: 5px;
+    margin-left: -80%;
+}
+
+ 
+   .box1:hover,.box2:hover,.box3:hover,.box4:hover{
+    background-color: #e7e6e1;
+
+    .circle
+    {
+        background-color: white;
+    }
+   }
+
+
+.dot{
+   
+width: 7px;
+height:7px;
+border-radius:5px 5px;
+ background-color:#b4b4b0;
+
+margin-left: 30px;
+
+display: inline-block;
+
+}
+
+
+.dot:hover
+{
+    width: 10px;
+    height:10px; 
+    background-color:rgb(70, 184, 110);
+
+ #page1
+    {
+        width:25px;
+        height:5px; 
+
+    }
+}
+.dotdiv
+{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color:white;
+    padding: 10px;
+    border-top: 1px; /* Add a border at the top for separation */
+    z-index: 1000; /* Ensure it stays above other content */
+ 
+
+}
+
+@media only screen and (max-width: 600px) {
+    .container {
+        width: 100%;
+    }
+    #logo {
+        width: 50%; 
+    }
+    .b1, #dashboardsbutton, #scenebutton {
+        width: 10%; 
+        margin-bottom: 10px;
+    }
+    .box1,.box2 {
+        width: 42%; 
+        margin-bottom: 20px;
+        padding: 10px; 
+        box-sizing: border-box;
+        padding-top: 20px;
+    }
+    .circle {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .img {
+        width: 70%; 
+    }
+    .box1 h4, .box2 h4, .box1 p, .box2 p {
+        margin-left: 0; 
+    }
+    .dotdiv {
+      
+        width: 100%; 
+        margin: 0 auto;
+        text-align: center;
+    }
+   
+
+}
+
+@media only screen and (min-width: 600px) {
+    .container {
+        width: 100%;
+    }
+    #logo {
+        width: 50%; 
+    }
+    .b1, #dashboardsbutton, #scenebutton {
+        width: 45%; 
+        margin-bottom: 10px;
+    }
+    .box1, .box2 {
+        width: 45%; 
+        margin-bottom: 20px;
+        margin-right: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 30px;
+        padding-bottom: 20px;
+        box-sizing: border-box;
+    }
+    .circle {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .img {
+        width: 70%; 
+    }
+    .box1 h4, .box2 h4, .box1 p, .box2 p {
+        margin-left: 0; 
+    }
+    .dotdiv {
+        width: 100%; 
+        margin: 0 auto;
+        text-align: center;
+    }
+    #wifilog
+    {
+        margin-left:80%;
+        margin-top: -18px;
+    }
+}
+
+
+@media only screen and (min-width: 1024px) {
+    .container {
+        width: 90%;
+    }
+    #logo {
+        width: 50%; 
+    }
+    .b1, #dashboardsbutton, #scenebutton {
+        width: 45%; 
+        margin-bottom: 10px;
+    }
+    .box1, .box2 {
+        width: 47%; 
+        margin-bottom: 20px;
+        padding: 35px; 
+        box-sizing: border-box;
+    }
+    .circle {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .img {
+        width: 70%; 
+    }
+    .box1 h4, .box2 h4, .box1 p, .box2 p {
+        margin-left: 0; 
+    }
+    .dotdiv {
+        width: 100%; 
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    div.scrollmenu
+    {
+        width: 100%;
+    }
+}
+
+

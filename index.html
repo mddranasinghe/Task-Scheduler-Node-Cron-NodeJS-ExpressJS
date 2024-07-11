@@ -223,7 +223,7 @@ p.zone{ font-size: 10px; padding-top: 3px;}
   <div id="scene-div" style="display: none;">
     <div id="scene-list">
       <div id="left-box">  
-          <div id="block-L" onclick="location.href='index2.html'">scene 01</div>
+          <div id="block-L" onclick="location.href='scene/scene.html'">scene 01</div>
       </div>
       <div id="right-box" >    
           <div  id="block-R">Scene 02</div>
@@ -252,8 +252,8 @@ p.zone{ font-size: 10px; padding-top: 3px;}
 
 <script>
 
-const urlParams = new URLSearchParams(window.location.search);
-const Nvvalue = urlParams.get('value');
+var urlParams = new URLSearchParams(window.location.search);
+var Nvvalue = urlParams.get('value');
 
       if (Nvvalue == 'scene-div') {
         navfun('scene-div','device_div');
