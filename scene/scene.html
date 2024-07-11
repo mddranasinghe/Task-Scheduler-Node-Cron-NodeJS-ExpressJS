@@ -347,7 +347,7 @@ font-size: 18px;
   justify-content: center;
   position: fixed;
   bottom: 20px;
-  height: 20%;
+  height: 130px;
   background-color: white;
 }
 
@@ -361,7 +361,20 @@ font-size: 18px;
   border-radius: 5px;
   border: none;
   font-size: 18px;
-  margin-top:45px;
+  margin-top:85px;
+  position: absolute;
+}
+#Button_disable {
+  width: 98%;
+
+  height: 40px;
+  text-align: center;
+  color: white;
+  background-color: black;
+  border-radius: 5px;
+  border: none;
+  font-size: 18px;
+  margin-top:30px;
   position: absolute;
 }
 
@@ -442,7 +455,7 @@ color:blue;
         <input type="hidden" id="actionType" name="actionType" value="create">
         <input type="hidden" id="scheduleId" name="scheduleId" value="">
     <div class="elementBox">
-      <input style="border: none;"type="text" id="scheduleName" name="scheduleName" required placeholder="Add Timer Name" value="">
+      <input style="border: none;"type="text" id="scheduleName" name="scheduleName" placeholder="Add Timer Name" r>
     </div>
 
     <div class="elementBox" id="everydays" onclick="SetDays()" style="display: none;">
@@ -488,7 +501,11 @@ color:blue;
 
 
 <div class="add-button2" style="z-index: 9990;">
-  <button  type="submit" id="schedulButton"  onclick="callForm()"> Save and Enable</button></div>
+  <button  type="submit" id="Button_disable"  onclick="callForm()"> Disable</button>
+
+  <button  type="submit" id="schedulButton"  onclick="callForm()"> Save and Enable</button>
+
+</div>
 
 
 </div>
