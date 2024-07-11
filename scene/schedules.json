@@ -1,16 +1,26 @@
 [
   {
-    "id": 1,
-    "scheduleName": "job 01",
+    "id": 2,
+    "enable": 0,
+    "scheduleName": "111",
     "cronTimes": [
-      "08 11 11 7 *"
+      "50 16 11 7 *"
     ]
   },
   {
     "id": 2,
-    "scheduleName": "",
+    "enable": 1,
+    "scheduleName": "111",
     "cronTimes": [
-      "06 13 11 7 *"
+      "50 16 11 7 *"
+    ]
+  },
+  {
+    "id": 3,
+    "enable": 0,
+    "scheduleName": "ff",
+    "cronTimes": [
+      "59 21 11 7 *"
     ]
   }
 ]

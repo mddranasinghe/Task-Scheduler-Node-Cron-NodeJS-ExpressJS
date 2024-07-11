@@ -101,14 +101,16 @@ function loadSchedules() {
   try {
     const data = fs.readFileSync('schedules.json', 'utf8');
     const parsedSchedules = JSON.parse(data);
-    
-    // Reconstruct cron jobs
+
+    // Reconstruct cron jobs for enabled schedules only
     parsedSchedules.forEach(schedule => {
-      schedule.tasks = schedule.cronTimes.map(pattern => {
-        return cron.schedule(pattern, () => {
-          console.log(`Running scheduled job: ${schedule.scheduleName}`);
+      if (schedule.enable === 1) {
+        schedule.tasks = schedule.cronTimes.map(pattern => {
+          return cron.schedule(pattern, () => {
+            console.log(`Running scheduled job: ${schedule.scheduleName}`);
+          });
         });
-      });
+      } 
     });
 
     return parsedSchedules;
@@ -119,52 +121,63 @@ function loadSchedules() {
 }
 
 
+
 function AddSchedule(payload) {
   try {
     payload = JSON.parse(payload);
     console.log('Payload:', payload);
-
+   
+    if (payload[0] == "0") 
+    {
+      enable=0;
+    }
+   else if (payload[0] == "1") 
+     {
+        enable=1;
+    }
+    console.log('fdddddd------'+enable);
     const id = schedules.length + 1;
     const cronTimes = [];
     const tasks = [];
-    const scheduleName = payload[6];
+    const scheduleName = payload[7];
 
-    const daysArray = (payload[5] === '*') ? '*' : getIndicesFromBinary(payload[5]);
+    const daysArray = (payload[6] === '*') ? '*' : getIndicesFromBinary(payload[5]);
 
     if (daysArray === '*') {
-      const pattern = `${payload[2]} ${payload[3]} ${payload[0]} ${payload[1]} *`;
+      const pattern = `${payload[3]} ${payload[4]} ${payload[1]} ${payload[2]} *`;
 
       if (!cron.validate(pattern)) {
         throw new Error(`Invalid cron pattern: ${pattern}`);
       }
 
-      const task = cron.schedule(pattern, () => {
-        console.log(`Running scheduled job every day`);
+     const task = cron.schedule(pattern, () => {
+       // console.log(`Running scheduled job every day`);
       });
 
       cronTimes.push(pattern);
       tasks.push(task);
     } else {
       daysArray.forEach(day => {
-        const pattern = `${payload[2]} ${payload[3]} ${payload[0]} ${payload[1]} ${day}`;
+        const pattern = `${payload[3]} ${payload[4]} ${payload[1]} ${payload[2]} ${day}`;
 
         if (!cron.validate(pattern)) {
           throw new Error(`Invalid cron pattern: ${pattern}`);
         }
 
-        const task = cron.schedule(pattern, () => {
-          console.log(`Running scheduled job on day ${day}`);
+       const task = cron.schedule(pattern, () => {
+        //  console.log(`Running scheduled job on day ${day}`);
         });
+       
 
         cronTimes.push(pattern);
         tasks.push(task);
       });
     }
 
-    const job = { id, scheduleName, cronTimes, tasks };
+    const job = { id, enable, scheduleName, cronTimes, tasks };
     schedules.push(job);
     saveSchedules(schedules);
-
+    loadSchedules();
     console.log(`Schedule "${scheduleName}" set for ${payload[5]} at ${payload[2]}:${payload[3]}`);
   } catch (error) {
     console.error('Error scheduling job:', error);
@@ -209,6 +222,7 @@ function saveSchedules(schedules) {
     // Create a copy of schedules without tasks to avoid circular references
     const schedulesToSave = schedules.map(schedule => ({
       id: schedule.id,
+      enable:schedule.enable,
       scheduleName: schedule.scheduleName,
       cronTimes: schedule.cronTimes
     }));
@@ -225,6 +239,7 @@ function getList()
 {
   const jobList = schedules.map(schedule => ({
     id: schedule.id,
+    enable:schedule.enable,
     scheduleName: schedule.scheduleName,
     cronTimes: schedule.cronTimes
   }));
@@ -237,10 +252,19 @@ function updateJob(payload,jobid)
 {
   try{
   payload = JSON.parse(payload);
+
+  if (payload[0] == "0") 
+    {
+      enable=0;
+    }
+   else if (payload[0] == "1") 
+     {
+        enable=1;
+    }
   const cronTimes = [];
   const tasks = [];
    const id = jobid;
-   const scheduleName = payload[6];
+   const scheduleName = payload[7];
  
 
    const scheduleIndex = schedules.findIndex(schedule => schedule.id == id);
@@ -249,31 +273,31 @@ function updateJob(payload,jobid)
  
    console.log(`Schedule with ID ${id} not found`)
   }
-  const daysArray = (payload[5] === '*') ? '*' : getIndicesFromBinary(payload[5]);
+  const daysArray = (payload[6] === '*') ? '*' : getIndicesFromBinary(payload[5]);
 
   if (daysArray === '*') {
-    const pattern = `${payload[2]} ${payload[3]} ${payload[0]} ${payload[1]} *`;
+    const pattern = `${payload[3]} ${payload[4]} ${payload[1]} ${payload[2]} *`;
 
     if (!cron.validate(pattern)) {
       throw new Error(`Invalid cron pattern: ${pattern}`);
     }
 
     const task = cron.schedule(pattern, () => {
-      console.log(`Running scheduled job every day`);
+     // console.log(`Running scheduled job every day`);
     });
 
     cronTimes.push(pattern);
     tasks.push(task);
   } else {
     daysArray.forEach(day => {
-      const pattern = `${payload[2]} ${payload[3]} ${payload[0]} ${payload[1]} ${day}`;
+      const pattern = `${payload[3]} ${payload[4]} ${payload[1]} ${payload[2]} ${day}`;
 
       if (!cron.validate(pattern)) {
         throw new Error(`Invalid cron pattern: ${pattern}`);
       }
 
       const task = cron.schedule(pattern, () => {
-        console.log(`Running scheduled job on day ${day}`);
+      //  console.log(`Running scheduled job on day ${day}`);
       });
 
       cronTimes.push(pattern);
@@ -285,14 +309,14 @@ function updateJob(payload,jobid)
    schedules[scheduleIndex].tasks.forEach(task => task.stop());
     
    // Update schedule
+   schedules[scheduleIndex].enable = enable;
    schedules[scheduleIndex].scheduleName = scheduleName;
    schedules[scheduleIndex].cronTimes = cronTimes;
    schedules[scheduleIndex].tasks = tasks;
 
    saveSchedules(schedules);
-
-  
    console.log(`Schedule updateded `)
+   loadSchedules();
  } catch (error) {
 
    console.log(`Error updating job: ${error.message}`)
