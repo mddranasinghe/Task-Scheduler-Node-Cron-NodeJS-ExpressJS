@@ -260,6 +260,9 @@ input[type="checkbox"]:checked::after {
         {
           width: 400px;
           height: 320px;
+          display: block;
+  margin-left: auto;
+  margin-right: auto;
         }
 
         /*  schdule box css*/
@@ -818,6 +821,12 @@ function displayJobs(jobs) {
         else if(job.enable == 0)
         {
           enabletext = 'Inactive';
+       backgroundColor ='#D0CECE';
+
+         }
+         else if(job.enable == 4)
+        {
+          enabletext = 'expired';
        backgroundColor ='#D0CECE';
 
          }

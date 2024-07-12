@@ -135,6 +135,10 @@ function loadSchedules() {
         schedule.tasks = schedule.cronTimes.map(pattern => {
           return cron.schedule(pattern, () => {
             console.log(`Running scheduled job: ${schedule.scheduleName}`);
+            schedule.enable = 4;
+
+            saveSchedules(parsedSchedules);
+
           });
         });
       } else {
@@ -261,6 +265,8 @@ function saveSchedules(schedules) {
   } catch (error) {
     console.error('Error writing schedules file:', error);
   }
+  loadSchedules() ;
+  getList();
 }
 
 
@@ -350,8 +356,7 @@ function updateJob(payload,jobid)
 
    console.log(`Error updating job: ${error.message}`)
  }
- loadSchedules();
- getList();
+
 
 }
 
