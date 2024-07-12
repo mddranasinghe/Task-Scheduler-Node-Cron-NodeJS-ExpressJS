@@ -33,17 +33,19 @@ body{
 
         width:20px;
         height: 20px;
-        
+        margin-top: 10px;
       }
       #editimg
       {
         width:20px;
         height: 20px;
+        margin-top: 10px;
       }
 #clockimg{ 
  
   width: 30px;
   height: 30px;
+  margin-top: 5px;
 }
 
 
@@ -62,9 +64,15 @@ height: 30px;
   width: 50%; margin-top: 1vw; margin-bottom: 1vw; float: left; display: flex;
 }
 #right-box{
-  width: 50%;margin-top: 3vw; float: right; display: flex; justify-content: right; 
+  width: 50%;margin-top: 1vw; margin-bottom: 1vw; float: right; display: flex; justify-content: right; 
 }
-
+#schdule_stat
+{
+  
+  padding:4px 5px 4px 5px;
+  border-radius: 20px;
+  font-size: 11px;
+}
 
 .cricle{
 
@@ -781,6 +789,7 @@ function scheduleCronTime(timer_stat,scheduleName, scheduleDays, scheduleTime) {
 }
 */
 function displayJobs(jobs) {
+ const schdule_stat=document.getElementById('schdule_stat');
     jobs = JSON.parse(jobs);
     const jobsList = document.getElementById('scheduleJobsList');
     jobsList.innerHTML = ''; // Clear previous jobs
@@ -800,8 +809,18 @@ function displayJobs(jobs) {
     }
 
     jobs.forEach(job => {
-        const cronTimes = job.cronTimes ? job.cronTimes.join(', ') : ''; // Check if cronTimes is defined
+        const cronTimes = job.cronTimes ? job.cronTimes.join(', ') : ''; 
         const jobElement = document.createElement('div');
+        if(job.enable == 1){
+         enabletext = 'Active';
+        backgroundColor='#BBE883';
+        }
+        else if(job.enable == 0)
+        {
+          enabletext = 'Inactive';
+       backgroundColor ='#D0CECE';
+
+         }
         jobElement.innerHTML = `
             <div id="scene-div">
                 <div id="scene-list">
@@ -810,6 +829,7 @@ function displayJobs(jobs) {
                         <p>${job.scheduleName}</p>
                     </div>
                     <div id="right-box">
+                        <p id="schdule_stat" style="background-color:${backgroundColor}">${enabletext}</p>&nbsp&nbsp&nbsp&nbsp
                         <div onclick="populateUpdateForm(${job.id}, '${job.scheduleName}', '${cronTimes}')">
                             <img src="image/edit.png" id='editimg' onclick="controlOption('add','update')">
                         </div>&nbsp&nbsp&nbsp&nbsp
