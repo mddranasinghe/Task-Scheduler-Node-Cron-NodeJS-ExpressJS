@@ -248,7 +248,7 @@ input[type="checkbox"]:checked::after {
             top: 120px;
            
         }
-        #scene-div img
+        #scene-div #no_sch
         {
           width: 400px;
           height: 320px;
@@ -790,8 +790,8 @@ function displayJobs(jobs) {
         const noJobsElement = document.createElement('div');
         noJobsElement.innerHTML = `
             <div id="scene-div">
-           <samll>   &nbsp There are no schedules. Tap "Add New Schedule" to create schedule.</samll><br>
-            <img src="image/no_schdule.png" id='deleimg'>
+           <samll>There are no schedules. Tap "Add New Schedule" to create schedule.</samll><br>
+            <img  id=no_sch src="image/no_schdule.png" id='deleimg'>
 
             </div>
         `;
