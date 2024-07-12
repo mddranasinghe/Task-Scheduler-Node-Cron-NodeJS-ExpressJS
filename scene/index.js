@@ -97,7 +97,7 @@ function sendCommandToDevice(topic, payload) {
 
 let schedules = loadSchedules(); // Load existing schedules from the file
 
-function loadSchedules() {
+/*function loadSchedules() {
   try {
     const data = fs.readFileSync('schedules.json', 'utf8');
     const parsedSchedules = JSON.parse(data);
@@ -118,8 +118,36 @@ function loadSchedules() {
     console.error('Error reading schedules file:', error);
     return [];
   }
-}
+}*/
 
+function loadSchedules() {
+  try {
+    const data = fs.readFileSync('schedules.json', 'utf8');
+    const parsedSchedules = JSON.parse(data);
+
+    // Reconstruct cron jobs for enabled schedules only
+    parsedSchedules.forEach(schedule => {
+      if (!schedule.tasks) {
+        schedule.tasks = []; // Initialize tasks as an empty array if it doesn't exist
+      }
+
+      if (schedule.enable === 1) {
+        schedule.tasks = schedule.cronTimes.map(pattern => {
+          return cron.schedule(pattern, () => {
+            console.log(`Running scheduled job: ${schedule.scheduleName}`);
+          });
+        });
+      } else {
+        schedule.tasks = []; // Ensure tasks are an empty array if the schedule is disabled
+      }
+    });
+
+    return parsedSchedules;
+  } catch (error) {
+    console.error('Error reading schedules file:', error);
+    return [];
+  }
+}
 
 
 function AddSchedule(payload) {
@@ -141,7 +169,7 @@ function AddSchedule(payload) {
     const tasks = [];
     const scheduleName = payload[7];
 
-    const daysArray = (payload[6] === '*') ? '*' : getIndicesFromBinary(payload[5]);
+    const daysArray = (payload[6] === '*') ? '*' : getIndicesFromBinary(payload[6]);
 
     if (daysArray === '*') {
       const pattern = `${payload[3]} ${payload[4]} ${payload[1]} ${payload[2]} *`;
@@ -177,8 +205,9 @@ function AddSchedule(payload) {
     const job = { id, enable, scheduleName, cronTimes, tasks };
     schedules.push(job);
     saveSchedules(schedules);
-    loadSchedules();
+
     console.log(`Schedule "${scheduleName}" set for ${payload[5]} at ${payload[2]}:${payload[3]}`);
+    loadSchedules();
   } catch (error) {
     console.error('Error scheduling job:', error);
     console.log(`Error scheduling job: ${error.message}`);
@@ -273,7 +302,7 @@ function updateJob(payload,jobid)
  
    console.log(`Schedule with ID ${id} not found`)
   }
-  const daysArray = (payload[6] === '*') ? '*' : getIndicesFromBinary(payload[5]);
+  const daysArray = (payload[6] === '*') ? '*' : getIndicesFromBinary(payload[6]);
 
   if (daysArray === '*') {
     const pattern = `${payload[3]} ${payload[4]} ${payload[1]} ${payload[2]} *`;
@@ -313,21 +342,21 @@ function updateJob(payload,jobid)
    schedules[scheduleIndex].scheduleName = scheduleName;
    schedules[scheduleIndex].cronTimes = cronTimes;
    schedules[scheduleIndex].tasks = tasks;
-
    saveSchedules(schedules);
-   console.log(`Schedule updateded `)
+   console.log(`Schedule updateded `);
    loadSchedules();
+
  } catch (error) {
 
    console.log(`Error updating job: ${error.message}`)
  }
-
+ loadSchedules();
  getList();
- 
+
 }
 
 
-function jobdelete(payload)
+/*function jobdelete(payload)
 {
   payload = JSON.parse(payload);
   const scheduleIndex = schedules.findIndex(schedule => schedule.id == payload);
@@ -345,9 +374,36 @@ function jobdelete(payload)
 
 
   console.log(`Schedule with ID ${scheduleIndex} deleted`);
-
+  loadSchedules();
   getList();
 
+
+}*/
+function jobdelete(payload) {
+  try {
+    payload = JSON.parse(payload);
+    const scheduleIndex = schedules.findIndex(schedule => schedule.id == payload);
+
+    if (scheduleIndex === -1) {
+      console.error(`Schedule with ID ${payload} not found`);
+      return;
+    }
+
+    // Stop all tasks for the schedule
+    if (schedules[scheduleIndex].tasks) {
+      schedules[scheduleIndex].tasks.forEach(task => task.stop());
+    }
+
+    // Remove the schedule
+    schedules.splice(scheduleIndex, 1);
+    saveSchedules(schedules);
+
+    console.log(`Schedule with ID ${payload} deleted`);
+    loadSchedules();
+    getList();
+  } catch (error) {
+    console.error('Message handling error:', error);
+  }
 }
 
 

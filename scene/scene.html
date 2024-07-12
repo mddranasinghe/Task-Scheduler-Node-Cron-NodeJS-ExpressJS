@@ -246,6 +246,12 @@ input[type="checkbox"]:checked::after {
             margin-top: 1px; 
             position: fixed;
             top: 120px;
+           
+        }
+        #scene-div img
+        {
+          width: 400px;
+          height: 320px;
         }
 
         /*  schdule box css*/
@@ -433,18 +439,18 @@ color:blue;
 <div id="add" style="display: none; ">
   
 <div class="head_schedule"  style="z-index: 9990;">
-  <img src="image/less-than.png"  id="backicon" onclick="backFun();">
+  <img src="image/less-than.png"  id="backicon" onclick="backfun();">
     <h1> Schedule</h1>
   </div>
   <div class="schdule_body">
 
     <p style="font-size: 15px;">Execute only once at a given time of the day or Repeat after given time of the day.</p>
     <div  class="cricle-box" >
-     <input type="checkbox" id="onece" value="4" checked>
+     <input type="checkbox" id="onece"  checked>
      <div>Onece </div>
     </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <div  class="cricle-box">
-      <input type="checkbox" id="repeat" value="4">
+      <input type="checkbox" id="repeat">
 
     <div>Repeat </div>
 
@@ -506,8 +512,6 @@ color:blue;
   <button  type="submit" id="schedulButton"  onclick="callForm('1')"> Save and Enable</button>
 
 </div>
-
-
 </div>
 
 
@@ -525,7 +529,7 @@ color:blue;
 <div id="overlay2"></div>
 <script>
 
-var totalDays = 0,scheduleType=0,timer_stat=1,
+var totalDays = 0, scheduleType=0, timer_stat=1,
 subTopic="v2jlcwytpqaufx/scene/#",
 publish_topic="v2jlcwytpqaufx/scene/timer/";
 
@@ -534,6 +538,7 @@ document.querySelectorAll('input[name="scheduleDays"]').forEach(checkbox => {
   const value = parseInt(checkbox.value, 10);
   checkbox.checked = (totalDays & value) !== 0;
 });
+
 removePopup();
 
  }
@@ -564,6 +569,8 @@ function handleFormSubmit(event) {
   const scheduleDays =  Array.from(document.querySelectorAll('input[name="scheduleDays"]:checked'))
                  .map(day => parseInt(day.value, 10)) 
                  .reduce((sum, value) => sum + value, 0); 
+
+   console.log('scheduleDays'+scheduleDays)  ;            
   const scheduleTime = form.querySelector('input[name="scheduleTime"]').value;
 
   if (actionType === 'create') {
@@ -583,11 +590,13 @@ function handleFormSubmit(event) {
 function backfun() {  // backbutton 
   document.getElementById('add').style.display='none';
   document.getElementById('list').style.display='block';
+  scheduleType = 0;
+
 }
 
 function controlOption(id,id2)  //for add new schedule button
 {
-
+  //
    button_dis=  document.getElementById('Button_disable');
   document.getElementById('scheduleForm').reset();
   document.getElementById('actionType').value = 'create';
@@ -606,6 +615,7 @@ function controlOption(id,id2)  //for add new schedule button
 
 if(id2 == 'create')
 {
+  
   setCurrentTime();
   button_dis.style.backgroundColor="#C7CBD4";
   button_dis.disabled = true;
@@ -649,12 +659,7 @@ document.getElementById('onece').addEventListener('change', function() {
   }
 });
 
-function backFun()
-{
-  document.getElementById('add').style.display='none';
 
-  document.getElementById('list').style.display='block';
-}
 
 
 var deleteID=0;
@@ -709,7 +714,7 @@ function scheduleCronTime(timer_stat,scheduleName, scheduleDays, scheduleTime) {
       sendCommandToDevice(publish_topic+'set', JSON.stringify(scheduleArry));
       
     }
-   
+   // scheduleType = 0;
   }
 
 
@@ -731,7 +736,7 @@ function scheduleCronTime(timer_stat,scheduleName, scheduleDays, scheduleTime) {
       
     }
    else if(scheduleType == 0){
-    scheduleDays = "*";
+      scheduleDays = "*"; 
      [hour, minute] = scheduleTime.split(':');   
         d = new Date();
       date = d.getDate();
@@ -741,10 +746,12 @@ function scheduleCronTime(timer_stat,scheduleName, scheduleDays, scheduleTime) {
       sendCommandToDevice(publish_topic+'update/'+scheduleId, JSON.stringify(scheduleArry));
       
     }
+
+    //scheduleType = 0;
 }
 
   
-function displayJobs(jobs) {
+/*function displayJobs(jobs) {
     jobs = JSON.parse(jobs);
     const jobsList = document.getElementById('scheduleJobsList');
     jobsList.innerHTML = ''; // Clear previous jobs
@@ -772,9 +779,53 @@ function displayJobs(jobs) {
         jobsList.appendChild(jobElement);
     });
 }
+*/
+function displayJobs(jobs) {
+    jobs = JSON.parse(jobs);
+    const jobsList = document.getElementById('scheduleJobsList');
+    jobsList.innerHTML = ''; // Clear previous jobs
+
+    if (jobs.length === 0) {
+        // Display message when no jobs are found
+        const noJobsElement = document.createElement('div');
+        noJobsElement.innerHTML = `
+            <div id="scene-div">
+           <samll>   &nbsp There are no schedules. Tap "Add New Schedule" to create schedule.</samll><br>
+            <img src="image/no_schdule.png" id='deleimg'>
+
+            </div>
+        `;
+        jobsList.appendChild(noJobsElement);
+        return;
+    }
+
+    jobs.forEach(job => {
+        const cronTimes = job.cronTimes ? job.cronTimes.join(', ') : ''; // Check if cronTimes is defined
+        const jobElement = document.createElement('div');
+        jobElement.innerHTML = `
+            <div id="scene-div">
+                <div id="scene-list">
+                    <div id="left-box">  &nbsp&nbsp&nbsp&nbsp
+                        <img src="image/clock.png" id="clockimg">&nbsp&nbsp&nbsp&nbsp
+                        <p>${job.scheduleName}</p>
+                    </div>
+                    <div id="right-box">
+                        <div onclick="populateUpdateForm(${job.id}, '${job.scheduleName}', '${cronTimes}')">
+                            <img src="image/edit.png" id='editimg' onclick="controlOption('add','update')">
+                        </div>&nbsp&nbsp&nbsp&nbsp
+                        <div onclick="actionDelete(${job.id})">
+                            <img src="image/delete.png" id='deleimg'>
+                        </div>&nbsp&nbsp&nbsp&nbsp
+                    </div>
+                </div>
+            </div>
+        `;
+        jobsList.appendChild(jobElement);
+    });
+}
 
 
-function populateUpdateForm(id, scheduleName, cronTimes) {
+/*function populateUpdateForm(id, scheduleName, cronTimes) {
   document.getElementById('actionType').value = 'update';
   document.getElementById('scheduleId').value = id;
   document.getElementById('scheduleName').value = scheduleName;
@@ -795,10 +846,10 @@ function populateUpdateForm(id, scheduleName, cronTimes) {
   }
    
   });
-  const firstCronTime = cronTimes.split(',')[0];
-  const cronParts = firstCronTime.split(' ');
+ // const firstCronTime = cronTimes.split(',')[0];
+ // const cronParts = firstCronTime.split(' ');
 
-  if (cronParts.length >= 2) {
+  /*if (cronParts.length >= 2) {
     const minute = cronParts[0];
     const hour = cronParts[1];
     const time = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
@@ -806,6 +857,49 @@ function populateUpdateForm(id, scheduleName, cronTimes) {
   } else {
     console.error('Invalid cron time format:', firstCronTime);
   }
+
+
+  const firstCronTime = cronTimes.split(',')[0];
+  const [minute, hour] = firstCronTime.split(' ').slice(0, 2);
+  const time = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
+  document.getElementById('scheduleTime').value = time;
+}*/
+function populateUpdateForm(id, scheduleName, cronTimes) {
+  document.getElementById('actionType').value = 'update';
+  document.getElementById('scheduleId').value = id;
+  document.getElementById('scheduleName').value = scheduleName;
+
+  const days = cronTimes.split(',').map(time => parseInt(time.trim().split(' ')[4], 10));
+   totalDays = days.reduce((acc, day) => acc + Math.pow(2, day), 0);
+   console.log('days'+totalDays);
+
+  document.querySelectorAll('input[name="scheduleDays"]').forEach(checkbox => {
+    const value = parseInt(checkbox.value, 10);
+    checkbox.checked = (totalDays & value) !== 0;
+  });
+
+  if (totalDays >= 1 )
+  {
+    document.getElementById('onece').checked = false;
+    document.getElementById('repeat').checked = true;
+    document.getElementById('everydays').style.display='block';
+    scheduleType = 1;
+
+  }
+  else  { // Adjusted to >= 0
+  
+    document.querySelectorAll('input[name="scheduleDays"]').forEach(checkbox => {
+      checkbox.checked = true;
+    });
+  }
+
+  const firstCronTime = cronTimes.split(',')[0];
+  const [minute, hour] = firstCronTime.split(' ').slice(0, 2);
+  const time = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
+  document.getElementById('scheduleTime').value = time;
+  
+  
+  
 }
 
 
