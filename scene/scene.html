@@ -256,7 +256,7 @@ input[type="checkbox"]:checked::after {
             top: 120px;
            
         }
-        #scene-div #no_sch
+        #scene-div #no_sch /*img no schedule */
         {
           width: 400px;
           height: 320px;
@@ -811,6 +811,7 @@ function displayJobs(jobs) {
         return;
     }
 
+    if (jobs.length != 0) {
     jobs.forEach(job => {
         const cronTimes = job.cronTimes ? job.cronTimes.join(', ') : ''; 
         const jobElement = document.createElement('div');
@@ -851,6 +852,7 @@ function displayJobs(jobs) {
         `;
         jobsList.appendChild(jobElement);
     });
+  }
 }
 
 
