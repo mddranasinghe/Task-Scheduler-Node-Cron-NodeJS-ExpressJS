@@ -556,7 +556,7 @@ color:blue;
 <div id="overlay2"></div>
 <script>
 
-var totalDays = 0, type=3, active=1,id=0,action=0,type=0,year=2024;
+var totalDays = 0, type=3, active=1,id=0,action=0,year=2024;
 subTopic="v2jlcwytpqaufx/scene/#",
 publish_topic="v2jlcwytpqaufx/scene/timer/";
 
@@ -630,7 +630,7 @@ function handleFormSubmit(event) {
 function backfun() {  // backbutton 
   document.getElementById('add').style.display='none';
   document.getElementById('list').style.display='block';
-  type = 0;
+  type = 3;
 
 }
 
@@ -662,6 +662,7 @@ if(id2 == 'create')
   button_dis.style.backgroundColor="#C7CBD4";
   button_dis.disabled = true;
   button_dis.style.color="black";
+  type = 3;
 
 }
 
@@ -843,7 +844,7 @@ function displayJobs(jobs) {
                     </div>
                     <div id="right-box">
                         <p id="schdule_stat" style="background-color:${backgroundColor}">${activetext}</p>&nbsp&nbsp&nbsp&nbsp
-                        <div onclick="populateUpdateForm(${job.id},${job.active},'${job.scheduleName}','${cronTimes}')">
+                        <div onclick="populateUpdateForm(${job.id},${job.active},'${job.scheduleName}','${cronTimes}',${job.type})">
                             <img src="image/edit.png" id='editimg' onclick="controlOption('add','update')">
                         </div>&nbsp&nbsp&nbsp&nbsp
                         <div onclick="actionDelete(${job.id})">
@@ -866,7 +867,7 @@ function displayJobs(jobs) {
 
 
 
-function populateUpdateForm(id,active,scheduleName, cronTimes) {
+function populateUpdateForm(id,active,scheduleName, cronTimes,type) {
   document.getElementById('actionType').value = 'update';
   document.getElementById('scheduleId').value = id;
   document.getElementById('scheduleName').value = scheduleName;
@@ -898,14 +899,15 @@ function populateUpdateForm(id,active,scheduleName, cronTimes) {
     checkbox.checked = (totalDays & value) !== 0;
   });
 
-  if (totalDays >= 1) {
+  if (type == 4) {
     document.getElementById('onece').checked = false;
     document.getElementById('repeat').checked = true;
     document.getElementById('everydays').style.display = 'block';
-    type = 4;
+
   } else {
     document.querySelectorAll('input[name="scheduleDays"]').forEach(checkbox => {
       checkbox.checked = true;
+     
     });
   }
 
