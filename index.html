@@ -439,7 +439,7 @@ function displaySceneList(payload) {
                 jobElement.className = `box ${boxClass}`;
                 jobElement.innerHTML = `
                 
-                    <div class="${blockClass}" onclick="location.href='scene/scene.html?id=${scene.scene_id}'">
+                    <div class="${blockClass}" onclick="location.href='scene/scene.html?id=${scene.scene_id}&scene_name=${scene.scene_name}'">
                         <img src="resources/image/icons/${scene.scene_icon}.png" alt="${scene.scene_name}">
                         <h5>${scene.scene_name}</h5>
                         <p>${scene.scene_description}</p>

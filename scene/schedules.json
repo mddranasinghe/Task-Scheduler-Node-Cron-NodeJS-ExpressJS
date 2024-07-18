@@ -2,14 +2,11 @@
   {
     "id": "1_1",
     "active": 1,
-    "type": 4,
+    "type": 3,
     "action": 0,
     "scheduleName": "job 01",
     "cronTimes": [
-      "58 01 * * 1",
-      "58 01 * * 2",
-      "58 01 * * 3",
-      "58 01 * * 4"
+      "58 01 18 7 *"
     ]
   },
   {
@@ -20,16 +17,6 @@
     "scheduleName": "job 04",
     "cronTimes": [
       "18 12 18 7 *"
-    ]
-  },
-  {
-    "id": "5_4",
-    "active": 1,
-    "type": 3,
-    "action": 0,
-    "scheduleName": "job 05",
-    "cronTimes": [
-      "12 13 18 7 *"
     ]
   },
   {
@@ -50,6 +37,26 @@
     "scheduleName": "job 03",
     "cronTimes": [
       "13 13 18 7 *"
+    ]
+  },
+  {
+    "id": "1_7",
+    "active": 1,
+    "type": 3,
+    "action": 0,
+    "scheduleName": "k",
+    "cronTimes": [
+      "47 15 18 7 *"
+    ]
+  },
+  {
+    "id": "1_8",
+    "active": 1,
+    "type": 3,
+    "action": 0,
+    "scheduleName": "kk",
+    "cronTimes": [
+      "47 15 18 7 *"
     ]
   }
 ]

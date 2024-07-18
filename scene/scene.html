@@ -450,7 +450,7 @@ color:blue;
     <header>
         <img src="image/less-than.png" id="backicon" onclick="location.href='../index.html?value=scene-div'">
         <h1>Schedule List</h1>
-        
+        <small style="padding: 5px;" id="sceneName"></small>
     </header>
     <div id="scheduleJobsList">
         <!-- Your list content goes here -->
@@ -557,11 +557,14 @@ color:blue;
 <script>
 var urlParams = new URLSearchParams(window.location.search),
 scene_id = urlParams.get('id'),
+scene_name= urlParams.get('scene_name'),
+
  totalDays = 0, scheduleType=3, active=1,action=0,year=2024;
 subTopic="v2jlcwytpqaufx/scene/#",
 publish_topic="v2jlcwytpqaufx/scene/timer/";
 console.log('id '+ scene_id )
 connect();
+document.getElementById('sceneName').innerHTML=scene_name;
 
 function resetChanges() { //popup  cancle button 
 document.querySelectorAll('input[name="scheduleDays"]').forEach(checkbox => {
@@ -945,6 +948,7 @@ sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
     jobs = JSON.parse(jobs);
     const jobsList = document.getElementById('scheduleJobsList');
     jobsList.innerHTML = ''; // Clear previous jobs
+   
 
     if (jobs.length === 0) {
         // Display message when no jobs are found
