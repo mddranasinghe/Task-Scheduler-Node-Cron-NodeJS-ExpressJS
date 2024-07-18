@@ -1,0 +1,50 @@
+[
+   {
+
+        "scene_id": "1",
+        "scene_name": "Home Away",
+        "scene_description": "scene",
+        "scene_icon": "ic_scn_02",
+        "favorite": true
+    },
+
+    {
+
+        "scene_id": "2",
+        "scene_name": "Back Home",
+        "scene_description": "scene",
+        "scene_icon": "ic_scn_01",
+        "favorite": true
+    },
+
+    {
+
+        "scene_id": "3",
+        "scene_name": "Good Night",
+        "scene_description": "scene",
+        "scene_icon": "ic_scn_03",
+        "favorite": true
+
+    },
+
+    {
+
+        "scene_id": "4",
+        "scene_name": "Shut Down All",
+        "scene_description": "scene",
+        "scene_icon": "ic_scn_17",
+        "favorite": false
+
+    },
+
+    {
+
+        "scene_id": "5",
+        "scene_name": "Switch Off All Lights",
+        "scene_description": "scene",
+        "scene_icon": "ic_scn_10",
+        "favorite": true
+
+    }
+
+]

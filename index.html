@@ -135,29 +135,56 @@ p.zone{ font-size: 10px; padding-top: 3px;}
 }
 
 
-
-
-
-
-
-#scene-list{
-  width: 95%; margin: 0 auto; overflow: hidden;color:black;font-size: 13px; margin-top: 2vw;
-}
-#left-box{
-  width: 50%; margin-top: 1vw; margin-bottom: 1vw; float: left; display: flex; justify-content: center; 
-}
-#right-box{
-  width: 50%;margin-top: 1vw; float: right; display: flex; justify-content: center;
-}
-#block-L{
-  width: 95%;height: 80px; padding: 6px;  box-shadow: 0.5px 0.5px 3px .5px gray; border-radius: 7px; text-align: center;
- margin:  0 auto; 
-}
-#block-R
-{
-  width: 95%; height: 80px; padding:6px; box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 7px; text-align: center;
+#scene-div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 97%; margin: 0 auto;
 
 }
+
+.box {
+  width: 50%;
+  margin-top: 2.5vw;
+  display: flex;
+  justify-content: center;
+}
+
+.block-L, .block-R {
+  width: 95%;
+  height: 85px;
+  padding: 8px;
+  box-shadow: 0.5px 0.5px 3px 0.5px gray;
+  border-radius: 7px;
+}
+
+#scene-div img {
+  width: 40px;
+  height: 38px;
+}
+
+#scene-div p{
+
+font-size: 10px; 
+padding-bottom:6px;
+}
+
+
+.left-box {
+  float: left;
+ 
+}
+
+.right-box {
+  float: right;
+
+}
+
+.box:nth-child(2n+1) {
+  clear: both;
+}
+
+
 	</style>
 </head>
 <body>
@@ -220,23 +247,13 @@ p.zone{ font-size: 10px; padding-top: 3px;}
 
 
 
-  <div id="scene-div" style="display: none;">
-    <div id="scene-list">
-      <div id="left-box">  
-          <div id="block-L" onclick="location.href='scene/scene.html'">scene 01</div>
-      </div>
-      <div id="right-box" >    
-          <div  id="block-R">Scene 02</div>
-      </div>
-  </div>
 
-
-
-  </div>
-
-
-
-
+    <div id="scene-div" style="display: none; ">
+      
+     
+    </div>
+    
+   
         <div class="dotdiv">
             <div class="dotConnction" id="page1"style="width: 10px; height: 10px;"></div>
             </div>
@@ -251,11 +268,16 @@ p.zone{ font-size: 10px; padding-top: 3px;}
 
 
 <script>
+  var client; 
+  var isConnected = false;  
 
-var urlParams = new URLSearchParams(window.location.search);
-var Nvvalue = urlParams.get('value');
+var urlParams = new URLSearchParams(window.location.search),
+ Nvvalue = urlParams.get('value'),
+ scn_pub_topic="v2jlcwytpqaufx/scene/list",
+  scn_top = 'v2jlcwytpqaufx/scene/#';
 
       if (Nvvalue == 'scene-div') {
+        connect();
         navfun('scene-div','device_div');
 
       } else {
@@ -270,25 +292,26 @@ function navfun(id1,id2)
   {
     document.getElementById('device-button').style.backgroundColor='#68B581';
     document.getElementById('scene-button').style.backgroundColor='#9B9B9B';
-  document.getElementById(id1).style.display="inline";
+  document.getElementById(id1).style.display="block";
   document.getElementById(id2).style.display="none"
   }
   else if(id1 == "scene-div")
   {
+    sendCommandToDevice(scn_pub_topic, 1);
     document.getElementById('scene-button').style.backgroundColor='#7D63BE';
     document.getElementById('device-button').style.backgroundColor='#9B9B9B';
+  
+
   }
 
-  document.getElementById(id1).style.display="inline";
+  document.getElementById(id1).style.display="block";
   document.getElementById(id2).style.display="none";
 }
 
 
 
 
-
-
-         var payload, topic,topicsArray,stat1=0,stat2=0,stat3=0,stat4=0,sum_stat=0,
+        var payload, topic,topicsArray,stat1=0,stat2=0,stat3=0,stat4=0,sum_stat=0,
          companyID="node", 
          // Device type..........
          deviceTypePump="spc",
@@ -321,7 +344,6 @@ function navfun(id1,id2)
             }catch(error)
             {
           
-        
             }
         }
         //............................................................................................
@@ -331,6 +353,8 @@ function navfun(id1,id2)
            getDataFromDevice(pumpTopic); 
            getDataFromDevice(floodTopic); 
 		        getDataFromDevice(SirenTopic); 
+            getDataFromDevice(scn_top); 
+            isConnected = true; 
  
         }
         
@@ -341,14 +365,29 @@ function navfun(id1,id2)
           document.getElementById('node/spc/7469308fcf871dad4d4').style.backgroundColor="#b4b4b0";
           document.getElementById('node/lls2/923714-42180e2de6b4').style.backgroundColor="#b4b4b0";
           document.getElementById('bsa').style.backgroundColor="#b4b4b0";
+          isConnected = false; 
         }  setInterval(connect, 1000); }
 
         function onMessageArrived(message) {
             topic = message.destinationName;
             payload=message.payloadString;
+
+            topicsArray = topic.split("/");
+
         console.log("Payload:" + payload);
         console.log("Topic:", topic);
-        displayFunction(payload,topic);}
+
+        if(topicsArray[1] != 'scene' ){
+          displayFunction(payload,topic);
+        }
+        else if(topicsArray[1] == 'scene')
+        {
+          displaySceneList(payload);
+        }
+
+      
+      }
+
 
     function getDataFromDevice(topic) {
      try{
@@ -357,8 +396,66 @@ function navfun(id1,id2)
     catch(error){
         console.log(error);}
     }
+  
+    function sendCommandToDevice(topic, payload) {
+  try {
+    if (!isConnected) {
+      console.log("Client is not connected. Attempting to connect...");
+      connect();
+    }
 
-    
+    // Wait until the client is connected before sending the message
+    const checkConnectionInterval = setInterval(() => {
+      if (isConnected) {
+        clearInterval(checkConnectionInterval);  // Clear the interval once connected
+        const jsonPayload = typeof payload === 'string' ? payload : JSON.stringify(payload);
+        console.log("sendCommandToDevice: " + topic + ", Payload: " + jsonPayload);
+        var message = new Paho.MQTT.Message(jsonPayload);
+        message.destinationName = topic;
+        client.send(message);
+      }
+    }, 100);  // Check every 100ms
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function displaySceneList(payload) {
+    payload = JSON.parse(payload);
+    const jobsList = document.getElementById('scene-div');
+
+    // Clear the previous content
+    jobsList.innerHTML = ''; 
+
+    if (payload.length !== 0) {
+        try {
+            payload.forEach((scene, index) => {
+                const jobElement = document.createElement('div');
+
+                // Alternate the class based on index
+                const boxClass = index % 2 === 0 ? 'left-box' : 'right-box';
+                const blockClass = index % 2 === 0 ? 'block-L' : 'block-R';
+
+                jobElement.className = `box ${boxClass}`;
+                jobElement.innerHTML = `
+                
+                    <div class="${blockClass}" onclick="location.href='scene/scene.html?id=${scene.scene_id}'">
+                        <img src="resources/image/icons/${scene.scene_icon}.png" alt="${scene.scene_name}">
+                        <h5>${scene.scene_name}</h5>
+                        <p>${scene.scene_description}</p>
+                    </div>
+                `;
+
+                // Append the new element to the jobs list
+                jobsList.appendChild(jobElement);
+            });
+        } catch (error) {
+            console.error('Error displaying scenes:', error);
+        }
+    }
+}
+
+
 
 function displayFunction(payload,topic) {
      topicsArray = topic.split("/");
@@ -438,7 +535,7 @@ function openPopup() {
   
 }
 
-setInterval(connect, 3000);      
+setInterval(connect, 1000);      
 connect();
  </script>
 </body>

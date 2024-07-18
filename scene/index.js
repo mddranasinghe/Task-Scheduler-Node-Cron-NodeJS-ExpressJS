@@ -2,7 +2,7 @@
 //const bodyParser = require('body-parser');
 const cron = require('node-cron');
 const fs = require('fs-extra');
-const path = require('path');
+//const path = require('path');
 //const cors = require('cors'); 
 const mqtt = require('mqtt'); 
 
@@ -96,7 +96,7 @@ function sendCommandToDevice(topic, payload) {
 }
 
 let schedules = loadSchedules(); // Load existing schedules from the file
-
+//console.log(schedules);
 
 function loadSchedules() {
   try {
@@ -114,6 +114,7 @@ function loadSchedules() {
       if (!schedule.tasks) {
         schedule.tasks = []; 
       }
+      
 
       if (schedule.active === 1) {
         schedule.tasks = schedule.cronTimes.map(pattern => {
@@ -164,14 +165,32 @@ function saveSchedules(schedules) {
 function AddSchedule(payload) {
   try {
     payload = JSON.parse(payload);
+
     console.log('Payload:', payload);
+    
+    let maxSchId = schedules.length > 0 ? Math.max(...schedules.map(s => parseInt(s.id.split('_')[1], 10))) + 1 : 1;
+
+    // Construct the new id using payload[0] and the new sch_id
+    let newId = `${payload[0]}_${maxSchId}`,
+    id=newId;
     const active = payload[1] === "1" ? 1 : 0,
     type =payload[2],
     action=payload[10],
-    id =schedules.length > 0 ? Math.max(...schedules.map(s => s.id)) + 1 : 1,
     cronTimes = [],
     scheduleName = payload[11],
     daysArray = (payload[9] === '*') ? '*' : getIndicesFromBinary(payload[9]);
+    
+/*
+    schedules.id.forEach(ids => {
+      const [scene_id,sch_id] = ids.split('_');
+      
+    let  ids = schedules.length > 0 ? Math.max(...schedules.map(s => s.id)) + 1 : 1;        
+    });
+
+      id = `${payload[0]}_${id}`;*/
+
+
+
 
     if (daysArray === '*') {
       const pattern = `${payload[7]} ${payload[6]} ${payload[5]} ${payload[4]} *`;
