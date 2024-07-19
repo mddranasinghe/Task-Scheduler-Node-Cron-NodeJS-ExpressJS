@@ -421,8 +421,24 @@ function navfun(id1,id2)
 }
 
 function displaySceneList(payload) {
-    payload = JSON.parse(payload);
+// Ensure payload is parsed if it's a string
+    if (typeof payload === 'string') {
+        try {
+            payload = JSON.parse(payload);
+        } catch (error) {
+            console.error('Error parsing payload:', error);
+            return;
+        }
+    }
+
+    // Check if payload is an array
+    if (!Array.isArray(payload)) {
+        console.error('Payload is not an array:', payload);
+        return;
+    }
     const jobsList = document.getElementById('scene-div');
+
+
 
     // Clear the previous content
     jobsList.innerHTML = ''; 
@@ -454,8 +470,6 @@ function displaySceneList(payload) {
         }
     }
 }
-
-
 
 function displayFunction(payload,topic) {
      topicsArray = topic.split("/");

@@ -88,5 +88,15 @@
     "cronTimes": [
       "58 09 19 7 *"
     ]
+  },
+  {
+    "id": "4_12",
+    "active": 1,
+    "type": 3,
+    "action": 0,
+    "scheduleName": "Off",
+    "cronTimes": [
+      "10 11 19 7 *"
+    ]
   }
 ]
