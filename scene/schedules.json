@@ -68,5 +68,25 @@
     "cronTimes": [
       "57 08 19 7 *"
     ]
+  },
+  {
+    "id": "1_10",
+    "active": 1,
+    "type": 3,
+    "action": 0,
+    "scheduleName": "G",
+    "cronTimes": [
+      "58 09 19 7 *"
+    ]
+  },
+  {
+    "id": "1_11",
+    "active": 1,
+    "type": 3,
+    "action": 0,
+    "scheduleName": "V",
+    "cronTimes": [
+      "58 09 19 7 *"
+    ]
   }
 ]
