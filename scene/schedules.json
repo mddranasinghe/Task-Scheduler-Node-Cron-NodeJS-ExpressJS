@@ -58,5 +58,15 @@
     "cronTimes": [
       "47 15 18 7 *"
     ]
+  },
+  {
+    "id": "5_9",
+    "active": 1,
+    "type": 3,
+    "action": 0,
+    "scheduleName": "Job 05",
+    "cronTimes": [
+      "57 08 19 7 *"
+    ]
   }
 ]
