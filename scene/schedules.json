@@ -1,32 +1,38 @@
 [
   {
     "id": "1_1",
-    "active": 1,
-    "type": 3,
+    "active": 4,
+    "type": 4,
     "action": 0,
     "scheduleName": "job 01",
     "cronTimes": [
-      "58 01 18 7 *"
+      "39 11 * * 0",
+      "39 11 * * 1",
+      "39 11 * * 2",
+      "39 11 * * 3",
+      "39 11 * * 4",
+      "39 11 * * 5",
+      "39 11 * * 6"
     ]
   },
   {
     "id": "4_3",
-    "active": 1,
+    "active": 4,
     "type": 3,
     "action": 0,
     "scheduleName": "job 04",
     "cronTimes": [
-      "18 12 18 7 *"
+      "39 11 19 7 *"
     ]
   },
   {
     "id": "2_5",
-    "active": 0,
+    "active": 1,
     "type": 3,
     "action": 0,
     "scheduleName": "job 02",
     "cronTimes": [
-      "12 13 18 7 *"
+      "30 11 19 7 *"
     ]
   },
   {
@@ -40,26 +46,6 @@
     ]
   },
   {
-    "id": "1_7",
-    "active": 1,
-    "type": 3,
-    "action": 0,
-    "scheduleName": "k",
-    "cronTimes": [
-      "47 15 18 7 *"
-    ]
-  },
-  {
-    "id": "1_8",
-    "active": 1,
-    "type": 3,
-    "action": 0,
-    "scheduleName": "kk",
-    "cronTimes": [
-      "47 15 18 7 *"
-    ]
-  },
-  {
     "id": "5_9",
     "active": 1,
     "type": 3,
@@ -70,33 +56,33 @@
     ]
   },
   {
-    "id": "1_10",
-    "active": 1,
-    "type": 3,
-    "action": 0,
-    "scheduleName": "G",
-    "cronTimes": [
-      "58 09 19 7 *"
-    ]
-  },
-  {
-    "id": "1_11",
-    "active": 1,
-    "type": 3,
-    "action": 0,
-    "scheduleName": "V",
-    "cronTimes": [
-      "58 09 19 7 *"
-    ]
-  },
-  {
     "id": "4_12",
-    "active": 1,
+    "active": 4,
     "type": 3,
     "action": 0,
     "scheduleName": "Off",
     "cronTimes": [
-      "10 11 19 7 *"
+      "39 11 19 7 *"
+    ]
+  },
+  {
+    "id": "1_13",
+    "active": 4,
+    "type": 3,
+    "action": 0,
+    "scheduleName": "Jovmb",
+    "cronTimes": [
+      "39 11 19 7 *"
+    ]
+  },
+  {
+    "id": "3_14",
+    "active": 1,
+    "type": 3,
+    "action": 0,
+    "scheduleName": "Nifht",
+    "cronTimes": [
+      "31 11 19 7 *"
     ]
   }
 ]

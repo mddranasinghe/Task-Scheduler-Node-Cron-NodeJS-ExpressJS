@@ -122,7 +122,9 @@ function loadSchedules() {
             console.log(`Running scheduled job: ${schedule.scheduleName}`);
             schedule.active = 4;
 
-            saveSchedules(parsedSchedules);
+            setTimeout(() => {
+              saveSchedules(parsedSchedules);
+            }, 1500);
           });
 
           global.currentTasks.push(task);
