@@ -10,16 +10,6 @@
     ]
   },
   {
-    "id": "2_5",
-    "active": 1,
-    "type": 3,
-    "action": 0,
-    "scheduleName": "job 02",
-    "cronTimes": [
-      "30 11 19 7 *"
-    ]
-  },
-  {
     "id": "3_6",
     "active": 1,
     "type": 3,
@@ -67,6 +57,16 @@
     "scheduleName": "Asdfg",
     "cronTimes": [
       "32 10 * * 1"
+    ]
+  },
+  {
+    "id": "1_16",
+    "active": 1,
+    "type": 3,
+    "action": 0,
+    "scheduleName": "mnm",
+    "cronTimes": [
+      "20 13 22 7 *"
     ]
   }
 ]

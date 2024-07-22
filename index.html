@@ -274,7 +274,9 @@ padding-bottom:2px;
 var urlParams = new URLSearchParams(window.location.search),
  Nvvalue = urlParams.get('value'),
  scn_pub_topic="v2jlcwytpqaufx/scene/list",
-  scn_top = 'v2jlcwytpqaufx/scene/#';
+scn_top = 'v2jlcwytpqaufx/scene/#';
+publish_topic_timers="v2jlcwytpqaufx/scene/timer/";
+
 
       if (Nvvalue == 'scene-div') {
         connect();
@@ -298,6 +300,7 @@ function navfun(id1,id2)
   else if(id1 == "scene-div")
   {
     sendCommandToDevice(scn_pub_topic, 1);
+    sendCommandToDevice(publish_topic_timers+"list",'read');
     document.getElementById('scene-button').style.backgroundColor='#7D63BE';
     document.getElementById('device-button').style.backgroundColor='#9B9B9B';
   
@@ -380,10 +383,16 @@ function navfun(id1,id2)
         if(topicsArray[1] != 'scene' ){
           displayFunction(payload,topic);
         }
-        else if(topicsArray[1] == 'scene')
+        else if(topicsArray[2] == 'list')
         {
           displaySceneList(payload);
         }
+        else if(topicsArray[2] == 'timers')
+        {
+         // displaySceneList(payload);
+         console.log('hi')
+        }
+
 
       
       }
