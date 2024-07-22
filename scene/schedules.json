@@ -1,28 +1,12 @@
 [
   {
-    "id": "1_1",
-    "active": 4,
-    "type": 4,
-    "action": 0,
-    "scheduleName": "job 01",
-    "cronTimes": [
-      "39 11 * * 0",
-      "39 11 * * 1",
-      "39 11 * * 2",
-      "39 11 * * 3",
-      "39 11 * * 4",
-      "39 11 * * 5",
-      "39 11 * * 6"
-    ]
-  },
-  {
     "id": "4_3",
-    "active": 4,
+    "active": 1,
     "type": 3,
     "action": 0,
     "scheduleName": "job 04",
     "cronTimes": [
-      "39 11 19 7 *"
+      "41 11 22 7 *"
     ]
   },
   {
@@ -57,22 +41,12 @@
   },
   {
     "id": "4_12",
-    "active": 4,
+    "active": 1,
     "type": 3,
     "action": 0,
-    "scheduleName": "Off",
+    "scheduleName": "Offf",
     "cronTimes": [
-      "39 11 19 7 *"
-    ]
-  },
-  {
-    "id": "1_13",
-    "active": 4,
-    "type": 3,
-    "action": 0,
-    "scheduleName": "Jovmb",
-    "cronTimes": [
-      "39 11 19 7 *"
+      "41 11 22 7 *"
     ]
   },
   {
@@ -82,7 +56,17 @@
     "action": 0,
     "scheduleName": "Nifht",
     "cronTimes": [
-      "31 11 19 7 *"
+      "33 11 19 7 *"
+    ]
+  },
+  {
+    "id": "1_15",
+    "active": 0,
+    "type": 4,
+    "action": 0,
+    "scheduleName": "Asdfg",
+    "cronTimes": [
+      "32 10 * * 1"
     ]
   }
 ]
