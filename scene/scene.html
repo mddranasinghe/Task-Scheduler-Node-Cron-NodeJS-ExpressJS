@@ -249,11 +249,13 @@ input[type="checkbox"]:checked::after {
             border: none;
             overflow-x: hidden;
             overflow-y: auto;
-            width: 98%;
+            width: 95%;
             height: 60%;
             margin-top: 14px; 
             position: fixed;
             top: 120px;
+            left: 50%;
+            transform: translateX(-50%); 
            
         }
         #scene-div #no_sch /*img no schedule */
@@ -261,8 +263,8 @@ input[type="checkbox"]:checked::after {
           width: 400px;
           height: 320px;
           display: block;
-  margin-left: auto;
-  margin-right: auto;
+       margin-left: auto;
+       margin-right: auto;
         }
 
         /*  schdule box css*/
@@ -463,6 +465,7 @@ color:blue;
     <div id="scheduleJobsList">
         <!-- Your list content goes here -->
     </div>
+
     <div class="add-button">
         <button id="list-button" onclick="controlOption('add','create')">Add New Schedule</button>
     </div>
@@ -567,6 +570,7 @@ color:blue;
 var urlParams = new URLSearchParams(window.location.search),
 scene_id = urlParams.get('id'),
 scene_name= urlParams.get('scene_name'),
+scene_icon= urlParams.get('scene_icon'),
 
  totalDays = 0, scheduleType=3, active=1,action=0,year=2024;
 subTopic="v2jlcwytpqaufx/scene/#",
@@ -758,7 +762,7 @@ function scheduleCronTime(active,scheduleName, scheduleDays, scheduleTime) {
    [hour, minute] = scheduleTime.split(':');
    seconds = 0;
    
-      const scheduleArry = [scene_id,active,scheduleType,year,month,date,hour,minute,seconds,scheduleDays,action,scheduleName];
+      const scheduleArry = [scene_id,active,scheduleType,year,month,date,hour,minute,seconds,scheduleDays,action,scheduleName,scene_name,scene_icon];
       sendCommandToDevice(publish_topic+'set', JSON.stringify(scheduleArry));
       
     }
@@ -770,7 +774,7 @@ function scheduleCronTime(active,scheduleName, scheduleDays, scheduleTime) {
       month = d.getMonth() + 1; 
       seconds = "0";
 
-      const scheduleArry = [scene_id,active,scheduleType,year,month,date,hour,minute,seconds,scheduleDays,action,scheduleName];
+      const scheduleArry = [scene_id,active,scheduleType,year,month,date,hour,minute,seconds,scheduleDays,action,scheduleName,scene_name,scene_icon];
       sendCommandToDevice(publish_topic+'set', JSON.stringify(scheduleArry));
       
     }
@@ -791,7 +795,7 @@ function scheduleCronTime(active,scheduleName, scheduleDays, scheduleTime) {
  
    [hour, minute] = scheduleTime.split(':');
    seconds = 0;
-   const scheduleArry = [scene_id,active,scheduleType,year,month,date,hour,minute,seconds,scheduleDays,action,scheduleName];
+   const scheduleArry = [scene_id,active,scheduleType,year,month,date,hour,minute,seconds,scheduleDays,action,scheduleName,scene_name,scene_icon];
    sendCommandToDevice(publish_topic+'update/'+scheduleId, JSON.stringify(scheduleArry));
       
     }
@@ -802,7 +806,7 @@ function scheduleCronTime(active,scheduleName, scheduleDays, scheduleTime) {
       date = d.getDate();
       month = d.getMonth() + 1; 
       seconds = "0";
-      const scheduleArry = [scene_id,active,scheduleType,year,month,date,hour,minute,seconds,scheduleDays,action,scheduleName];
+      const scheduleArry = [scene_id,active,scheduleType,year,month,date,hour,minute,seconds,scheduleDays,action,scheduleName,scene_name,scene_icon];
       sendCommandToDevice(publish_topic+'update/'+scheduleId, JSON.stringify(scheduleArry));
       
     }
@@ -966,7 +970,7 @@ sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
         noJobsElement.innerHTML = `
             <div id="scene-div">
                 <small>There are no schedules. Tap "Add New Schedule" to create a schedule.</small><br>
-                <img id="no_sch" src="image/no_schdule.png" id="deleimg">
+                <img id="no_sch" src="image/no_schdule.png">
             </div>
         `;
         jobsList.appendChild(noJobsElement);

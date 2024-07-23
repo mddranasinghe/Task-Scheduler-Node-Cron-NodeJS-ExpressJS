@@ -89,31 +89,6 @@ p.zone{ font-size: 10px; padding-top: 3px;}
 
 .popup-content {text-align: center; margin-bottom:0%; }
 
-    @media only screen and (max-width: 600px) {
-
-	.img-container {width: 40px;  height: 40px; overflow: hidden; position: relative;} 
-.img-container img { width: 100%; height: auto; display: block; position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);}
-    .device_name{font-size: 13px;font-weight: bold;}
-    .zone{font-size:10px;padding-top: 3px;}
-
-}
-   @media only screen and (min-width: 600px) {
-
-	.img-container {width: 60px;  height: 60px; overflow: hidden; position: relative;} 
-.img-container img { width: 100%; height: auto; display: block; position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);}
-    .device_name{font-size: 15px;font-weight: bold;}
-    .zone{font-size:13px;padding-top: 3px;}
-    td{ box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 10px; padding-left: 15px;padding-right: 20px; padding-top:10px; padding-bottom:10px ; width: 30%};
-}
-
-@media only screen and (min-width: 1024px) {
-    
-	.img-container {width: 80px;  height: 80px; overflow: hidden; position: relative;} 
-.img-container img { width: 100%; height: auto; display: block; position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);}
-   .device_name{font-size: 17px;font-weight: bold;}
-    .zone{font-size:15px;padding-top: 3px;}
-    #device_div {width: 80%;margin: 0 auto;}
-    .dotdiv{width: 80%;}}
 
 #nav-Button{   
   width: 92%;  margin: 0 auto; overflow: hidden;color:white;font-size: 13px; margin-top: 2vw;
@@ -184,6 +159,152 @@ padding-bottom:2px;
   clear: both;
 }
 
+#scene_manage {
+            width: 100%;
+            display: none;
+            justify-content: center;
+            position: fixed;
+            bottom: 20px; 
+            height: 75px;
+        }
+
+        #scene_button  {
+            width: 98%;
+            height: 46px;
+            text-align: center;
+            color: white;
+            background-color: #7D63BE;
+            border-radius: 5px;
+            border: none;
+            font-size: 18px;
+              margin-top:32px;
+        }
+
+
+#scene-manage{
+  width: 98%; margin: 0 auto; overflow: hidden;color:black;font-size: 13px; margin-top: 2vw; margin-bottom: 3vw;
+  border: 1px solid #3091E5; border-radius: 6px;;
+}
+#left-side{
+  width: 70%; margin-top: 1vw; margin-bottom: 1vw; float: left; display: flex;
+}
+#right-side{
+  width: 30%;margin-top: 1vw; margin-bottom: 1vw; float: right; display: flex; justify-content: right; 
+}
+#scene-manage p{
+
+  margin-top: 10px;
+}
+
+#scene_manage_div {
+  width: 100%;
+}
+#scene_manage_div header
+{
+  position: fixed;
+
+  padding: 9px;
+}
+#scene_manage_list {
+    border: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 95%;
+    height: 60%;
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%); 
+    margin: 0 auto;
+}
+#empty_schudule #no_sch /*img no schedule */
+        {
+          width: 400px;
+          height: 320px;
+          display: block;
+        margin: 0 auto;
+        }
+ #deleimg{
+
+width:20px;
+height: 20px;
+margin-top: 10px;
+        }
+#scene_icon{
+  width: 30px;
+  height: 30px;
+  margin-top: 5px;
+}
+
+
+#delete_Scene_sch {
+            width: 100%;
+            left: 50%;
+            transform: translateX(-50%); 
+            
+            justify-content: center;
+            position: fixed;
+            bottom: 20px; 
+            height: 43px;
+        }
+#delete_all_schedule  {
+            width: 98%;
+            height: 46px;
+            text-align: center;
+            color: white;
+            background-color: #3091E5;
+            border-radius: 5px;
+            border: none;
+            font-size: 18px;
+              margin-top:32px;
+              margin: 0 auto;
+        }
+
+        #backicon{
+
+width: 20px;
+height: 20px;
+}
+
+@media only screen and (max-width: 600px) {
+
+.img-container {width: 40px;  height: 40px; overflow: hidden; position: relative;} 
+.img-container img { width: 100%; height: auto; display: block; position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);}
+  .device_name{font-size: 13px;font-weight: bold;}
+  .zone{font-size:10px;padding-top: 3px;}
+  #scene-div img {width: 40px;  height: 38px;}
+}
+@media only screen and (min-width: 600px) {
+
+.img-container {width: 60px;  height: 60px; overflow: hidden; position: relative;} 
+.img-container img { width: 100%; height: auto; display: block; position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);}
+.device_name{font-size: 15px;font-weight: bold;}
+.zone{font-size:13px;padding-top: 3px;}
+td{ box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 10px; padding-left: 15px;padding-right: 20px; padding-top:10px; padding-bottom:10px ; width: 30%;}
+#scene-div img{width: 60px;  height: 58px;overflow: hidden; position: relative;}
+.block-L, .block-R {width: 95%;height: 110px;padding: 12px;box-shadow: 0.5px 0.5px 3px 0.5px gray;border-radius: 9px;}
+#scene-div p{font-size: 11px; padding-bottom:2px;}
+
+}
+
+@media only screen and (min-width: 1024px) {
+  
+.img-container {width: 80px;  height: 80px; overflow: hidden; position: relative;} 
+.img-container img { width: 100%; height: auto; display: block; position: absolute; top: 50%;left: 50%;transform: translate(-50%, -50%);}
+ .device_name{font-size: 17px;font-weight: bold;}
+  .zone{font-size:15px;padding-top: 3px;}
+  #device_div {width: 80%;margin: 0 auto;}
+  .dotdiv{width: 80%;}
+  #scene-div img{width: 80px; height: 78px;}
+
+.block-L, .block-R {width: 95%;height: 130px;padding: 12px;box-shadow: 0.5px 0.5px 3px 0.5px gray;border-radius: 9px;}
+#scene-div p{font-size: 11px; padding-bottom:2px;}
+#scene-div { display: flex; flex-wrap: wrap; justify-content: space-between; width: 77%; margin: 0 auto;}
+
+}
+
+
+
 
 	</style>
 </head>
@@ -243,42 +364,53 @@ padding-bottom:2px;
     </div><p class="device_name"> GPS Tracker </p><p class="zone">Home</p></td>
 
 </tr>
-    </table></div>
+    </table>
+  
+    <div class="dotdiv">
+      <div class="dotConnction" id="page1"style="width: 10px; height: 10px;"></div>
+      </div>
+  </div>
 
 
 
 
     <div id="scene-div" style="display: none; ">
       
-     
     </div>
-    
-   
-        <div class="dotdiv">
-            <div class="dotConnction" id="page1"style="width: 10px; height: 10px;"></div>
-            </div>
-
+  
             <!-- The popup message box -->
             <div id="popup" class="popup" >
               <div class="popup-content" >
                 <p style=" font-size: 12px;">This Device Has Not Been Registered!</p>
       
-              </div>
-            </div>
+              </div> </div>
+            <div id="scene_manage">
+              <button id="scene_button" onclick="navSceneManage('scene_manage_div')">Scene Manage</button>
+          </div>
+          
+          <div id="scene_manage_div" style="display:none; ">
+            <header>
+              <img src="resources\image\b1.png" id="backicon" onclick="location.href='../index.html?value=scene-div'">
+              <h1>Scene Manage</h1>
+            </header>
+       
+          <div id="scene_manage_list"></div>
 
-
+          <div id="delete_Scene_sch">
+            <button id="delete_all_schedule" onclick="deleteAllSchdule()">Delete All Schedules</button>
+        </div>
+          </div>
 <script>
   var client; 
   var isConnected = false;  
 
 var urlParams = new URLSearchParams(window.location.search),
  Nvvalue = urlParams.get('value'),
- scn_pub_topic="v2jlcwytpqaufx/scene/list",
+ scn_pub_topic="v2jlcwytpqaufx/scene/list",// for scene 
 scn_top = 'v2jlcwytpqaufx/scene/#';
-publish_topic_timers="v2jlcwytpqaufx/scene/timer/";
+publish_topic_timers="v2jlcwytpqaufx/scene/timer/";// for schedule
 
-
-      if (Nvvalue == 'scene-div') {
+ if (Nvvalue == 'scene-div') {
         connect();
         navfun('scene-div','device_div');
 
@@ -296,6 +428,7 @@ function navfun(id1,id2)
     document.getElementById('scene-button').style.backgroundColor='#9B9B9B';
   document.getElementById(id1).style.display="block";
   document.getElementById(id2).style.display="none"
+  document.getElementById('scene_manage').style.display="none";
   }
   else if(id1 == "scene-div")
   {
@@ -303,13 +436,92 @@ function navfun(id1,id2)
     sendCommandToDevice(publish_topic_timers+"list",'read');
     document.getElementById('scene-button').style.backgroundColor='#7D63BE';
     document.getElementById('device-button').style.backgroundColor='#9B9B9B';
-  
+    document.getElementById('scene_manage').style.display="flex";
+
 
   }
 
   document.getElementById(id1).style.display="block";
   document.getElementById(id2).style.display="none";
 }
+
+
+function navSceneManage(id)
+{
+  document.getElementById(id).style.display="block";
+  document.getElementById('delete_all_schedule').style.display="block";
+  document.getElementById('nav-Button').style.display="none";
+  document.getElementById('scene-div').style.display="none";
+  document.getElementById('scene_manage').style.display="none";
+
+}
+
+function displaySceneManage(jobs) {
+   console.log('hi',jobs)
+    //jobs = JSON.parse(jobs);
+    const jobsList = document.getElementById('scene_manage_list');
+    jobsList.innerHTML = ''; // Clear previous jobs
+    if (jobs.length === 0) {
+        // Display message when no jobs are found
+        const noJobsElement = document.createElement('div');
+        noJobsElement.innerHTML = `
+            <div id="empty_schudule">
+                <small>There are no schedules. Tap "Add New Schedule" to create a schedule.</small><br>
+                <img id="no_sch" src="scene/image/no_schdule.png" id="deleimg">
+            </div>
+        `;
+        jobsList.appendChild(noJobsElement);
+        return;
+    }
+    try {
+        jobs.forEach(job => {
+            const jobElement = document.createElement('div');
+            jobElement.innerHTML = `
+                <div id="scene-manage">
+                    <div id="scene-list">
+                        <div id="left-side">&nbsp&nbsp&nbsp&nbsp
+                            <img src="resources/image/icons/${job.sceneIcon}.png" id='scene_icon' >&nbsp&nbsp&nbsp&nbsp
+                            <p>${job.sceneName}</p>
+                        </div>
+                        <div id="right-side">
+                            <div onclick="deleteSceneSchedule('${job.id}')">
+                                <img src="resources/image/icons/delete.png" id="deleimg">
+                            </div>&nbsp&nbsp&nbsp&nbsp
+                        </div>
+                    </div>
+                </div>
+            `;
+            jobsList.appendChild(jobElement);
+        });
+
+      
+    } catch (error) {
+        console.error('Error displaying jobs:', error);
+    }
+}
+
+function deleteAllSchdule()
+{
+  sendCommandToDevice(publish_topic_timers +'delete', 'all');
+}
+
+
+
+
+function deleteSceneSchedule(id)
+{
+  sendCommandToDevice(publish_topic_timers +'all',JSON.stringify(id) );
+}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -389,14 +601,36 @@ function navfun(id1,id2)
         }
         else if(topicsArray[2] == 'timers')
         {
-         // displaySceneList(payload);
-         console.log('hi')
+          const uniqueScenes = extractUniqueScenes(payload);
+          console.log(uniqueScenes);
+          displaySceneManage(uniqueScenes);
+
         }
-
-
+      
       
       }
+      function extractUniqueScenes(payload) {
+    const parsedPayload = JSON.parse(payload);
+    const uniqueScenes = {};
 
+    parsedPayload.forEach(item => {
+        const sceneID = item.id.split('_')[0];
+        if (!uniqueScenes[sceneID]) {
+            
+            uniqueScenes[sceneID] = {
+                sceneName: item.sceneName,
+                sceneIcon: item.sceneIcon
+            };
+        }
+    });
+
+  //  console.log(uniqueScenes);
+    return Object.keys(uniqueScenes).map(sceneID => ({
+        id: sceneID,
+        sceneName: uniqueScenes[sceneID].sceneName,
+        sceneIcon: uniqueScenes[sceneID].sceneIcon
+    }));
+}
 
     function getDataFromDevice(topic) {
      try{
@@ -428,6 +662,8 @@ function navfun(id1,id2)
     console.log(error);
   }
 }
+
+
 
 function displaySceneList(payload) {
 // Ensure payload is parsed if it's a string
@@ -464,7 +700,7 @@ function displaySceneList(payload) {
                 jobElement.className = `box ${boxClass}`;
                 jobElement.innerHTML = `
                 
-                    <div class="${blockClass}" onclick="location.href='scene/scene.html?id=${scene.scene_id}&scene_name=${scene.scene_name}'">
+                    <div class="${blockClass}" onclick="location.href='scene/scene.html?id=${scene.scene_id}&scene_name=${scene.scene_name}&scene_icon=${scene.scene_icon}'">
                         <img src="resources/image/icons/${scene.scene_icon}.png" alt="${scene.scene_name}">
                         <h5>${scene.scene_name}</h5>
                         <p>${scene.scene_description}</p>
