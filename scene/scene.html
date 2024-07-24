@@ -962,9 +962,9 @@ sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
     jobs = JSON.parse(jobs);
     const jobsList = document.getElementById('scheduleJobsList');
     jobsList.innerHTML = ''; // Clear previous jobs
-   
+    count=0;
 
-    if (jobs.length === 0) {
+  /*  if (jobs.length === 0) {
         // Display message when no jobs are found
         const noJobsElement = document.createElement('div');
         noJobsElement.innerHTML = `
@@ -975,7 +975,7 @@ sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
         `;
         jobsList.appendChild(noJobsElement);
         return;
-    }
+    }*/
 
     try {
         jobs.forEach(job => {
@@ -985,6 +985,8 @@ sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
             idsplit=job.id.split('_');
            // console.log('eee',idsplit[0]);
             if(scene_id == idsplit[0] ){
+           
+
             let activetext = '';
             let backgroundColor = '';
 
@@ -1019,7 +1021,10 @@ sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
                 </div>
             `;
             jobsList.appendChild(jobElement);
-        }});
+        }
+        
+      
+      });
 
       
     } catch (error) {

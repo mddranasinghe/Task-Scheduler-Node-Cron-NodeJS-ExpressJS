@@ -54,7 +54,7 @@ try{
       const jobId = topicsArray[4];
       updateJob(payload, jobId);
     } else if (topicsArray[3] === 'delete' && payload != 'all') {
-      //jobdelete(payload);
+      jobdelete(payload);
     // deleteAllSchedules();
     } 
   else if (topicsArray[3] === 'delete' && payload == 'all') {
