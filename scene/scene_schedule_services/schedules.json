@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "id": "3_1",
+    "active": 1,
+    "type": 3,
+    "action": 0,
+    "scheduleName": "Hsh",
+    "sceneName": "Good Night",
+    "sceneIcon": "ic_scn_03",
+    "cronTimes": [
+      "45 13 25 7 *"
+    ]
+  }
+]

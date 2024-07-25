@@ -388,21 +388,21 @@ td{ box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 10px; padding-left: 1
     <table> 
     
         <tr><td id="waterpump" ontouchstart="addHoverClass('waterpump')" ontouchend="removeHoverClass('waterpump')" style="cursor:pointer;"> <div class="dot" id="node/spc/7469308fcf871dad4d4"style="width: 5px; height: 5px; float:left;"></div>  <div class="img-container">
-                <img src="resources\image\pump.png" class="img_td" alt="Pump Image">
+                <img src="resources\image\pump.png" class="no-save" alt="Pump Image">
             </div><p class="device_name">Water Pump</p><p class="zone">Pump room</p></td>  
 			            <td id="flood" ontouchstart="addHoverClass('flood')" ontouchend="removeHoverClass('flood')"><div class="dot" id="node/lls2/923714-42180e2de6b4" style="width: 5px; height: 5px; float:left;"></div>  <div class="img-container">
-                <img src="resources\image\flood.png" class="img_td" alt="cctv">
+                <img src="resources\image\flood.png" class="no-save" alt="cctv">
             </div><p class="device_name"> Flood Level </p><p class="zone">Graden</p></td>
 			
         
 			
         </tr>
         <tr><td id="siren" ontouchstart="addHoverClass('siren')" ontouchend="removeHoverClass('siren')"><div class="dot" id="bsa" style="width: 5px; height: 5px; float:left;"></div>  <div class="img-container">
-                <img src="resources\image\siren.jpg" class="img_td" alt="siren">
+                <img src="resources\image\siren.jpg" class="no-save" alt="siren">
             </div><p class="device_name"> Home Siren</p><p class="zone">Home</p></td>  
         
             <td id="powerSource" ontouchstart="addHoverClass('powerSource')" ontouchend="removeHoverClass('powerSource')"><div class="dot" id="" style="width: 5px; height: 5px; float:left;"></div>  <div class="img-container">
-                <img src="resources\image\power.jpg" class="img_td" alt="Power">
+                <img src="resources\image\power.jpg" class="no-save" alt="Power">
             </div><p class="device_name">Power Source</p><p class="zone">Home</p></td>
 
         </tr>   
@@ -411,11 +411,11 @@ td{ box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 10px; padding-left: 1
 
           
       <td id="smoke" ontouchstart="addHoverClass('smoke')" ontouchend="removeHoverClass('smoke')" ><div class="dot" id=""style="width: 5px; height: 5px; float:left;"></div>  <div class="img-container">
-        <img src="resources\image\smoke.jpg" class="img_td" alt="cctv">
+        <img src="resources\image\smoke.jpg" class="no-save" alt="cctv">
     </div><p class="device_name"> Smoke Detector </p><p class="zone">Home</p></td>
 
       <td id="cctv" ontouchstart="addHoverClass('cctv')" ontouchend="removeHoverClass('cctv')"><div class="dot" id=""style="width: 5px; height: 5px; float:left;"></div>  <div class="img-container">
-          <img src="resources\image\cctv\cam.png" class="img_td" alt="cctv">
+          <img src="resources\image\cctv\cam.png" class="no-save" alt="cctv">
       </div><p class="device_name"> CCTV Bridge </p><p class="zone">Home</p></td>
 
   </tr>   
@@ -424,7 +424,7 @@ td{ box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 10px; padding-left: 1
 
 
     <td id="" style="opacity: 0.5;" onclick="openPopup()" ><div class="dot" id=""style="width: 5px; height: 5px; float:left"></div>  <div class="img-container">
-        <img src="resources\image\vehicle.png" class="img_td" alt="cctv">
+        <img src="resources\image\vehicle.png" class="no-save" alt="cctv">
     </div><p class="device_name"> GPS Tracker </p><p class="zone">Home</p></td>
 
 </tr>
@@ -603,6 +603,34 @@ var  payload, topic,topicsArray,stat1=0,stat2=0,stat3=0,stat4=0,sum_stat=0,
       
       
       }
+
+
+
+      document.addEventListener('DOMContentLoaded', function() {
+      // Prevent right-click context menu on images
+      document.addEventListener('contextmenu', function(event) {
+        if (event.target.matches('.no-save')) {
+          event.preventDefault();
+        }
+      });
+
+      // Prevent long-press save option on mobile devices
+      document.addEventListener('touchstart', function(event) {
+        if (event.target.matches('.no-save')) {
+          event.preventDefault();
+        }
+      }, { passive: false });
+
+      document.addEventListener('mousedown', function(event) {
+        if (event.target.matches('.no-save')) {
+          event.preventDefault();
+        }
+      });
+    });
+
+
+
+
  /*     function setsceneId(payload) {
     const parsedPayload = JSON.parse(payload);
     const uniqueScenes = {};
