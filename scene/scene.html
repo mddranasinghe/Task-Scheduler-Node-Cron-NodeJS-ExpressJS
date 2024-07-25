@@ -961,7 +961,7 @@ sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
     jobsList.innerHTML = ''; // Clear previous jobs
     count=0;
 
-  /*  if (jobs.length === 0) {
+   if (jobs.length === 0) {
         // Display message when no jobs are found
         const noJobsElement = document.createElement('div');
         noJobsElement.innerHTML = `
@@ -972,17 +972,19 @@ sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
         `;
         jobsList.appendChild(noJobsElement);
         return;
-    }*/
+    }
 
     try {
         jobs.forEach(job => {
+          
             const cronTimes = job.cronTimes ? job.cronTimes.join(', ') : ''; 
             const jobElement = document.createElement('div');
-           // console.log('ppp ' + job.id);
+
             idsplit=job.id.split('_');
-           // console.log('eee',idsplit[0]);
+
             if(scene_id == idsplit[0] ){
-           
+            
+              count=1;
 
             let activetext = '';
             let backgroundColor = '';
@@ -1023,7 +1025,18 @@ sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
       
       });
 
-      
+    if(count == 0) {
+        // Display message when no jobs are found
+        const noJobsElement = document.createElement('div');
+        noJobsElement.innerHTML = `
+            <div id="scene-div">
+                <small>There are no schedules. Tap "Add New Schedule" to create a schedule.</small><br>
+                <img id="no_sch" src="image/no_schdule.png">
+            </div>
+        `;
+        jobsList.appendChild(noJobsElement);
+        return;
+    }
     } catch (error) {
         console.error('Error displaying jobs:', error);
     }
