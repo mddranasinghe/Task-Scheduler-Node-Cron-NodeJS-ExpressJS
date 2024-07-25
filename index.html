@@ -606,27 +606,7 @@ var  payload, topic,topicsArray,stat1=0,stat2=0,stat3=0,stat4=0,sum_stat=0,
 
 
 
-      document.addEventListener('DOMContentLoaded', function() {
-      // Prevent right-click context menu on images
-      document.addEventListener('contextmenu', function(event) {
-        if (event.target.matches('.no-save')) {
-          event.preventDefault();
-        }
-      });
-
-      // Prevent long-press save option on mobile devices
-      document.addEventListener('touchstart', function(event) {
-        if (event.target.matches('.no-save')) {
-          event.preventDefault();
-        }
-      }, { passive: false });
-
-      document.addEventListener('mousedown', function(event) {
-        if (event.target.matches('.no-save')) {
-          event.preventDefault();
-        }
-      });
-    });
+    
 
 
 
@@ -982,6 +962,26 @@ document.getElementById("cctv").onclick=function(){location.href="controller/cct
 function removeHoverClass(id) {
     document.getElementById(id).classList.remove('hover-effect');
 }
+
+
+document.addEventListener('contextmenu', function(event) {
+    if (event.target.tagName === 'IMG') {
+      event.preventDefault();
+    }
+  });
+
+  // Prevent long-press save option on mobile devices
+  document.addEventListener('touchstart', function(event) {
+    if (event.target.tagName === 'IMG') {
+      event.preventDefault();
+    }
+  }, { passive: false });
+
+  document.addEventListener('mousedown', function(event) {
+    if (event.target.tagName === 'IMG') {
+      event.preventDefault();
+    }
+  });
 
 // Function to opne the popup
 function openPopup() {

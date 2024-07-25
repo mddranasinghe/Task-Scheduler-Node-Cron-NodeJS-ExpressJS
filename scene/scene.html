@@ -1111,7 +1111,24 @@ function onConnectionLost(responseObject) {
   
 }
 
+document.addEventListener('contextmenu', function(event) {
+    if (event.target.tagName === 'IMG') {
+      event.preventDefault();
+    }
+  });
 
+  // Prevent long-press save option on mobile devices
+  document.addEventListener('touchstart', function(event) {
+    if (event.target.tagName === 'IMG') {
+      event.preventDefault();
+    }
+  }, { passive: false });
+
+  document.addEventListener('mousedown', function(event) {
+    if (event.target.tagName === 'IMG') {
+      event.preventDefault();
+    }
+  });
     </script>
 </body>
 </html>
