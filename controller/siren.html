@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../resources/js/paho.javascript-1.0.3/paho-mqtt-min.js"></script>
+    <script src="../resources/js/connection.js"></script>
+    <style>
+        body{margin: 0 auto; width: 100%;     font-family: 'Avenir', sans-serif;
+}
+        .container_main{box-shadow: 0.5px 0.5px 3px 0.5px gray; width: 95%; height: 85vw; position:relative; margin: 0 auto;}
+        .container {
+            position:relative;
+            width: 70%;
+            margin: 0 auto;
+            top:11%;
+            
+        }
+
+        #image {
+            width: 100%;
+            position:relative;
+          
+        }
+
+        .siren1 {
+         
+            border-style: solid; width: 12vw; height: 12vw; position: absolute; left:51.5%; top:0%;
+            border-radius: 2vw;
+            border-width: .5vw;
+            border-color: gray;
+            display:none;
+            transform: translateX(-50%);
+
+        }
+
+        .siren2 {
+        
+            border-style: solid; width: 12vw; height: 12vw; position: absolute; left:99%; top:32%;
+            border-radius: 2vw;
+            border-width: .5vw;
+            border-color: gray;
+             display:none;
+            transform: translateX(-50%);
+       
+        }
+        .siren3 {
+            border-style: solid; width: 12vw; height: 12vw; position: absolute; left:45.5%; top:79.7%;
+            border-radius: 2vw;
+            border-width: .5vw;
+            border-color: gray;
+            transform: translateX(-50%);
+            display:none;
+      
+        }
+
+        .siren4 {
+            border-style: solid; width: 12vw; height: 12vw; position: absolute; left:1.5%; top:33.5%;
+            border-radius: 2vw;
+            border-width: .5vw;
+            border-color: gray;
+            transform: translateX(-50%);
+            display:none;
+         
+        }
+
+        .dot{position: absolute;width: 1vw; height: 1vw; background-color:red ;top: 82%; left: 77%; border-radius:50%;}
+        
+        .popup {
+            width: 70%;
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius:20px;
+            z-index: 9999;
+         }
+
+.popup-content {
+    text-align: center;
+}
+.pop_button{width: 100%; border-top:solid; border-width: .5px; border-color:gray; position:relative;}
+
+#yesButton, #noButton {
+width: 49%;  
+height: 47px;
+ border-left: solid;
+ border-color: gray;
+ border-width: 0.5px;
+float: right;
+color:blue;
+border-radius: 0px 0px 20px 0px;
+
+  }
+#yesButton{border-left: none; color:red;border-radius: 0px 0px 0px 20px;}
+.pop_button p{ text-align:center; margin-bottom: 10px;}
+
+
+
+/* toggle botton..............................*/
+.toggle { position: relative; box-sizing: border-box;}
+.toggle input[type="checkbox"] {
+  position: absolute;
+  left: 2px;
+  top: 0;
+ /* z-index: 10;*/
+  width: 85%;
+  height: 70%;
+  cursor: pointer;
+  opacity: 0;}
+
+.toggle label {
+  position: relative;
+  display: block;
+  align-items: center;
+  box-sizing: border-box;}
+
+.toggle label:before {
+  content: '';
+  width: 50px;
+  height: 22px;
+  background: #ccc;
+  position: relative;
+  display: inline-block;
+  border-radius: 46px;
+  box-sizing: border-box;
+  transition: 0.2s ease-in;
+}
+.toggle label:after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  left: 2px;
+  top: 2px;
+  z-index: 2;
+  background: #fff;
+  box-sizing: border-box;
+  transition: 0.2s ease-in;
+}
+.toggle input[type="checkbox"]:checked + label:before { background: #4BD865;}
+.toggle input[type="checkbox"]:checked + label:after {left: 30px;}
+
+
+
+.Ac,.Al,.moresett,.moreset_container{ width:100%;box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 3px 3px; position: relative; }
+.status_box {
+        padding-left: 20px;
+        padding-right: 20px;
+        background-color:white;
+        display: flex; /* Use flexbox to align children */
+         align-items: center; }
+
+.topic {flex: 1;} 
+.option { margin-left: center;} /* Push to the right */
+
+
+
+.popup2 {
+    width: 80%;
+  display: none; 
+  position: fixed;
+  top: 90%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  border-radius: 10px 10px;
+  background-color:#7D63BE;
+  padding: 12px 12px 12px 12px;
+  z-index: 9999; 
+  color: white;
+
+ 
+}
+
+
+.popup2-content {text-align: center; margin-bottom:0%; }
+
+.custom-select select {
+    border: 1px solid gray; /* Set border color to green */
+    border-radius: 5px; /* Optional: Add border radius */
+    padding: 5px; /* Optional: Add padding */
+
+    color:black;
+}
+
+#overlay1,#overlay2,#overlay3,#overlay4{
+  /*   position: fixed;*/
+     display:none;
+     width: 100%;
+     height: 100%;
+     top: 0;
+     left: 0;
+     background-color: rgba(0,0,0,0.5);
+     z-index: 9998;
+     cursor: pointer;
+     position: absolute;
+   
+    }
+    #overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 9998;
+  cursor: pointer;
+}
+.signal-bars {display: flex; margin: 2px; }
+ .bar {width: 3px;margin-right: 1px;background-color: #ccc;}
+  
+ .s,#s2,#s3,#s4{
+    position: absolute;
+    top: 40%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    height: 70%;
+    display:inline ;
+    fill: green;
+    width: 70%;
+
+  }
+
+
+.sT,#sT2,#sT3,#sT4{
+    position: absolute;
+    top: 40%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    height: 70%;
+    display:none ;
+    fill: red;
+    width: 70%;
+    animation: opc .5s infinite;
+  }
+
+.toggle button {
+  position: relative;
+    width: 50px;
+    height: 22px;
+    display: none;
+    font-size: 3vw;
+   border-radius: 1vw;
+   background-color: #D83C3C;
+   border: none;
+   color:white;
+}
+
+
+/*more setting page --------------------*/
+
+#morSettingpage {
+  width: 95%; height:100%; background-color: white;top:0%;z-index: 9998; display: block; position: relative; margin: 0 auto;
+}
+#morSettingpage img {
+  width: 30px; height: 30px; 
+}
+
+.box{ width:95%;box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 3px 3px; position:absolute;margin-top: 20px;}
+
+
+@keyframes opc {
+  from {opacity: 1;}
+  to {opacity: .2;}
+}
+
+.un_m,#m2,#m3,#m4
+{
+   position: absolute;
+   width: 6.5vw; 
+   height: 6.5vw;
+   top: 40%;
+   left: 50%; 
+   display: none;
+   margin-top: 1.5%;
+   transform: translate(-50%, -50%);
+
+}
+
+@media only screen and (min-width: 900px) {
+      
+      body{width: 80%; margin: 0 auto;}
+
+      
+      .siren1 {
+         
+         border-style: solid; width: 12vw; height: 12vw; position: absolute; left:51.5%; top:-4.5%;
+         border-radius: 2vw;
+         border-width: .5vw;
+         border-color: gray;
+        
+         transform: translateX(-50%);
+
+     }
+
+     .siren2 {
+     
+         border-style: solid; width: 12vw; height: 12vw; position: absolute; left:101%; top:30%;
+         border-radius: 2vw;
+         border-width: .5vw;
+         border-color: gray;
+
+         transform: translateX(-50%);
+    
+     }
+     .siren3 {
+         border-style: solid; width: 12vw; height: 12vw; position: absolute; left:45.5%; top:79.7%;
+         border-radius: 2vw;
+         border-width: .5vw;
+         border-color: gray ;
+
+         transform: translateX(-50%);
+   
+     }
+
+     .siren4 {
+         border-style: solid; width: 12vw; height: 12vw; position: absolute; left:-1.5%; top:31%;
+         border-radius: 2vw;
+         border-width: .5vw;
+         border-color: gray;
+         transform: translateX(-50%);
+      
+     }
+    }
+
+#trigger_All{  box-shadow: 0.5px 0.5px 3px 0.5px gray;width: 48%; height: 100px; float: left; position: relative; z-index: 9990; }
+#reset_All{ box-shadow: 0.5px 0.5px 3px 0.5px gray; width: 48%; height: 100px;  box-shadow: 0.5px 0.5px 3px 0.5px gray; float: right; position: relative; z-index: 9990; }
+.trigger_one{width: 44%; height: 25px;   border-radius: 4px;float: left; border:none;box-shadow: 0.5px 0.5px 3px 0.5px gray;color:blue;background-color: white;}
+.reset_one{width: 44%; height: 25px;   border-radius: 4px;float: right; border:none;box-shadow: 0.5px 0.5px 3px 0.5px gray; color:red;background-color: white;
+}
+   
+   </style>
+</head>
+<body>
+    <table style="width: 100%;"  id="div1">
+        <tr>
+            <td><a href="../index.html"><img src="../resources\image\siren\less-than.png" style="width: 30px; height: 35px;"></a></td>
+            <td style="text-align: center; width:100%;"><h2>Siren Monitoring Systems</h2></td>
+        </tr>
+    </table>
+    
+    <table style="width: 93%; margin: 0 auto;" id="div2"><tr style="width: 90%;"><td  style="width: 50%;"><td style="width: 50%; text-align: right;">
+      <p style="font-size: 13px; color:rgb(156, 156, 156) ; display: inline;" id="offline">offline</p> 
+      <p style="font-size: 13px; color:#7BDD0A; display: none;" id="online"> online </p></td>
+      <td>
+        <div class="signal-bars" id="signalBars">
+          <div class="bar" id="bar1" style="height:2px; margin-top:8px;"></div>
+          <div class="bar" id="bar2"style="height:4px;margin-top:6px;" ></div>
+          <div class="bar" id="bar3"style="height:6px;margin-top:4px;"></div>
+          <div class="bar" id="bar4"style="height:8px;margin-top:2px;"></div>
+          <div class="bar" id="bar5"style="height:10px;"></div>
+      </div></td></tr></table>
+
+
+    <svg  height="80px" width="80px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" display="none">        <!-- Alarm Icon -->
+        <symbol id="alarm-icon" viewBox="0 0 346.013 346.013">
+            
+<g>
+            <path d="M261.752,242.918c-2.429-2.128-4.723-4.138-5.832-6.133c-0.088-0.161-0.184-0.324-0.32-0.549
+            c-4.244-6.792-5.837-23.742-6.788-33.866c-0.142-1.521-0.279-2.975-0.416-4.336c-0.014-0.138-0.03-0.274-0.058-0.482
+            c-2.181-15.25-7.596-37.241-21.01-55.398c-9.281-12.563-20.811-21.047-34.316-25.263c-1.391-9.796-9.832-17.353-20.006-17.353
+            c-10.174,0-18.617,7.559-20.006,17.355c-13.504,4.213-25.035,12.697-34.316,25.262c-13.414,18.154-18.83,40.146-21.01,55.396
+            l-0.016,0.122c-0.017,0.131-0.032,0.259-0.04,0.353c-0.138,1.369-0.275,2.82-0.417,4.34c-0.952,10.129-2.545,27.082-6.828,33.934
+            c-0.076,0.125-0.147,0.25-0.255,0.438c-1.134,2.041-3.428,4.053-5.855,6.182c-5.969,5.23-18.388,16.116-8.156,35.115
+            c1.979,3.677,5.804,5.961,9.98,5.961h173.839c4.173,0,7.996-2.283,9.979-5.96C280.135,259.04,267.721,248.153,261.752,242.918z"/>
+        <path d="M192.752,302.979h-40.214c-1.652,0-3.205,0.723-4.262,1.981c-1.982,2.362-1.427,5.51-1.096,7.39l0.026,0.151
+            c2.188,12.541,13.028,21.644,25.776,21.644c12.984,0,24.125-9.685,25.912-22.511l0.039-0.21c0.221-1.165,0.737-3.892-1.189-6.219
+            C197.055,304.374,195.491,302.979,192.752,302.979z"/>
+        <path d="M101.631,24.448c-1.338-8.176-9.046-13.723-17.227-12.379C61.8,15.77,40.925,27.203,25.623,44.26
+            C10.266,61.382,1.415,82.568,0.028,105.529c-0.5,8.269,5.799,15.378,14.068,15.877c0.308,0.019,0.614,0.028,0.918,0.028
+            c7.871,0,14.478-6.135,14.958-14.097c0.975-16.132,7.193-31.017,17.982-43.045c10.907-12.159,25.187-19.98,41.296-22.618
+            C97.428,40.335,102.97,32.623,101.631,24.448z"/>
+        <path d="M83.133,128.277c0.519-8.591,3.831-16.518,9.576-22.924c5.809-6.475,13.414-10.64,21.993-12.045
+            c8.175-1.339,13.718-9.051,12.379-17.227c-1.338-8.175-9.045-13.723-17.227-12.379c-15.182,2.485-29.202,10.163-39.478,21.619
+            c-10.167,11.334-16.271,25.946-17.189,41.146c-0.5,8.269,5.799,15.378,14.068,15.877c0.308,0.019,0.613,0.028,0.918,0.028
+            C76.044,142.373,82.652,136.238,83.133,128.277z"/>
+        <path d="M345.985,105.529c-1.387-22.961-10.238-44.147-25.596-61.27c-15.301-17.057-36.176-28.489-58.78-32.19
+            c-8.172-1.346-15.889,4.203-17.227,12.379c-1.339,8.175,4.203,15.888,12.379,17.227c16.109,2.639,30.39,10.459,41.296,22.617
+            c10.79,12.029,17.008,26.914,17.982,43.046c0.48,7.962,7.087,14.097,14.959,14.097c0.304,0,0.61-0.01,0.918-0.028
+            C340.186,120.907,346.485,113.797,345.985,105.529z"/>
+        <path d="M275.636,85.321c-10.276-11.455-24.297-19.133-39.479-21.618c-8.179-1.344-15.888,4.203-17.227,12.379
+            s4.204,15.889,12.379,17.227c8.58,1.405,16.186,5.57,21.994,12.045c5.746,6.406,9.057,14.333,9.575,22.923
+            c0.48,7.962,7.087,14.097,14.959,14.097c0.304,0,0.609-0.009,0.917-0.027c8.27-0.499,14.568-7.606,14.069-15.876
+            C291.908,111.27,285.803,96.657,275.636,85.321z"/>
+
+        </g>
+        
+        </symbol>
+    </svg>
+
+
+
+
+   
+  <div class="container_main"id="div3"  >
+   
+    <div class="container">
+        <img id="image" src="../resources\image\siren\i.jpg">
+
+
+       <div class="siren1" id="siren_0">
+         <div style="left:.5vw; top:-6.5vw; font-size: 2.5vw;position: absolute;"><p>Rear&nbsp;Left</p></div>
+       </div>
+
+       <div  class="siren2" id="siren_1">
+         <div style="left:.5vw; top:10.5vw; font-size: 2.5vw;position: absolute;"><p>Front&nbsp;Left</p></div>
+       </div>
+     
+      <div  class="siren3" id="siren_2">
+        <div style="left:.5vw; top:10.5vw; font-size: 2.5vw;position: absolute;"><p>Front&nbsp;Right</p></div>
+      </div>
+      
+      <div class="siren4" id="siren_3">
+        <div style="left:.5vw; top:10.5vw; font-size: 2.5vw;position: absolute;"><p>Rear&nbsp;Right</p></div>
+      </div>
+    
+              
+    </div>
+            <div id="overlay1"></div>
+            
+  </div>
+<br>
+
+
+        <div style="width: 95%; margin: 0 auto;" id="div4">
+
+
+          <div  id="trigger_All"  >
+          <div style="padding: 10px;" onclick="trigger_Reset_fun('trigger_All')" ontouchstart="addHoverClass('trigger_All')" ontouchend="removeHoverClass('trigger_All')">
+            <img src ="../resources\image\siren\triggr.png" style="width: 35px;"><br>
+
+            <small ><b>Trigger All Sirens </b></small><br>
+            <small>Home</small>
+            
+          </div>
+          <div id="overlay2"></div>
+          </div>
+
+          <div id="reset_All"  >
+          <div style="padding: 10px;" onclick="trigger_Reset_fun('reset_All')" ontouchstart="addHoverClass('reset_All')" ontouchend="removeHoverClass('reset_All')">
+            <img src ="../resources\image\siren\reset1.png" style="width: 35px;"><br>
+            <small ><b>Reset All Sirens </b></small><br>
+            <small>Home</small>
+          </div>
+          <div id="overlay3"></div>
+          </div>
+
+          <div style="clear: both;"></div>
+          <br>
+
+
+          <div class="Al">
+    
+              <div class="status_box">
+                    <div class="topic"><p>Sirenes Action</p></div>
+                    <div class="option">  <div class="toggle">
+                    <input type="checkbox" id="S_Ac" onclick="acAll('S_Ac')" checked><label for="S_Ac" ></label></div> 
+                 </div>
+                 </div>
+                 <div class="status_box">
+                  <div class="topic"><p>Sirenes Auto Reset</p></div>
+                  <div class="option">  <div class="toggle">
+                  <input type="checkbox" id="S_Dis"><label for="S_Dis"></label></div></div>
+               </div>
+
+
+                <div class="status_box" id="set_timer_time_box">
+                  <div class="topic"><p id="label_timer_time" >Sirens Reset Time</p></div>
+                  <div class="option" ><div class="custom-select" style=" margin-top:12.6px;margin-bottom: 12.6px;">
+                    <select name="time" id="time" style="background-color: white;">
+                      <option value="10">10sec</option>
+                      <option value="20">20sec</option>
+                      <option value="30">30sec</option>
+                      <option value="60">1 min</option>
+                      <option value="120">2 min</option>
+                      <option value="180">3 min</option>
+                      <option value="240">4 min </option>
+                      <option value="300">5 min</option>
+                    </select><label for="time" id="time"></label></div></div>
+               </div>
+
+               <div id="overlay4"></div>
+
+         </div>
+            
+
+<br>
+      <div class="moresett"  id="div5" ontouchstart="addHoverClass('div5')" ontouchend="removeHoverClass('div5')" onclick="MoreSettingPage()">
+          <div class="status_box">
+            <div class="topic"><p><b>More Setting</b></p></div>
+            <div class="option">  <div class="toggle">
+             <img src="../resources\image\siren\arrow1.png" style="width: 30px; height: 30px;"></div></div>
+          </div>
+            
+      </div>
+
+     </div>
+
+
+<!--more setting page..............................................................................-->
+ <div id="morSettingpage">
+   <img src="../resources\image\siren\less-than.png"  onclick="mainpage()">
+   <h2>More Setting</h2>
+
+<div id="box">
+
+</div>
+
+</div>
+
+<br>
+<br>
+        
+      <div id="popup" class="popup">
+        <div style="padding: 20px;">   <div class="popup-content">
+          <p>Are you sure you want to performe  this action?</p>  </div></div>
+      <div class="pop_button">
+          <div id="noButton" ontouchstart="addHoverClass('noButton')" ontouchend="removeHoverClass('noButton')"><p>No</p></div>
+            <div id="yesButton" ontouchstart="addHoverClass('yesButton')" ontouchend="removeHoverClass('yesButton')"><p>Yes</p></div></div>
+      </div>
+  
+
+
+
+      <div id="popup2" class="popup2" >
+        <div class="popup2-content" >
+          <p style=" font-size: 12px;">siren  disarm!</p>
+
+        </div>
+      </div>
+
+    
+      <div id="overlay"></div>
+    <script>
+
+var id1Value,id1,payload,topic, timer,stat,d=0,bar,value,timeSec,topicsArray,statValue=0,s=0,triggerReset,stat1=0,stat2=0,stat3=0,stat4=0,sum_stat=0,
+companyID="node", deviceType="bsa",deviceID="8983514-da13896f6480",
+publish_topic=companyID+"/"+deviceType+"/"+"b2n/homeCorners/",// publish topic
+subTopic = companyID+"/"+deviceType+"/"+"+/"+"+"+"/+", // subscribe topic
+publish_topicSW=companyID+"/"+deviceType+"/b2n/",// publish topic
+
+ device_id = ['16351370-8a80f94dffbc','16334980-8440f94dffbc', '16337445-254af94dffbc', '16336187-3b45f94dffbc'],
+/*
+ '14028845-2d10d6e768e8',
+  '8973248-c0eb886f6480',
+  '8983514-da13896f6480',
+  '8955008-80a4886f6480'
+*/
+ device_name = [
+' Rear Left Siren',
+' Front Left Siren',
+'Front Right Siren',
+'Rear Right Siren'
+],
+
+ container = document.getElementById('box'),
+ numCopies = device_id.length;
+
+  
+  icons = (index) => `
+      <svg  class='s' id="s_${index}" onclick="actionClose('s_${index}','unm_${index}')">
+                <use xlink:href="#alarm-icon"></use>
+            </svg>
+            <svg class='sT' id="sT_${index}">
+              <use xlink:href="#alarm-icon"></use>
+          </svg>
+            <img src="../resources/image/siren/unm.svg"  class="un_m" id="unm_${index}">
+        
+            <div class="dot" id="dot_${index}">
+            </div>
+    `;
+
+
+    for (let i = 0; i < numCopies; i++) {
+      try{
+      if (device_id[i] != null) {
+          const template = icons(device_id[i]);
+          document.getElementById('siren_'+i).insertAdjacentHTML('beforeend', template);
+          document.getElementById('siren_'+i).style.display='block'
+          console.log(device_id[i]);
+           continue;
+            }
+      }catch{}
+     
+    }
+
+  
+    const generateTemplate = (index,device_name) => `
+    <small style="color:gray" id="device_name"><b>${device_name}</b></small>
+  <div class="moreset_container">
+  <div class="status_box">
+           <div class="topic"><p>Stat</p></div>
+           <div class="option">  <div class="toggle">
+            <p style="font-size: 13px; color:rgb(156, 156, 156) ; display: inline;" id="offline_${index}">offline</p> 
+            <p style="font-size: 13px; color:#7BDD0A; display: none;" id="online_${index}"> online </p></td>
+           
+            </div></div>
+
+         </div>
+         <div class="status_box">
+           <div class="topic"><p>Signal Strength </p></div>
+           <div class="option"><div class="toggle">
+         <p id="signal_${index}" style=font-size:13px>--</p>
+         </div></div>
+         </div>
+    
+         
+         <div class="status_box">
+           <div class="topic"><p>Up Time</p></div>
+           <div class="option">  <div class="toggle">
+             <p id="up_${index}"style=font-size:13px>--</p>
+            </div></div>
+         </div>
+               
+         <div style="padding:15px">
+           <button class="trigger_one" id="${index}" onClick="triggerOne('${index}')" ontouchstart="addHoverClass('${index}')" ontouchend="removeHoverClass('${index}')">Trigger</button>
+           <button class="reset_one"  id="R_${index}" onClick="resetOne('${index}')" ontouchstart="addHoverClass('R_${index}')" ontouchend="removeHoverClass('R_${index}')">Reset</button>
+           <div style="clear: both;"></div>
+
+         </div>
+ </div>
+<br>
+       
+    `;
+
+    for (let i = 0; i < numCopies; i++) {
+      try{
+      if (device_id[i] != null) {
+      const template = generateTemplate(device_id[i], device_name[i]);
+        container.insertAdjacentHTML('beforeend', template);
+          console.log(device_id[i]);
+          continue;
+        }
+      }catch{}
+    }
+
+
+//navigate morw setting page....................
+function MoreSettingPage()
+{
+  onConnect();
+document.getElementById('morSettingpage').style.display='block';
+
+for (var i = 1; i <= 5; i++) {
+  document.getElementById('div' + i).style.display = 'none';
+}
+
+
+}
+function mainpage()
+{
+document.getElementById('morSettingpage').style.display='none';
+for (var i = 1; i <= 5; i++) {
+  document.getElementById('div' + i).style.display = 'block';
+}
+
+}
+
+function connect(){//connect------------------------------------------------------------------
+try{
+client.connect({ onSuccess: onConnect,useSSL: mqttUseSSL,userName,password });
+client.onConnectionLost = onConnectionLost;
+client.onMessageArrived = onMessageArrived;
+
+}catch{}}
+
+function onConnect() {
+try{
+    console.log("onConnect");    
+      client.subscribe(subTopic);
+    sendCommandToDevice(publish_topic+"info","read");
+}
+catch{}
+}
+
+function sendCommandToDevice(topic,payload) {
+  try{
+    if (client.isConnected()) {
+        console.log("sendCommandToDevice: " + topic + ", Payload: " + payload);
+        var message = new Paho.MQTT.Message(payload);
+        message.destinationName = topic;
+        client.send(message);
+    }}
+    catch(error)
+    {
+      console.log(error);
+    }
+}
+
+
+function onMessageArrived(message) {
+  try{
+   onlinestatus();
+  topic = message.destinationName;
+  payload=message.payloadString;
+    console.log("Payload:" + payload);
+    console.log("Topic:", topic);
+   displayFunction(payload,topic); 
+
+  }
+  catch(error)
+  {
+    console.log(error);
+  } 
+}
+
+function onConnectionLost(responseObject) {
+  if (responseObject.errorCode !== 0) {
+    console.log("onConnectionLost:"+responseObject.errorMessage);
+    offlinestatus('offline');
+  }
+  
+}
+
+function onlinestatus()
+{
+  document.getElementById("online").style.display="inline";
+  document.getElementById("offline").style.display="none";
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById("overlay"+i).style.display="none";
+        }
+
+
+}
+function offlinestatus(stat_)
+{
+  try{
+ if(stat_ == 'offline')
+ {
+  document.getElementById("offline").style.color="#FF3827";
+
+ }
+    document.getElementById("online").style.display="none";
+    document.getElementById("offline").style.display="inline";
+ 
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById("overlay"+i).style.display="block";
+        }
+
+for(var x = 0; x < bar.length; x++)
+{
+bar[x].style.backgroundColor = "#ccc";
+}
+  }
+  catch{}
+}
+
+function resetAll()// reset all sirens 
+{
+  sendCommandToDevice(publish_topic+"sw/set",'0');
+}
+function triggerAll()// trigger all sirens 
+{
+  sendCommandToDevice(publish_topic+"sw/set",'1');
+}
+
+function resetOne(id)// reset all sirens 
+{
+  sendCommandToDevice(publish_topicSW+id+"/sw/set",'0');
+}
+function triggerOne(id)// trigger all sirens 
+{
+  sendCommandToDevice(publish_topicSW+id+"/sw/set",'1');
+}
+
+
+function displayFunction(payload,topic)
+{
+  payload = JSON.parse(payload);
+  topicsArray = topic.split("/");
+  stat=payload['stat'];
+  timeSec=payload.inching[1];
+
+
+switch (stat)
+{
+  case "online":
+    sum_stat=0;
+    onlinestatus();
+    document.getElementById('online_'+topicsArray[3]).style.display = 'inline';
+    document.getElementById('offline_'+topicsArray[3]).style.display = 'none';
+    document.getElementById('dot_'+topicsArray[3]).style.backgroundColor="#7BDD0A";
+
+    break;
+  case "offline":
+  document.getElementById('online_'+topicsArray[3]).style.display = 'none';
+  document.getElementById('offline_'+topicsArray[3]).style.display = 'inline';
+  document.getElementById('dot_'+topicsArray[3]).style.backgroundColor="#FF3827";
+
+  if      (topicsArray[3] == device_id[0]){stat1 = 1;  }
+  else if (topicsArray[3] == device_id[1]) {stat2= 1; }
+  else if (topicsArray[3] == device_id[2]) {stat3 = 1; }
+  else if (topicsArray[3] == device_id[3]) {stat4 = 1; }
+
+    document.getElementById('offline_'+topicsArray[3]).style.color="#FF3827";
+    document.getElementById(topicsArray[3]).disabled = true;
+    document.getElementById('R_'+topicsArray[3]).disabled = true;
+
+    sum_stat=(stat1+stat2+stat3+stat4);
+    console.log(sum_stat)
+ 
+  if(sum_stat == device_id.length){  
+       document.getElementById("online").style.display="none";
+       document.getElementById("offline").style.display="inline";
+         document.getElementById("offline").style.color="#FF3827";
+
+         for (let i = 1; i <= 4; i++) {
+          document.getElementById("overlay"+i).style.display="block";
+        }
+
+         
+        for(var x = 0; x < bar.length; x++)
+       {
+       bar[x].style.backgroundColor = "#ccc";
+       }
+   }
+    break;
+}
+
+
+
+
+document.getElementById('up_'+topicsArray[3]).innerHTML = formatTime(payload["up"]);// runing time
+    function formatTime(minutes) {
+    var days = Math.floor(minutes / (24 * 60)).toString().padStart(2, '0');
+    var remainingMinutes = minutes % (24 * 60);
+    var hours = Math.floor(remainingMinutes / 60).toString().padStart(2, '0');
+    var remainingSeconds = remainingMinutes % 60;
+    var formattedMinutes = remainingSeconds.toString().padStart(2, '0');
+    return days + "d: " + hours + "h: " + formattedMinutes + "m";
+}
+ 
+
+var n=Math.abs(payload['rssi']);
+var d=(n % 50);
+if(n <= 50 && n >= 1) 
+{
+  document.getElementById('signal_'+topicsArray[3]).innerHTML='&nbsp99%';
+
+}
+else if(d != 0){
+var d2= d*2;
+d2=100-d2;
+document.getElementById('signal_'+topicsArray[3]).innerHTML='&nbsp'+d2+'%';
+
+}
+
+
+
+
+if(payload['sw'] == 1 && payload['stat'] == 'online') 
+{
+  document.getElementById('sT_'+topicsArray[3]).style.display = 'inline';
+  document.getElementById('s_'+topicsArray[3]).style.display = 'none';
+
+}
+else if(payload['sw'] == 0){
+
+  document.getElementById('sT_'+topicsArray[3]).style.display = 'none';
+  document.getElementById('s_'+topicsArray[3]).style.display = 'inline';
+
+}
+
+
+updateSignalStrength(payload['rssi'],payload['stat']);//rssi
+
+if( payload.inching[0] === 1  ){
+document.getElementById('S_Dis').checked = true;
+document.getElementById("time").style.display="inline";
+document.getElementById("label_timer_time").style.display="inline";
+document.getElementById('time').value = payload.inching[1].toString();
+}
+if( payload.inching[0] === 0 ){
+document.getElementById('S_Dis').checked = false;
+document.getElementById("time").style.display="none";
+ document.getElementById("label_timer_time").style.display="none";
+}
+
+}
+
+
+ bar=  document.getElementsByClassName("bar");  //signal bar.
+    function updateSignalStrength(rssi,stat) {
+    if(stat === 'online'){
+      if (rssi >= -50) {
+    bar[0].style.backgroundColor = "#565461";
+    bar[1].style.backgroundColor = "#565461";
+    bar[2].style.backgroundColor = "#565461";
+    bar[3].style.backgroundColor = "#565461";
+    bar[4].style.backgroundColor = "#565461";
+} else if (rssi >= -55) {
+    bar[0].style.backgroundColor = "#565461";
+    bar[1].style.backgroundColor = "#565461";
+    bar[2].style.backgroundColor = "#565461";
+    bar[3].style.backgroundColor = "#565461";
+} else if (rssi >= -65) {
+    bar[0].style.backgroundColor = "#565461";
+    bar[1].style.backgroundColor = "#565461";
+    bar[2].style.backgroundColor = "#565461";
+} else if (rssi >= -80) {
+    bar[0].style.backgroundColor = "#565461";
+    bar[1].style.backgroundColor = "#565461";
+} else if (rssi >= -85) {
+    bar[0].style.backgroundColor = "#565461";
+} else if (rssi >= -100) {
+}
+    }
+    }
+  function trigger_Reset_fun(id)
+  {
+    document.getElementById('popup').style.display = 'block';
+    document.getElementById("overlay").style.display = "block";
+    triggerReset=id;
+  }
+
+    function acAll(id)  //change siren action....................
+   {
+    id=document.getElementById(id);
+    if (!id.checked) {
+        document.getElementById('popup').style.display = 'block';
+        document.getElementById("overlay").style.display = "block";
+        id1Value='S_Ac';
+    }
+    else if(id.checked)
+    {
+      for (var i = 0; i < 4; i++) {
+  
+       document.getElementById(('s_'+ device_id[i])).style.display = "inline"; 
+       document.getElementById(('unm_'+ device_id[i])).style.display = "none";
+ }
+    }
+  
+
+}
+function actionClose(id1,element){
+
+   document.getElementById('popup').style.display = 'block';
+   document.getElementById("overlay").style.display = "block";
+    id1Value=id1;
+    idelement=element;
+  }
+    document.getElementById('yesButton').addEventListener('click', function() {
+ try{
+    document.getElementById('popup').style.display = 'none';
+    document.getElementById("overlay").style.display = "none";
+    
+    if(triggerReset == 'trigger_All')
+    {
+      triggerAll();
+
+    }
+
+        
+    if(triggerReset == 'reset_All')
+    {
+      resetAll();
+      
+    }
+
+    if (id1Value != 'S_Ac') {  // individual disarm
+        document.getElementById(id1Value).style.display = "none"; 
+        document.getElementById(idelement).style.display = "inline"; 
+    }
+    
+    if(id1Value === 'S_Ac')// siren all disarm
+    {
+    for (var i = 0; i < 4; i++) {
+  
+      document.getElementById(('s_'+ device_id[i])).style.display = "none"; 
+      document.getElementById(('unm_'+ device_id[i])).style.display = "inline";
+     }
+    }
+
+      
+  openPopup();
+ }
+ catch{}
+});
+
+document.getElementById('noButton').addEventListener('click', function() {
+try{
+    document.getElementById('popup').style.display = 'none';
+    document.getElementById("overlay").style.display = "none";
+    document.getElementById(id1Value).checked = true;
+}catch{}
+
+});
+
+document.getElementById('S_Dis').addEventListener('change', function() {
+ var topic=publish_topic+"inching/set/1"
+  if(this.checked){
+          document.getElementById("time").style.display="inline";
+          document.getElementById("label_timer_time").style.display="inline"; 
+          payload="1,"+timeSec;
+        }else{
+          document.getElementById("time").style.display="none";
+          document.getElementById("label_timer_time").style.display="none";
+           payload="0,"+timeSec;
+         }
+          sendCommandToDevice(topic,payload);
+  });
+
+//set time.......................................................................................
+  document.getElementById('time').addEventListener('change', function() {
+      topic=publish_topic+"inching/set/1"
+      value=this.value;
+       payload="1,"+value;
+       timeSec=value;
+      sendCommandToDevice(topic,payload);
+  });
+
+
+  function addHoverClass(id) {
+    document.getElementById(id).style.opacity=0.3 ;
+    document.getElementById(id).style.backgroundColor= '#EEEEEE';
+}
+
+function removeHoverClass(id) {
+    document.getElementById(id).style.opacity=1;
+    document.getElementById(id).style.backgroundColor= 'white';
+}
+
+
+// Function to opne the popup
+function openPopup() {
+  var popup = document.getElementById("popup2");
+  popup.style.display = "block";
+
+  setTimeout(function() {
+    popup.style.display = "none";
+  }, 1300); 
+  
+}
+  connect();          
+  mainpage();
+  setTimeout(function() {
+ if(stat !== 'online'){
+  offlinestatus('none');}
+   }, 1000);
+
+setInterval(connect, 2000);
+    </script>
+</body>
+</html>

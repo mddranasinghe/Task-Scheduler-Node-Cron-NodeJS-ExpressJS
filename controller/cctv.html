@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" href="data:,">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+<style> 
+body{
+
+touch-action: pan-y;
+}
+.container{width: 100%;margin: 0 auto;}
+.ui{
+        border: 1px solid;
+        margin: 0 auto;}
+        table #home{  
+        
+          vertical-align: right;
+
+          }
+        .container td{border: 0px solid;
+          width:28%}
+          table p{font-size: 5.5vw;}
+          table img{width: 15vw; height: 15vw;}
+
+
+      .line_out{ border: .5vw solid  #FEB018; width:95%;  margin-left:auto;margin-right:auto ;}
+      .line_in{ border: .5vw solid #018FFB; width:95%;  margin-left:auto;margin-right:auto ;}
+
+       
+       
+       
+       
+          #arrowIn 
+        {    border-top: 2vw solid transparent; 
+            border-bottom:2vw solid transparent;
+            border-left: 3vw solid  #018FFB;
+            transform: translateY(-50%) scale(1,1); 
+        
+            margin-left: 95%;
+            margin-top:-.8%;
+            position: relative;
+       
+          }
+        #arrowout{
+
+            border-top: 2vw solid transparent; 
+            border-bottom:2vw solid transparent;
+            border-left: 3vw solid #FEB018 ;
+            transform: translateY(-50%) scale(-1,1); 
+         
+           margin-left:auto;
+            margin-top:-.4%;
+            position: absolute;
+         }
+
+
+
+  .button-box{
+
+      top:10vw;
+      height: 9vw;
+      margin: 0 auto;
+      position: relative;
+      border: 0px solid;
+      width: 90%;
+      box-shadow: 0.5px 0.5px 3px 0.5px gray;
+      border-radius: 5vw;
+      background-color:    #9B9B9B ;
+  
+
+  }
+  .toggle-btn {
+
+    cursor: pointer;
+    background: transparent;
+    border:0px solid;
+    outline: none;
+    position: relative;
+    width: 32%;
+    height:100%;
+    margin: 0 auto;
+    border-radius: 5vw;
+    font-size:4vw ;
+    color: white;
+    direction: none;
+  }
+
+  #btn
+  {
+      left:33%;
+      position:absolute;
+      width: 33.4%;
+      height:100%;
+      background:  #68B581;
+      border-radius: 5vw;
+ 
+      box-shadow: 1px 1px 6px 1px gray;
+  }
+
+  #In{width:100%;box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 3px 3px; margin-top:15vw;position: relative;display: none; width: 95%; margin-right: auto; margin-left: auto;}
+  #InOut{width:100%;box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 3px 3px; margin-top:15vw;position: relative;width:95% ; margin-right: auto; margin-left: auto;}
+  #Out{width:100%;box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 3px 3px; margin-top: 15vw;position: relative; display:none;width: 95%; margin-right: auto; margin-left: auto; }
+
+      
+
+ /* Style for checkboxes */
+ input[type="checkbox"] {
+    width: 30px;
+    height: 30px; 
+    border: 3px solid green; 
+    background-color: white; 
+    appearance: none;
+    position: relative; 
+	border-radius:5px;
+
+}
+
+
+input[type="checkbox"]:checked::after {
+    content: ''; 
+    position: absolute; 
+    left: 8px; 
+    top: 4.5px; 
+    width: 6px;
+    height: 12px; 
+    border: 3px solid green;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+
+}
+
+
+
+
+.toggle { position: relative; box-sizing: border-box;}
+.toggle input[type="checkbox"] {
+  position: absolute;
+  left: px;
+  top: 0;
+ /* z-index: 10;*/
+  cursor: pointer;
+  opacity: 0;}
+
+.toggle label {
+  position: relative;
+  display: block;
+  align-items: center;
+  box-sizing: border-box;}
+
+.toggle label:before {
+  content: '';
+  width: 50px;
+  height: 22px;
+  background: #ccc;
+  position: relative;
+  display: inline-block;
+  border-radius: 46px;
+  box-sizing: border-box;
+  transition: 0.2s ease-in;
+}
+.toggle label:after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  left: 2px;
+  top: 2px;
+  z-index: 2;
+  background: #fff;
+  box-sizing: border-box;
+  transition: 0.2s ease-in;
+}
+.toggle input[type="checkbox"]:checked + label:before { background: #4BD865;}
+.toggle input[type="checkbox"]:checked + label:after {left: 30px;}
+
+
+
+.status_box {
+        padding-left: 10px;
+        padding-right: 10px;
+        background-color:white;
+        display: flex; /* Use flexbox to align children */
+         align-items: center;
+         border: 0px solid;
+     
+      }
+
+.topic {flex: 1;} 
+.option { margin-left: center;} /* Push to the right */
+
+.popup{
+     width: 70%;
+       display: none;
+       position: fixed;
+       top: 50%;
+       left: 50%;
+       transform: translate(-50%, -50%);
+       background-color: #ffffff;
+       border: 1px solid #ccc;
+       border-radius:20px;
+     
+       z-index: 9999;
+    }
+    
+    .popup-content {
+       text-align: center;
+    }
+    .pop_button{width: 100%; border-top:solid; border-width: .5px; border-color:gray; position:relative;}
+    
+    #yesButton, #noButton {
+    width: 49%;  
+    border-left: solid;
+    border-color: gray;
+    border-width: 0.5px;
+    float: right;
+    
+    color: blue;
+   
+
+   
+     }
+    #yesButton{border-left: none; color:red}
+    .pop_button p{ text-align:center; }
+    
+    #overlay {
+     position: fixed;
+     display: none;
+     width: 100%;
+     height: 100%;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background-color: rgba(0,0,0,0.5);
+     z-index: 9998;
+     cursor: pointer;
+    }
+
+
+
+    .popup2 {
+    width: 80%;
+  display: none; 
+  position: fixed;
+  top: 90%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  border-radius: 10px 10px;
+  background-color:#7D63BE;
+ 
+  z-index: 9999; 
+  color: white;
+  font-size: 100%;
+ 
+}
+
+
+.popup-content2 {text-align: center;margin-bottom:0%; }
+</style>
+</head>
+<body>
+    <div class="main_div">
+        <table style="width: 100%; padding: 3.5%;"><tr>
+            <td><a href="../index.html"><img src="../resources\image\less-than.png" style="width: 8vw; height: 9vw;"></a></td>
+            <td style="text-align: center; width:100%;"><p><b>CCTV Bridge</b></p></td>
+          </tr></table>
+    <div class="container">
+      
+        
+
+<table style="border: 0px solid; margin: 0 auto; width: 90%; ">
+<tr>
+    <td  style="width: 10%;"><img id="nvr"src="../resources\image\cctv\cam.png" ></td>
+    <td style="width: 60%;">
+      <div  class="line_out" id="l3" ></div><div id="arrowout"></div>
+
+       <div class="line_in" id="l1" style="margin-top: 3vw;"></div><div id="arrowIn"></div>
+    </td>
+    <td style="width: 10%;">   
+        <img id="home" src="../resources\image\cctv\shome.png" style="margin-bottom: 10px;" ></td>
+</tr>
+
+</table>
+
+    <div  class='button-box'>
+        <div id='btn'></div>
+        <button type='button' onclick="in1()"class='toggle-btn'> IN</button>
+        <button type='button' onclick="Inout()"class='toggle-btn'>All</button>
+        <button type='button' onclick="out()"class='toggle-btn'>OUT</button>
+    </div>
+
+<div id="In">
+<div  style="width: 90%; margin: 0 auto;">
+  <div class="status_box">
+    <div class="topic"><p>Arm In Feed</p></div>
+    <div class="option">  <div class="toggle">
+    <input type="checkbox" checked id="arm_in_feeds" onclick="actionClose('arm_in_feeds')" ><label for="arm_in_feeds" ></label></div> 
+ </div>
+  </div>
+<hr style="border-color:#ccc">
+  <div class="status_box" >
+    <div class="topic"><p>Feed 01</p></div>
+    <input type="checkbox"  id="arm_in1"><label for="arm_in1" ></label>
+</div>
+<div class="status_box" >
+  <div class="topic" ><p>Feed 02</p></div>
+  <input type="checkbox" id="arm_in2"><label for="arm_in2" ></label>
+</div>
+<div class="status_box" >
+  <div class="topic" ><p>Feed 03</p></div>
+  <input type="checkbox" id="arm_in3"><label for="arm_in3" ></label>
+</div>
+<div class="status_box" >
+  <div class="topic" ><p>Feed 04</p></div>
+  <input type="checkbox" id="arm_in4"><label for="arm_in4" ></label>
+</div>
+</div>
+
+
+</div>
+<div id="InOut">
+ 
+  <div style="width: 90%; margin: 0 auto; ">
+ 
+    <div class="status_box">
+      <div class="topic"><p>Arm In Feed</p></div>
+      <div class="option">  <div class="toggle">
+      <input type="checkbox" checked id="arm_in" onclick="actionClose('arm_in')" ><label for="arm_in" ></label></div> 
+   </div>
+    </div>
+    <div class="status_box">
+      <div class="topic"><p>Arm Out Feed</p></div>
+      <div class="option">  <div class="toggle">
+      <input type="checkbox" checked id="arm_out" onclick="actionClose('arm_out')" ><label for="arm_out" ></label></div> 
+   </div>
+  </div>
+  <div class="status_box">
+    <div class="topic"><p>Arm All Feed</p></div>
+    <div class="option">  <div class="toggle">
+    <input type="checkbox" checked id="arm_all" onclick="actionClose('arm_all')" ><label for="arm_all" ></label></div> 
+ </div>
+</div>
+
+</div>
+</div>
+
+<div id="Out">
+  <div  style="width: 90%; margin: 0 auto;">
+    <div class="status_box">
+      <div class="topic"><p>Arm Out Feed</p></div>
+      <div class="option">  <div class="toggle">
+      <input type="checkbox" checked id="arm_out_feeds" onclick="actionClose('arm_out_feeds')" ><label for="arm_out_feeds" ></label></div> 
+   </div>
+  </div>
+<hr style="border-color:#ccc">
+  <div class="status_box" >
+    <div class="topic" ><p>Feed 01</p></div>
+    <input type="checkbox" id="arm_out1"><label for="arm_out1" ></label>
+</div>
+<div class="status_box" >
+  <div class="topic" ><p>Feed 02</p></div>
+  <input type="checkbox" id="arm_out2"><label for="arm_out2" ></label>
+</div>
+<div class="status_box" >
+  <div class="topic" ><p>Feed 03</p></div>
+  <input type="checkbox" id="arm_out3"><label for="arm_out3" ></label>
+</div>
+<div class="status_box" >
+  <div class="topic" ><p>Feed 04</p></div>
+  <input type="checkbox" id="arm_out4"><label for="arm_out4" ></label>
+</div>
+</div>
+</div>
+
+<div id="popup" class="popup">
+  <div style="padding: 20px;">   <div class="popup-content">
+    <p>Are you sure you want to perform this action?</p>  </div></div>
+<div class="pop_button">
+    <div id="noButton"><p>No</p></div>
+      <div id="yesButton"><p>Yes</p></div></div>
+</div>
+<div id="overlay"></div>
+
+
+<div id="popup2" class="popup2" >
+  <div class="popup-content2" >
+    <p >Auto Mode Enable !</p>
+
+  </div>
+</div>
+<script>
+
+ var inch=document.getElementById('In');
+ var outch=document.getElementById('Out');
+ var inout=document.getElementById('InOut');
+ var btn=document.getElementById('btn');
+
+ var l1=document.getElementById('l1');
+ var l3=document.getElementById('l3');
+
+ var arrowIn=document.getElementById('arrowIn');
+ var arrowout=document.getElementById('arrowout');
+
+ var checkboxIn= document.getElementById('arm_in');
+ var checkboxOut= document.getElementById('arm_out');
+ var checkboxAll= document.getElementById('arm_all');
+
+
+ var checkboxInFeeds= document.getElementById('arm_in_feeds');
+ var checkboxOutFeeds= document.getElementById('arm_out_feeds');
+
+ function in1()
+ {
+   btn.style.left='0%';
+   inch.style.display='block';
+   inout.style.display="none";
+   outch.style.display='none';
+
+   l1.style.display='block';
+   l3.style.display='none';
+   arrowIn.style.display='block';
+   arrowout.style.display='none';
+
+ 
+
+ }
+ function Inout()
+ {
+   btn.style.left='33%';
+   inch.style.display='none';
+   inout.style.display="block";
+   outch.style.display='none';
+
+   l1.style.display='block';
+   l3.style.display='block';
+   arrowIn.style.display='block';
+   arrowout.style.display='block';
+
+
+
+ }
+ function out()
+ {
+     btn.style.left='67%';
+     inch.style.display='none';
+   inout.style.display="none";
+   outch.style.display='block';
+
+ 
+   l1.style.display='none';
+   l3.style.display='block';
+   arrowIn.style.display='none';
+   arrowout.style.display='block';
+
+      
+  
+ }
+
+
+
+ var payload;
+  function actionClose(id1){
+    var checkbox = document.getElementById(id1)
+    if (!checkbox.checked) {
+        document.getElementById('popup').style.display = 'block';
+        document.getElementById("overlay").style.display = "block";   
+    }
+    else{
+      
+
+      payload="1";
+    }
+    id1Value=id1;
+
+  }
+document.getElementById('yesButton').addEventListener('click', function() {
+ 
+    document.getElementById('popup').style.display = 'none';
+    document.getElementById("overlay").style.display = "none";
+    if (id1Value == 'arm_all') {
+        checkboxIn.checked = false;
+        checkboxOut.checked = false;
+        checkboxInFeeds.checked=false;
+        checkboxOutFeeds.checked=false;
+
+        for( var i=1; i<5; i++)
+        {
+          document.getElementById('arm_in'+i).disabled = true;
+
+        }
+        for( var i=1; i<5; i++)
+        {
+          document.getElementById('arm_out'+i).disabled = true;
+
+        }
+      
+     }
+     if(id1Value == 'arm_in')//in....................
+     {
+      if(!checkboxIn.checked && checkboxOut.checked )
+      {
+        document.getElementById('arm_all').checked = false;
+        arrowIn.style.borderLeftColor="#ccc";
+        l1.style.borderColor='#ccc';
+        checkboxInFeeds.checked=false;
+
+       for( var i=1; i<5; i++)
+        {
+          document.getElementById('arm_in'+i).disabled = true;
+
+        }
+      }
+
+      if(!checkboxIn.checked && !checkboxOut.checked )
+      {
+        checkboxInFeeds.checked=false;
+      }
+     }
+
+
+
+
+     if(id1Value == 'arm_out')//out.....................
+     {
+      if(checkboxIn.checked && !checkboxOut.checked )
+      {
+        checkboxAll.checked = false;
+        arrowout.style.borderLeftColor="#ccc";
+        l3.style.borderColor='#ccc';
+        checkboxOutFeeds.checked=false;
+
+        for( var i=1; i<5; i++)
+        {
+          document.getElementById('arm_Out'+i).disabled = true;
+
+        }
+      }
+      if(!checkboxIn.checked && !checkboxOut.checked )
+      {
+        for( var i=1; i<5; i++)
+        {
+          document.getElementById('arm_out'+i).disabled = true;
+
+        }
+
+      }
+     }
+
+
+     
+     if(!checkboxOut.checked && !checkboxIn.checked){
+           checkboxAll.checked = false;
+           arrowIn.style.borderLeftColor="#ccc";
+          l1.style.borderColor='#ccc';
+          arrowout.style.borderLeftColor="#ccc";
+          l3.style.borderColor='#ccc';
+          checkboxOutFeeds.checked=false;
+
+
+       
+     }
+   
+});
+
+document.getElementById('noButton').addEventListener('click', function() {
+ 
+    document.getElementById('popup').style.display = 'none';
+    document.getElementById("overlay").style.display = "none";
+    if (id1Value) {
+        document.getElementById(id1Value).checked = true;
+        payload="1";
+    }
+    if (id1Value =='arm_in') {  // arm in................................
+        if (checkboxIn.checked && !checkboxOut.checked ) {
+          arrowIn.style.borderLeftColor="#018FFB";
+          l1.style.borderColor='#018FFB';
+         }
+
+
+      }
+
+
+    if (id1Value == 'arm_all') {
+       checkboxIn.checked = true;
+       checkboxOut.checked = true;
+        checkboxAll.checked = true;
+       
+    }
+    if(checkboxOut.checked && checkboxIn.checked){
+       checkboxAll.checked = true;
+   }
+  else{
+    document.getElementById('arm_all').checked = false;
+   }
+    
+
+});
+
+
+document.getElementById('arm_all').addEventListener('change', function() {
+  arm_all()
+});
+
+document.getElementById('arm_out').addEventListener('change', function() {
+  arm_out();
+});
+document.getElementById('arm_in').addEventListener('change', function() {
+  arm_in();
+});
+
+document.getElementById('arm_in_feeds').addEventListener('change', function() {
+ 
+ if(!checkboxInFeeds.checked)
+ {
+  checkboxIn.checked = false;
+ arrowIn.style.borderLeftColor="#ccc";
+ l1.style.borderColor='#ccc';
+
+ }
+ if(checkboxInFeeds.checked)
+ {
+  checkboxIn.checked = true;
+  arrowIn.style.borderLeftColor="#018FFB";
+   l1.style.borderColor='#018FFB';
+   for( var i=1; i<5; i++)
+        {
+          document.getElementById('arm_in'+i).disabled = false;
+
+        }
+
+ }
+
+  arm_in();
+});
+document.getElementById('arm_out_feeds').addEventListener('change', function() {
+  if(!checkboxOutFeeds.checked)
+ {
+  checkboxOut.checked = false;
+ arrowout.style.borderLeftColor="#ccc";
+ l3.style.borderColor='#ccc';
+
+ }
+ if(checkboxOutFeeds.checked)
+ {
+  checkboxOut.checked = true;
+  arrowout.style.borderLeftColor="#FEB018";
+          l3.style.borderColor='#FEB018';
+
+ }
+arm_out();
+});
+
+
+
+
+function arm_in(){
+
+    if (checkboxIn.checked && !checkboxOut.checked ) {
+          arrowIn.style.borderLeftColor="#018FFB";
+          l1.style.borderColor='#018FFB';
+          checkboxInFeeds.checked=true;
+          for( var i=1; i<5; i++)
+        {
+          document.getElementById('arm_in'+i).disabled = false;
+
+        }
+  
+       
+    }
+    if(checkboxOut.checked && checkboxIn.checked){
+        checkboxAll.checked = true;
+           arrowIn.style.borderLeftColor="#018FFB";
+          l1.style.borderColor='#018FFB';
+          checkboxInFeeds.checked=true;
+          for( var i=1; i<5; i++)
+        {
+          document.getElementById('arm_in'+i).disabled = false;
+
+        }
+     }
+
+     if(!checkboxOut.checked && !checkboxIn.checked){
+          checkboxAll.checked = false;
+           arrowIn.style.borderLeftColor="#ccc";
+          l1.style.borderColor='#ccc';
+          arrowout.style.borderLeftColor="#ccc";
+          l3.style.borderColor='#ccc';
+         
+     }
+
+}
+
+function arm_out(){
+  if (!checkboxOut.checked && checkboxIn.checked ) {
+      arrowIn.style.borderLeftColor="#018FFB";
+          l1.style.borderColor='#018FFB';
+
+    }
+
+   if(checkboxOut.checked && checkboxIn.checked){
+      checkboxAll.checked = true;
+     
+          arrowout.style.borderLeftColor="#FEB018";
+          l3.style.borderColor='#FEB018';
+          checkboxOutFeeds.checked=true;
+          for( var i=1; i<5; i++)
+        {
+          document.getElementById('arm_out'+i).disabled = false;
+
+        }
+    }
+    if(checkboxOut.checked && !checkboxIn.checked){
+ 
+          arrowout.style.borderLeftColor="#FEB018";
+          l3.style.borderColor='#FEB018';
+          checkboxOutFeeds.checked=true;
+
+          for( var i=1; i<5; i++)
+        {
+          document.getElementById('arm_out'+i).disabled = false;
+
+        }
+    }
+
+}
+function arm_all(){
+  if (checkboxAll.checked) {
+        checkboxIn.checked = true;
+        checkboxOut.checked = true;
+        checkboxAll.checked = true;
+        checkboxInFeeds.checked=true;
+        checkboxOutFeeds.checked=true;
+
+        arrowIn.style.borderLeftColor="#018FFB";
+        l1.style.borderColor='#018FFB';
+        arrowout.style.borderLeftColor="#FEB018";
+        l3.style.borderColor='#FEB018';
+
+        for( var i=1; i<5; i++)
+        {
+          document.getElementById('arm_in'+i).disabled = false;
+          document.getElementById('arm_out'+i).disabled = false;
+        }
+  
+    }
+}
+
+
+
+
+</script>
+
+</body>
+</html>

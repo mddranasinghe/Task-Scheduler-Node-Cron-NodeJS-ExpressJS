@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../resources\js\apexcharts.min.js"></script>
+    <style>
+body{touch-action: pan-y;}
+div.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;}
+ * {
+	
+    font-family: 'Avenir', sans-serif;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.Gui_table{border-style: none; width: 85%; margin: 0 auto;}
+td{border-style: none; vertical-align: top;}
+.continar{width: 98%; height: 500px; margin: 0 auto;  position: relative; }
+.continar img{width: 50px; height: 50px; }
+#image_generetor{display: inline; position: absolute;}
+#image_home{   width: 50px; height: 50px; position: relative;  margin-top:95px;}
+
+
+#left_path{ height: 80px; border-style: solid; border-color:rgb(193, 203, 205); border-top: none; border-right: none; border-width: 5px; margin-left: 20px; margin-bottom: 10%; }
+#middle_path{ display: inline;margin-top: 50px; position: absolute; width: 13px; height: 42px;  border-style: solid; border-color: rgb(193, 203, 205); border-top: none;  border-bottom:none; border-width: 5px; margin-left: 14.5px; margin-bottom: 10%;  border-left: none;}
+#right_path{ height: 80px; border-style: solid; border-color: rgb(193, 203, 205); border-top: none; border-left:none ; border-width: 5px; margin-right: 20px; margin-bottom: 10%;}
+
+/*  animation */
+#left_path{
+ --angle: 0deg;
+ --rotation-angle: -360deg;
+  border-image: linear-gradient(var(--angle), #7af780, green ) 1;
+  animation: 1s rotate linear infinite;
+
+}
+
+right_path {
+  --angle: 0deg;
+  --rotation-angle: 360deg;
+  border-image: linear-gradient(var(--angle), #7af780, green) 1;
+  animation: 1s rotate linear infinite;
+
+}
+
+@keyframes rotate {
+  to {
+    --angle: var(--rotation-angle);
+    }
+}
+        
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+#image_solar.hover-effect,#image_home.hover-effect,#image_grid.hover-effect,#image_generetor.hover-effect{ opacity: 0.5;}
+.Details_menu{width: 100%; height:100%; margin-bottom: 10px;}
+.details_box{width: 100%; height: 75px; background-color: #FFF1DC; margin-top: 2%; border-radius: 10px 10px; }
+
+.button-div button{ width: 46%; margin-left: 2.6%; margin-top: 2%; margin-bottom: 2%; background-color: white;box-shadow: 0.4px 0.4px 2px 0.4px gray;border: none; border-radius: 5px 5px; padding-top:10px; padding-bottom: 10px; font-weight: bold;} 
+.apexcharts-menu-icon {
+  display: none;
+}
+
+
+
+
+
+    </style> 
+</head>
+<body>
+    <div  class="continar">
+        <table style="width: 100%;"><tr>
+       
+            <td><a href="../index.html"><img src="../resources/image/less-than.png" style="width: 30px; height: 35px;margin-top: 50%; "></a></td>
+            <td style="text-align: center; width:100%;" > <h2 >Power Source Status</h2></td>
+          </tr></table>
+         <table class="Gui_table" >
+    <tr >
+        <td style="width: 50%; padding-top: 10px;text-align: left;">
+            <img src="../resources/image/power\solar.svg" id="image_solar" alt="Power" onclick="Details_menu_solar()" ontouchstart="addHoverClass('image_solar')" ontouchend="removeHoverClass('image_solar')" >
+            <div  id="left_path"></div></td>
+        <td style=" padding-top: 10px;" width="1px">
+            <img src="../resources\image\power\generetor.svg" id="image_generetor" alt="Power"  onclick="Details_menu_generetor()"  ontouchstart="addHoverClass('image_generetor')" ontouchend="removeHoverClass('image_generetor')" >
+            <div  id="middle_path" ></div>
+       
+            <img src="../resources\image\power\h.svg" id="image_home" alt="Power"onclick="Details_menu_home()" ontouchstart="addHoverClass('image_home')" ontouchend="removeHoverClass('image_home')"  >  </td>
+        <td style="width: 50%; padding-top: 10px; text-align:right;">
+            <img src="../resources\image\power\grid.svg" id="image_grid" alt="Power" onclick="Details_menu_grid()" ontouchstart="addHoverClass('image_grid')" ontouchend="removeHoverClass('image_grid')" >
+            
+            <div id="right_path" ></div> </td>
+    </tr>
+  <tr>
+    <td colspan="3" style="text-align: center;">
+    <div class="Details_menu" id="Details_menu_home" style="display: inline-block;" >
+    <div class="details_box"> notice</div>
+
+
+    </div>
+</div>
+</td></tr>
+</table><!-- #F3F3F3-->
+
+
+
+<div class="sticky">
+    <p style="font-size: 20px; font-weight: bold;">Monitor Soruce Run Time</p>
+    <div id="monitor_device" style="color: gray; font-weight: bold; margin-left: 2.6%">Home Power</div>
+
+    <div class="button-div" style="margin: 0 auto; width: 100%; margin-bottom: 5px;">
+        <button id="weekButton" ontouchstart="addHoverClass('weekButton')" ontouchend="removeHoverClass('weekButton')" clicked>Week</button>
+        <button id="monthButton" ontouchstart="addHoverClass('monthButton')" ontouchend="removeHoverClass('monthButton')">Month</button>
+    </div>
+</div>
+
+<div id="chart" style="width: 100%; box-shadow: 0.5px 0.5px 3px 0.5px gray;">
+
+</div>
+
+
+<script>
+var chart,options,
+X_categories= ["Mon", "Tues", "Wed", "Thu", "Fri", "Sta", "Sun"],
+chartHeiht= X_categories.length*50,
+solarData = {  name: 'Solar Power',  data: [43, 55, 41, 37, 32, 33, 30]},
+generatorData = { name: 'Generator Power', data: [53, 32, 33, 40, 32, 33, 34]},
+gridData = { name: 'Grid Power', data: [12, 17, 11, 32, 33, 40, 20]};
+
+function chartFun(send) {
+     options = {
+        series: send,
+        chart: { type: 'bar', height: chartHeiht,stacked: true,
+        },
+        plotOptions: {
+            bar: { barHeight: '25px', height:'50px', horizontal: true, dataLabels: {
+                    total: {  enabled: true,  offsetX: 0,
+                        style: {  fontSize: '13px',  fontWeight: 900 }  } } },
+        },
+        stroke: {width: 1,colors: ['#fff'] },
+        title: {text:undefined  },
+        xaxis: {
+            categories: X_categories,
+            labels: {formatter: function (val) {
+                    return val + "Min"}  }
+        },
+        yaxis: {
+            title: { text: undefined },
+        },
+        tooltip: {
+            y: { formatter: function (val) {
+                    return val + "min"}}
+        },
+       
+fill: {
+  colors: [ function({ seriesIndex, w }) {
+    var name = send[seriesIndex].name;
+    if(name === 'Solar Power') {
+        return '#018FFB'
+    } else if (name === 'Generator Power') {
+        return '#00E296'
+    } else if (name === 'Grid Power'){
+        return '#FEB018'
+    } }]
+},    
+ legend: {position: 'top',horizontalAlign: 'left',offsetX: 20, markers: {fillColors: ['#018FFB', '#00E296', '#FEB018']}}
+    };
+    
+    if (chart) {chart.destroy();}
+
+    chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+        
+}
+chartFun([solarData, generatorData, gridData]);
+
+function Details_menu_solar()
+{
+document.getElementById('monitor_device').innerHTML="Solar Power";
+
+chartFun([solarData]);
+}
+
+
+
+function Details_menu_generetor(){
+ document.getElementById('monitor_device').innerHTML="Genertor Power";
+
+chartFun([generatorData]);
+}
+
+function Details_menu_grid(){
+ document.getElementById('monitor_device').innerHTML="Grid Power";
+
+chartFun([gridData]);
+}
+
+function Details_menu_home(){
+ document.getElementById('monitor_device').innerHTML="Home Power";
+ chartFun([solarData, generatorData, gridData]);
+
+}
+
+
+function addHoverClass(id) {
+    document.getElementById(id).classList.add('hover-effect');
+}
+
+function removeHoverClass(id) {
+    document.getElementById(id).classList.remove('hover-effect');
+}
+    document.getElementById('weekButton').addEventListener('click',function(){
+    document.getElementById('weekButton').style.backgroundColor = '#E0ECFC';
+    document.getElementById('monthButton').style.backgroundColor = 'white';
+    chartFun([solarData, generatorData, gridData]);})
+
+    document.getElementById('monthButton').addEventListener('click',function(){
+    document.getElementById('monthButton').style.backgroundColor = '#E0ECFC';
+    document.getElementById('weekButton').style.backgroundColor = 'white';
+    chartFun2([solarData, generatorData, gridData]);
+
+
+})
+
+    window.addEventListener('load', function() {
+            var weekButton = document.getElementById('weekButton');
+            weekButton.click();
+        });
+
+
+function addclass(){
+
+        document.getElementById('middle_path').style.display='inline';
+        document.getElementById('image_generetor').style.display='inline';
+       document.getElementById('')
+}
+
+</script>
+</body>
+</html>

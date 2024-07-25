@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="data:,">
+    <title>water pump</title>
+    <script src="../resources/js/paho.javascript-1.0.3/paho-mqtt-min.js"></script>
+    <script src="../resources/js/connection.js"></script>
+    <style>
+  body{touch-action: pan-y;}
+.toggle { position: relative; box-sizing: border-box;}
+.toggle input[type="checkbox"] {
+  position: absolute;
+  left: 2px;
+  top: 0;
+ /* z-index: 10;*/
+  width: 85%;
+  height: 70%;
+  cursor: pointer;
+  opacity: 0;}
+
+.toggle label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;}
+
+.toggle label:before {
+  content: '';
+  width: 50px;
+  height: 22px;
+  background: #ccc;
+  position: relative;
+  display: inline-block;
+  border-radius: 46px;
+  box-sizing: border-box;
+  transition: 0.2s ease-in;
+}
+.toggle label:after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  left: 2px;
+  top: 2px;
+  z-index: 2;
+  background: #fff;
+  box-sizing: border-box;
+  transition: 0.2s ease-in;
+}
+.toggle input[type="checkbox"]:checked + label:before { background: #4BD865;}
+.toggle input[type="checkbox"]:checked + label:after {left: 30px;}
+
+
+.controlpanels{   width: 95%;   margin: 0 auto;  font-family: 'Avenir', sans-serif;}
+.mainpump ,.System ,.Tubewell{ width:100%;box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 3px 3px;}
+.status_box {
+        padding-left: 20px;
+        padding-right: 20px;
+        background-color:white;
+        display: flex; /* Use flexbox to align children */
+         align-items: center; 
+        }
+
+.topic {flex: 1;} /* Expand to fill remaining space */
+.option { margin-left: center;} /* Push to the right */
+
+#set_timer_time{display: none; width: 45px;height: 20px;  text-align:center; }
+#set_timer_time_tubewell{display: none; width: 45px;height: 20px; text-align:center;}
+#set_timer_time_soft{display: none; width: 45px;height: 20px; text-align:center;}
+
+/*#pumppower_mainpump{z-index: 4;}*/
+#pumppower_status_tubewell{z-index: 8;}
+
+.signal-bars {display: flex; margin: 2px; }
+ .bar {width: 3px;margin-right: 1px;background-color: #ccc;}
+
+
+ .popup {
+    width: 80%;
+  display: none; 
+  position: fixed;
+  top: 90%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  border-radius: 10px 10px;
+  background-color:#7D63BE;
+ 
+  z-index: 9999; 
+  color: white;
+  font-size: 100%;
+ 
+}
+
+
+.popup-content {text-align: center;margin-bottom:0%; }
+
+#overlay_gui{
+  /*   position: fixed;*/
+     display: none;
+     width: 100%;
+     height: 100%;
+     top: 0;
+     left: 0;
+     background-color: rgba(0,0,0,0.5);
+     z-index: 9998;
+     cursor: pointer;
+     position: absolute;
+   
+    }
+
+    </style>
+</head>
+<body>
+ 
+    <div class="controlpanels">
+      <table style="width: 100%;"><tr>
+       
+      <td><a href="../index.html"><img src="../resources/image/less-than.png" style="width: 30px; height: 35px; "></a></td>
+      <td> <h2 style="text-align: center;">  Pump Control Status</h2></td>
+    </tr></table>
+    
+<table><tr style="width: 100%;"><td  style="width: 50%;"><p style=" color:grey; margin-bottom: -2px; margin-top: 3px;"><b>Main pump status </b> </p></td><td style="width: 50%; text-align: right;">
+  <p style="font-size: 13px; color:rgb(156, 156, 156) ; display: inline;" id="offline">offline</p> 
+  <p style="font-size: 13px; color:#7BDD0A; display: none;" id="online">online</p></td>
+  <td>
+    <div class="signal-bars" id="signalBars">
+      <div class="bar" id="bar1" style="height:2px; margin-top:8px;"></div>
+      <div class="bar" id="bar2"style="height:4px;margin-top:6px;" ></div>
+      <div class="bar" id="bar3"style="height:6px;margin-top:4px;"></div>
+      <div class="bar" id="bar4"style="height:8px;margin-top:2px;"></div>
+      <div class="bar" id="bar5"style="height:10px;"></div>
+  </div></td></tr></table>
+            <div class="mainpump">
+         
+                   <div class="status_box">
+                      <div class="topic"><p>Auto Mode</p></div>
+                      <div class="option">  <div class="toggle">
+                      <input type="checkbox" id="automode_mainpump"  ><label for="automode_mainpump" id="toggleLabel_mainpump_auto"></label></div> 
+                   </div>
+                  </div>
+        
+                  <div class="status_box">
+                      <div class="topic"><p>Pump Power</p></div>
+                      <div class="option"> <div class="toggle" id="toggle_pumppower_mainpump" onclick="openPopupmain()">
+                      <input type="checkbox" id="pumppower_mainpump"  ><label for="pumppower_mainpump" id="toggleLabel_pumppower_mainpump"></label></div>  
+                    </div>
+                    <P style="display:None;color: rgb(70, 184, 110);" id="pumppower_status_mainpower">ON</P>
+                    <p style="display:None; color:rgb(156, 156, 156) ;"  id="pumppower_status_mainpower_OFF">OFF</p>
+                  </div> 
+
+               
+                <div class="status_box">
+                  <div class="topic"><p>O/H Tank Floater</p></div>
+                  <div class="option"><P style="display:none;color:rgb(70, 184, 110)" id="o/h_on">ON</P><P id="o/h_off" style="color:rgb(156, 156, 156)">OFF</P> </div>
+              </div> 
+          
+
+            <div class="status_box">
+              <div class="topic"><p>Sump Floater</p></div>
+              <div class="option"><P style="display:none;color:rgb(70, 184, 110)" id="sump_on">ON</P><P id="sump_off" style="color:rgb(156, 156, 156)">OFF</P></div>
+          </div> 
+          
+        <div class="status_box" >
+          <div class="topic"><p>Pump Timer</p></div>
+          <div class="option" > <div class="toggle" onclick="openPopupmain()">
+          <input type="checkbox" id="pumptimer_mainpump" /><label for="pumptimer_mainpump" id="toggleLabel_pumptimer_mainpump"></label> </div>
+      </div> 
+    </div>
+
+         <div class="status_box" id="set_timer_time_box">
+          <div class="topic"><p id="label_timer_time" >Timer Time(Sec)</p></div>
+          <div class="option" ><div style=" margin-top:12.6px;margin-bottom: 12.6px;">
+          <input type="number" min="5" max="3600" id="set_timer_time"  /><label for="set_timer_time" id="toggleLabel_set_timer_time_mainpump"></label></div> 
+    
+
+    </div>
+  </div>
+
+ 
+  </div>
+
+
+    <p style="color:grey; margin-bottom: 3px; margin-top: 30px;"><b>Tubewell Pump Status</b></p>
+        
+    <div class="Tubewell" id="s">
+
+           <div class="status_box">
+              <div class="topic"><p>Auto Mode</p></div>
+              <div class="option">  <div class="toggle" >
+              <input type="checkbox" id="automode_tubewell"/><label for="automode_tubewell" id="toggleLabel_automode_tubewell" ></label></div> 
+           </div>
+          </div>
+
+          <div class="status_box">
+              <div class="topic"><p>Pump Power</p></div>
+              <div class="option"> <div class="toggle" id="toggle_pumppower_tubewell" onclick="openPopupTubewell()">
+              <input type="checkbox" id="pumppower_tubewell"/><label for="pumppower_tubewell" id="toggleLabel_pumppower_tubewell"></label></div> 
+              <P style="display:None;color: rgb(70, 184, 110);" id="pumppower_status_tubewell">ON</P>
+                    <p style="display:none; color:rgb(156, 156, 156) ;" id="pumppower_status_tubewell_off">OFF</p>
+          </div> 
+        </div>
+
+    <div class="status_box">
+      <div class="topic"><p>Tubewell Floater</p></div>
+      <div class="option"><P style="display:none;color:rgb(70, 184, 110)" id="Tubewell_floater_on">ON</P><P id="Tubewell_floater_off" style="color:rgb(156, 156, 156)">OFF</P></div>
+  </div> 
+
+
+<div class="status_box">
+  <div class="topic"><p>Pump Timer </p></div>
+  <div class="option"> <div class="toggle" onclick="openPopupTubewell()">
+  <input type="checkbox" id="pumptimer_tubewell"><label for="pumptimer_tubewell" id="toggleLabel_pumptimer_tubewell" ></label></div> 
+</div> 
+</div>
+
+<div class="status_box">
+  <div class="topic"><p id="label_timer_time_tubewell" >Timer Time(Sec)</p></div>
+  <div class="option" ><div style=" margin-top:12.6px;margin-bottom: 12.6px;">
+  <input type="number" min="5" max="18000" id="set_timer_time_tubewell" value="60"/><label for="set_timer_time_tubewell" id="toggleLabel_set_timer_time_tubewelll"></label></div> 
+</div>
+</div>
+
+
+
+</div>
+ 
+  <p style="color:grey ; margin-bottom: 3px; margin-top: 30px;"><b>System</b></p>
+      
+  <div class="System">
+
+         <div class="status_box">
+            <div class="topic"><p>Soft Start</p></div>
+            <div class="option">  <div class="toggle">
+            <input type="checkbox"  id="Soft_Start1" ><label for="Soft_Start1" id="toggleLabel"></label></div> 
+         </div>
+        </div>
+        
+<div class="status_box" id="soft_box">
+  <div class="topic"><p id="label_timer_time_soft">Timer Time(Sec)</p></div>
+  <div class="option" ><div style=" margin-top:12.6px;margin-bottom: 12.6px;">
+  <input type="number" min="5" max="18000" id="set_timer_time_soft" value=""/><label for="set_timer_time_soft" id="toggleLabel_set_timer_time_soft"></label></div> 
+</div>
+</div>
+
+  <div class="status_box">
+    <div class="topic"><p>Firmware Version</p></div>
+    <div class="option"><P style="color:rgb(156, 156, 156)" id="fw">--</P> </div>
+</div> 
+
+<div class="status_box">
+  <div class="topic"><p>Up Time</p></div>
+  <div class="option"><P style="color:rgb(156, 156, 156)" id="up">--</P> </div>
+</div> 
+
+<div class="status_box" onclick="openPopup()">
+  <div class="topic" ><p>Time</p></div>
+  <div class="option"><P style="color:rgb(156, 156, 156)" id="time">--</P> </div>
+</div> 
+
+  </div>      
+    </div>
+    <div id="popup" class="popup" >
+      <div class="popup-content" >
+        <p >Auto Mode Enable !</p>
+
+      </div>
+    </div>
+
+ <script  type="text/javascript" defer="true">
+//..............................................................................................................
+var payload; var companyID="node"; var deviceType="spc"; var deviceID="7469308fcf871dad4d4" ;
+var publish_topic=companyID+"/"+deviceType+"/"+"b2n/"+deviceID+"/";// publish topic
+const subTopic = companyID+"/"+deviceType+"/"+"n2b/"+deviceID+"/+";// subscribe topic
+let rebootfun=true;
+var ovarlay=  document.getElementsByClassName("status_box");
+//..............................................................................................................
+var automodemain,automodetubewell, stat;
+
+function connect(){
+try{
+client.connect({ onSuccess: onConnect,useSSL: mqttUseSSL,userName,password });
+client.onConnectionLost = onConnectionLost;
+client.onMessageArrived = onMessageArrived;
+}catch
+{
+
+}}
+
+function onConnect() {
+
+    console.log("onConnect");    
+   client.subscribe(subTopic);
+    sendCommandToDevice(publish_topic+"info","read");
+
+}
+
+function sendCommandToDevice(topic,payload) {
+  try{
+    if (client.isConnected()) {
+        console.log("sendCommandToDevice: " + topic + ", Payload: " + payload);
+        var message = new Paho.MQTT.Message(payload);
+        message.destinationName = topic;
+        client.send(message);
+    }}
+    catch(error)
+    {
+      console.log(error);
+    }
+}
+
+
+function onMessageArrived(message) {
+  try{
+   onlinestatus();
+  topic = message.destinationName;
+  payload=message.payloadString;
+    console.log("Payload:" + payload);
+    console.log("Topic:", topic);
+    displayFunction(payload);  
+  }
+  catch(error)
+  {
+    console.log(error);
+
+  }
+  
+}
+
+function onConnectionLost(responseObject) {
+  if (responseObject.errorCode !== 0) {
+    console.log("onConnectionLost:"+responseObject.errorMessage);
+    offlinestatus('offline');
+  }
+  
+}
+
+
+//setInterval(offlinestatus, 1000);
+
+function onlinestatus()
+{
+  document.getElementById("offline").style.display="none";
+  document.getElementById("online").style.display="inline";
+  for (var i = 0; i < ovarlay.length; i++) {
+  ovarlay[i].style.backgroundColor = "white";}
+  document.getElementById("automode_tubewell").disabled = false;
+ document.getElementById("automode_mainpump").disabled = false;
+
+  document.getElementById("pumppower_tubewell").disabled = false;
+  document.getElementById("pumptimer_tubewell").disabled = false;
+
+  document.getElementById("pumppower_mainpump").disabled = false;
+ document.getElementById("pumptimer_mainpump").disabled = false;
+
+ document.getElementById('Soft_Start1').disabled = false;
+ document.getElementById("set_timer_time").disabled = false;
+ document.getElementById("set_timer_time_tubewell").disabled = false;
+ document.getElementById("set_timer_time_soft").disabled = false;
+
+}
+
+function offlinestatus(stat)
+{
+  document.getElementById("offline").style.display="inline";
+ if(stat === 'offline'){  document.getElementById("offline").style.color="#FF3827";}
+
+
+// document.getElementById("overlay_gui").style.display="block";
+
+  document.getElementById("automode_tubewell").disabled = true;
+ document.getElementById("automode_mainpump").disabled = true;
+ 
+  document.getElementById("pumppower_tubewell").disabled = true;
+  document.getElementById("pumptimer_tubewell").disabled = true;
+
+  document.getElementById("pumppower_mainpump").disabled = true;
+  document.getElementById("pumptimer_mainpump").disabled = true;
+ 
+
+  document.getElementById("online").style.display="none";
+
+  document.getElementById('Soft_Start1').disabled = true;
+  document.getElementById("set_timer_time").disabled = true;
+ document.getElementById("set_timer_time_tubewell").disabled = true;
+ document.getElementById("set_timer_time_soft").disabled = true;
+
+for (var i = 0; i < ovarlay.length; i++) {
+ovarlay[i].style.backgroundColor = "#C2C2C2";}
+
+for(var x = 0; x < bar.length; x++)
+{
+bar[x].style.backgroundColor = "#ccc";
+}
+
+}
+
+      var automode_mainpump=document.getElementById('automode_mainpump');
+      automode_mainpump.addEventListener('change', function(){
+        var topic=publish_topic+"sw/mode/1";
+      
+        if(this.checked)
+        {
+          payload="1";
+          document.getElementById("pumppower_mainpump").disabled = true;
+          document.getElementById("pumptimer_mainpump").disabled = true;
+        }
+        else{
+          payload="0";
+          document.getElementById("pumppower_mainpump").disabled = false;
+          document.getElementById("pumptimer_mainpump").disabled = false;
+        }
+        sendCommandToDevice(topic,payload);
+
+        
+      });
+
+      var pumptimer_mainpump=document.getElementById('pumptimer_mainpump');
+      pumptimer_mainpump.addEventListener('change', function(){
+        if(this.checked){
+          document.getElementById("label_timer_time").style.display="inline";
+          document.getElementById("set_timer_time").style.display="inline"; 
+        }else{
+          document.getElementById("label_timer_time").style.display="none";
+          document.getElementById("set_timer_time").style.display="none"; }
+        });
+
+      var pumptimer_tubewell=document.getElementById('pumptimer_tubewell');
+      pumptimer_tubewell.addEventListener('change', function(){
+        if(this.checked)
+        {
+          document.getElementById("label_timer_time_tubewell").style.display="inline";
+          document.getElementById("set_timer_time_tubewell").style.display="inline"; 
+        }
+        else{
+          document.getElementById("label_timer_time_tubewell").style.display="none";
+          document.getElementById("set_timer_time_tubewell").style.display="none"; 
+
+        }
+      });
+
+      var automode_tubewell = document.getElementById('automode_tubewell');
+      automode_tubewell.addEventListener('change', function() {
+        var topic=publish_topic+"sw/mode/2";
+      
+        if (this.checked) {
+          document.getElementById("pumppower_tubewell").disabled = true;
+          document.getElementById("pumptimer_tubewell").disabled = true;
+          payload="1";
+       } 
+       else{
+        document.getElementById("pumppower_tubewell").disabled = false;
+          document.getElementById("pumptimer_tubewell").disabled = false;
+          payload="0";
+       }
+         sendCommandToDevice(topic,payload);
+      });
+
+
+      
+      document.getElementById('pumppower_mainpump').addEventListener('change', function(){
+        var topic=publish_topic+"sw/set/1";
+      
+        if (this.checked) {
+          payload="1";
+        }
+        else{
+          payload="0";
+
+        }
+        sendCommandToDevice(topic,payload);
+      });
+
+
+      document.getElementById('pumppower_tubewell').addEventListener('change', function(){
+        var topic=publish_topic+"sw/set/2";
+      
+        if (this.checked) {
+          payload="1";
+        }
+        else{
+          payload="0";
+
+        }
+        sendCommandToDevice(topic,payload);
+      });
+
+      document.getElementById('Soft_Start1').addEventListener('change', function(){
+        var topic=publish_topic+"sw/soft_start";
+      
+        if (this.checked) {
+          payload="1";
+        }
+        else{
+          payload="0";
+
+        }
+       sendCommandToDevice(topic,payload);
+      });
+      document.getElementById('pumptimer_mainpump').addEventListener('change', function(){
+        var topic=publish_topic+"sw/timer_mode_all";
+       
+        if (this.checked) {
+          payload="1,-";
+        }
+        else{
+          payload="0,-";
+         
+
+        }
+        sendCommandToDevice(topic,payload);
+      });
+      document.getElementById('pumptimer_tubewell').addEventListener('change', function(){
+        var topic=publish_topic+"sw/timer_mode_all";
+      
+        if (this.checked) {
+          payload="-,1";
+        }
+        else{
+          payload="-,0";
+
+        }
+        sendCommandToDevice(topic,payload);
+      });
+
+      var timer; 
+document.getElementById('set_timer_time').addEventListener('input', function(){
+    clearTimeout(timer); 
+    topic = publish_topic + "sw/on_time_all";
+    payload = this.value.trim(); 
+
+    if (payload !== "") { 
+        timer = setTimeout(function() {
+             payload = payload + ",-";
+            sendCommandToDevice(topic, payload);
+            console.log(payload);
+        }, 1000); 
+    }
+});
+
+
+
+var timer; 
+         document.getElementById('set_timer_time_tubewell').addEventListener('input', function(){
+         clearTimeout(timer); 
+          topic = publish_topic + "sw/on_time_all";
+          payload = this.value.trim();
+        if(payload !== ""){
+         timer = setTimeout(function() {
+        
+        payload = "-,"+payload;
+        sendCommandToDevice(topic, payload);
+        console.log(payload);
+    }, 1000); 
+  }
+});
+
+var timer; 
+         document.getElementById('set_timer_time_soft').addEventListener('input', function(){
+         clearTimeout(timer); 
+          topic = publish_topic + "sw/soft_delay";
+          payload = this.value.trim();
+        if(payload !== ""){
+         timer = setTimeout(function() {
+        sendCommandToDevice(topic, payload);
+        console.log(payload);
+    }, 1000); 
+  }
+});
+function displayFunction(payload) {
+      rebootfun=false;
+      payload = JSON.parse(payload);
+      stat=payload['stat'];
+
+      switch (payload['stat'])
+      {
+        case "online":
+          onlinestatus();
+          break;
+        case "offline":
+        offlinestatus(stat);
+          break;
+
+      }
+
+    if (payload.sw_mode && payload.sw_mode.length > 0 && payload.stat === "online") { // auto mode main pump
+        switch (payload.sw_mode[0]) { 
+            case 1:
+                document.getElementById('automode_mainpump').checked = true;
+                document.getElementById("pumppower_mainpump").disabled = true;
+                document.getElementById("pumptimer_mainpump").disabled = true;
+                document.getElementById("toggle_pumppower_mainpump").style.display="inline";
+                document.getElementById("set_timer_time").disabled = true;
+                break;
+
+            case 0:
+                document.getElementById('automode_mainpump').checked = false;
+                document.getElementById("pumptimer_mainpump").disabled = false;
+                document.getElementById("toggle_pumppower_mainpump").style.display="inline";
+
+
+                break;
+        }
+
+        automodemain=payload.sw_mode[0];
+
+    }
+
+   
+
+    if (payload.sw_mode && payload.sw_mode.length > 0 && payload.stat === "online") { // auto mpode tubewell
+        switch (payload.sw_mode[1]) {
+            case 1:
+                document.getElementById('automode_tubewell').checked = true;
+                document.getElementById("pumppower_tubewell").disabled = true;
+                document.getElementById("pumptimer_tubewell").disabled = true;
+                document.getElementById("toggle_pumppower_tubewell").style.display="inline";
+                 document.getElementById("set_timer_time_tubewell").disabled = true;
+                break;
+            case 0:
+                document.getElementById('automode_tubewell').checked = false;
+                document.getElementById("pumppower_tubewell").disabled = false;
+                document.getElementById("pumptimer_tubewell").disabled = false;
+                document.getElementById("toggle_pumppower_tubewell").style.display="inline";
+                break;
+        }
+        automodetubewell=payload.sw_mode[1];
+    }
+    
+    switch (payload['soft_start']) { 
+            case 1:
+                document.getElementById('Soft_Start1').checked = true;
+               document.getElementById("label_timer_time_soft").style.display="inline";
+              document.getElementById("set_timer_time_soft").style.display="inline";
+                document.getElementById("soft_box").style.display="flex"; 
+
+                break;
+            case 0:
+                document.getElementById('Soft_Start1').checked = false;
+                document.getElementById("label_timer_time_soft").style.display="none";
+                document.getElementById("set_timer_time_soft").style.display="none"; 
+                document.getElementById("soft_box").style.display="none";
+                break;
+        }
+    
+
+
+        if (payload.sw && payload.sw.length > 0) {  //   main pump switch
+        switch (payload.sw[0]) {
+            case 1:
+                document.getElementById('pumppower_mainpump').checked = true;
+                break;
+            case 0:
+                document.getElementById('pumppower_mainpump').checked = false;
+                break;
+        }
+    }
+
+
+    if (payload.sw && payload.sw.length > 0) {  // tubewell pump switch
+        switch (payload.sw[1]) {
+            case 1:
+                document.getElementById('pumppower_tubewell').checked = true;
+                break;
+            case 0:
+                document.getElementById('pumppower_tubewell').checked = false;
+                break;
+        }
+    }
+
+    if (payload.floater && payload.floater.length > 0) { // o/h floater
+        switch (payload.floater[0]) {
+            case 1:
+                document.getElementById('o/h_on').style.display="inline";
+                document.getElementById('o/h_off').style.display="none";
+               
+                break;
+            case 0:
+                document.getElementById('o/h_on').style.display="none";
+                document.getElementById('o/h_off').style.display="inline";
+
+                break;
+        }
+    }
+    if (payload.floater && payload.floater.length > 0) { // sump floater
+        switch (payload.floater[1]) {
+            case 1:
+                document.getElementById('sump_on').style.display="inline";
+                document.getElementById('sump_off').style.display="none";
+               
+                break;
+            case 0:
+                document.getElementById('sump_on').style.display="none";
+                document.getElementById('sump_off').style.display="inline";
+                break;
+        }
+    }
+
+    if (payload.floater && payload.floater.length > 0) { //tubewell floater
+        switch (payload.floater[2]) {
+            case 1:
+                document.getElementById('Tubewell_floater_on').style.display="inline";
+                document.getElementById('Tubewell_floater_off').style.display="none";
+               
+                break;
+            case 0:
+                document.getElementById('Tubewell_floater_on').style.display="none";
+                document.getElementById('Tubewell_floater_off').style.display="inline";
+                break;
+        }
+    }
+
+
+    if (payload.pmp_timer && payload.pmp_timer.length > 0) { // main pump timer
+        switch (payload.pmp_timer[0]) {
+            case 1:
+                document.getElementById('pumptimer_mainpump').checked = true;
+                document.getElementById("label_timer_time").style.display="inline";
+                document.getElementById("set_timer_time").style.display="inline"; 
+                break;
+            case 0:
+                document.getElementById('pumptimer_mainpump').checked = false;
+                document.getElementById("label_timer_time").style.display="none";
+                document.getElementById("set_timer_time").style.display="none"; 
+                break;
+        }
+    }
+
+
+    if (payload.pmp_timer && payload.pmp_timer.length > 0) { // tubewell timer
+        switch (payload.pmp_timer[1]) {
+            case 1:
+                document.getElementById('pumptimer_tubewell').checked = true;
+                document.getElementById("label_timer_time_tubewell").style.display="inline";
+                document.getElementById("set_timer_time_tubewell").style.display="inline"; 
+                break;
+            case 0:
+                document.getElementById('pumptimer_tubewell').checked = false;
+                document.getElementById("label_timer_time_tubewell").style.display="none";
+                document.getElementById("set_timer_time_tubewell").style.display="none"; 
+                break;
+        }
+    }
+
+
+    document.getElementById('up').innerHTML = formatTime(payload["up"]);// runing time
+    function formatTime(minutes) {
+    var days = Math.floor(minutes / (24 * 60)).toString().padStart(2, '0');
+    var remainingMinutes = minutes % (24 * 60);
+    var hours = Math.floor(remainingMinutes / 60).toString().padStart(2, '0');
+    var remainingSeconds = remainingMinutes % 60;
+    var formattedMinutes = remainingSeconds.toString().padStart(2, '0');
+    return days + "d: " + hours + "h: " + formattedMinutes + "m";
+}
+
+
+    
+    if(payload['fw']){ document.getElementById('fw').innerHTML = (payload["fw"]);}//  version 
+    if(payload['time']){ document.getElementById('time').innerHTML = (payload["time"]);}//device location time
+
+document.getElementById('set_timer_time').value=payload.timer_val[0];// main pump time
+document.getElementById('set_timer_time_tubewell').value=payload.timer_val[1];// tubewell time
+document.getElementById('set_timer_time_soft').value=payload['soft_delay'];// soft time
+
+updateSignalStrength(payload['rssi'],payload['stat']);//rssi
+
+
+}
+
+
+var bar=  document.getElementsByClassName("bar");  //signal bar.
+    function updateSignalStrength(rssi,stat) {
+    if(stat === 'online'){
+      if (rssi >= -50) {
+    bar[0].style.backgroundColor = "#565461";
+    bar[1].style.backgroundColor = "#565461";
+    bar[2].style.backgroundColor = "#565461";
+    bar[3].style.backgroundColor = "#565461";
+    bar[4].style.backgroundColor = "#565461";
+} else if (rssi >= -55) {
+    bar[0].style.backgroundColor = "#565461";
+    bar[1].style.backgroundColor = "#565461";
+    bar[2].style.backgroundColor = "#565461";
+    bar[3].style.backgroundColor = "#565461";
+} else if (rssi >= -65) {
+    bar[0].style.backgroundColor = "#565461";
+    bar[1].style.backgroundColor = "#565461";
+    bar[2].style.backgroundColor = "#565461";
+} else if (rssi >= -80) {
+    bar[0].style.backgroundColor = "#565461";
+    bar[1].style.backgroundColor = "#565461";
+} else if (rssi >= -85) {
+    bar[0].style.backgroundColor = "#565461";
+} else if (rssi >= -100) {
+}
+    }
+    }
+
+
+
+    function openPopupTubewell(){
+ if(automodetubewell === 1 && stat === "online")
+{
+  var popup = document.getElementById("popup");
+  popup.style.display = "block";
+
+  setTimeout(function() {
+    popup.style.display = "none";
+  }, 1000); 
+
+}
+  }
+  function openPopupmain(){
+  if(automodemain === 1 && stat === "online"){
+  var popup = document.getElementById("popup");
+  popup.style.display = "block";
+
+  setTimeout(function() {
+    popup.style.display = "none";
+  }, 1000); 
+}
+  }
+
+connect();
+//offlinestatus('none'); // Call the function with argument 'none'
+
+setTimeout(function() {
+  if(stat !== 'online'){
+  offlinestatus('none');}
+   }, 1500); 
+
+ setInterval(connect, 2000);
+</script>
+</body>
+</html>

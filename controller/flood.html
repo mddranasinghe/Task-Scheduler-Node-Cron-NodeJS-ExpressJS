@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="data:,">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../resources\css\flood.css">
+    <script src="../resources/js/paho.javascript-1.0.3/paho-mqtt-min.js"></script>
+    <script src="../resources/js/connection.js"></script>
+    <style >
+
+      
+    html, body {
+     margin: 0;
+     height: 100%;
+     width: 100%;
+    
+    }
+    body{  background:white; font-family: 'Avenir';
+    font-family: sans-serif;}
+    #gui{width: 92.5%;height: 320px; margin: 0 auto; border:px solid; position: relative;box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 3px;}
+    
+
+    #container {
+     position: absolute;
+     width: 10vw;
+     height: 250px;
+     top: 50%;
+     left: 50%;
+     transform: translate3d(-50%, -50%, 0);
+   
+
+    }
+    input {
+     display: none;
+    }
+    #container label {
+    
+     position: absolute;
+     display: block;
+     width: 10vw;
+     height :250px;
+     background: transparent;
+     border-radius: 0.4rem;
+     border: 4px solid white;
+     overflow: hidden;
+     border-right: none;
+     border-top: none;
+     border-bottom:none ;
+     box-shadow: -2px 4px 8px 4px rgba(white, 0.6);
+     border-image: linear-gradient(to top, green 20%, orange 70%, red 100%) 1; /* Set border image with linear gradient */
+
+    }
+    #water_level
+    {
+      left:7px;
+      position: absolute;
+      width: 40px;
+      height: 100%;
+      border: 2px solid gray;
+      border-radius: 3px;
+      box-shadow: inset  0 0 0 2px  white;
+
+    }
+    #fill{
+      position: absolute;
+      width: 100%;
+      height: 1%; /*should 98.5%*/
+      z-index: -1;
+      background-color: #018FFB;
+      bottom: 2px;
+      border-radius:3px;
+    }
+    .level {
+     position: absolute;
+     font-size: 0.7rem;
+     text-transform: uppercase;
+     letter-spacing: 1.5px;
+     margin-top: 0.7rem;
+     margin-left: -117px;
+     top: 44%;
+     color:#FF9200
+    }
+    
+    .level:nth-of-type(2) {
+     margin-left: -115px;
+     top: -6%;
+     color: red
+    }
+    
+    .level:nth-of-type(3) {
+     margin-left: -87px;
+     top:91%;
+     color: green;
+    }
+  /*  .level:nth-of-type(4) {
+     margin-left: -85px;
+     top: -4%;
+     color: rgb(180, 4, 4);
+    }*/
+    
+    .toggle { position: relative; box-sizing: border-box;}
+    .toggle input[type="checkbox"] {
+     position: absolute;
+     left: 2px;
+     top: 0;
+    /* z-index: 10;*/
+     width: 85%;
+     height: 70%;
+     cursor: pointer;
+     opacity: 0;}
+    
+    .toggle label {
+     position: relative;
+     display: block;
+     align-items: center;
+     box-sizing: border-box;
+     }
+    
+    .toggle label:before {
+     content: '';
+     width: 50px;
+     height: 22px;
+     background: #ccc;
+     position: relative;
+     display: inline-block;
+     border-radius: 46px;
+     box-sizing: border-box;
+     transition: 0.2s ease-in;
+     
+    }
+    .toggle label:after {
+     content: '';
+     position: absolute;
+     width: 18px;
+     height: 18px;
+     border-radius: 50%;
+     left: 2px;
+     top: 2px;
+     z-index: 2;
+     background: #fff;
+     box-sizing: border-box;
+     transition: 0.2s ease-in;
+    }
+    .toggle input[type="checkbox"]:checked + label:before { background: #4BD865;}
+    .toggle input[type="checkbox"]:checked + label:after {left: 30px;}
+    
+    .main_top{color:grey; margin-bottom: 3px; margin-top: 20px;margin-left:1.8vw;}
+    
+    .Ac,.Al { width:97%;box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius:3px; margin: 0 auto; position: relative;}
+
+
+
+
+    .status_box {
+           padding-left: 20px;
+           padding-right: 20px;
+           background-color:white;
+           display: flex; /* Use flexbox to align children */
+            align-items: center; }
+    
+    .topic {flex: 1;} 
+    .option { margin-left: center;} /* Push to the right */
+    
+    
+    
+    .popup {
+     width: 70%;
+       display: none;
+       position: fixed;
+       top: 50%;
+       left: 50%;
+       transform: translate(-50%, -50%);
+       background-color: #ffffff;
+       border: 1px solid #ccc;
+       border-radius:20px;
+    
+       z-index: 9999;
+    }
+    
+    .popup-content {
+       text-align: center;
+    }
+    .pop_button{width: 100%; border-top:solid; border-width: .5px; border-color:gray; position:relative;}
+    
+    #yesButton, #noButton {
+    width: 49%;  
+    height: 47px;
+    border-left: solid;
+    border-color: gray;
+    border-width: 0.5px;
+    float: right;
+    color:blue;
+     }
+    #yesButton{border-left: none; color:red}
+    .pop_button p{ text-align:center; margin-bottom: 10px;}
+    
+    #overlay {
+     position: fixed;
+     display: none;
+     width: 100%;
+     height: 100%;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background-color: rgba(0,0,0,0.5);
+     z-index: 9998;
+     cursor: pointer;
+    }
+#overlay_gui,#overlay_ac,#overlay_al{
+  /*   position: fixed;*/
+     display: none;
+     width: 100%;
+     height: 100%;
+     top: 0;
+     left: 0;
+     background-color: rgba(0,0,0,0.5);
+     z-index: 9998;
+     cursor: pointer;
+     position: absolute;
+   
+    }
+    .signal-bars {display: flex; margin: 2px; }
+ .bar {width: 3px;margin-right: 1px;background-color: #ccc;}
+
+
+
+    @media only screen and (min-width: 900px) {
+      
+      body{width: 80%; margin: 0 auto;}
+    }
+
+/* loding css*/
+   
+#loding_box{
+
+position: relative;
+ width: 50px;
+ height: 50px; 
+ border:px solid;
+  top:-50%;
+  left:45% ;
+  z-index: 100;
+  border-radius: 8px;
+  display: none;
+
+
+}
+
+#loding_overlay{
+
+  position: fixed;
+     display: none;
+     width: 100%;
+     height: 100%;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background-color: rgba(0, 0, 0, 0.037);
+     z-index: 99;
+     cursor: pointer;
+}
+
+
+
+div.spinner {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+  margin-left: -40%;
+  margin-right: 50%;
+  background: #51525596;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+div.spinner div {
+  width: 6%;
+  height: 16%;
+  background: #FFF;
+  position: absolute;
+  left: 49%;
+  top: 43%;
+  opacity: 0;
+  -webkit-border-radius: 50px;
+  -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.2);
+  -webkit-animation: fade 1s linear infinite;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: 1;}
+  to {opacity: 0.25;}
+}
+
+div.spinner div.bar1 {
+  -webkit-transform:rotate(0deg) translate(0, -130%);
+  -webkit-animation-delay: 0s;
+}    
+
+div.spinner div.bar2 {
+  -webkit-transform:rotate(30deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.9167s;
+}
+
+div.spinner div.bar3 {
+  -webkit-transform:rotate(60deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.833s;
+}
+div.spinner div.bar4 {
+  -webkit-transform:rotate(90deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.7497s;
+}
+div.spinner div.bar5 {
+  -webkit-transform:rotate(120deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.667s;
+}
+div.spinner div.bar6 {
+  -webkit-transform:rotate(150deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.5837s;
+}
+div.spinner div.bar7 {
+  -webkit-transform:rotate(180deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.5s;
+}
+div.spinner div.bar8 {
+  -webkit-transform:rotate(210deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.4167s;
+}
+div.spinner div.bar9 {
+  -webkit-transform:rotate(240deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.333s;
+}
+div.spinner div.bar10 {
+  -webkit-transform:rotate(270deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.2497s;
+}
+div.spinner div.bar11 {
+  -webkit-transform:rotate(300deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.167s;
+}
+div.spinner div.bar12 {
+  -webkit-transform:rotate(330deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.0833s;
+}
+
+
+
+
+
+
+
+.info_icon
+{
+  padding-left: 5.5px;
+  padding-right: 5.5px;
+  padding-top: 1.2px;
+  padding-bottom: .5px; 
+  border: 2px solid;
+  border-radius:50%; 
+  font-size: 11.5px;
+  color:gray;
+  font-weight:bold;
+  
+}
+
+/*,,,,,,,,,,,,,,,,,,*/
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 150px;
+  background-color: #7d63be;
+  color: #fff;
+  text-align:left;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -85px;
+font-size: 12px;
+padding: 10px;
+
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #7D63BE transparent transparent transparent;
+}
+.tooltip:hover .tooltiptext,
+.tooltip .tooltiptext.hover-effect {
+      visibility: visible;
+    }
+	
+
+
+    </style>
+
+
+</head>
+<body>
+  
+    <table style="width: 100%;"><tr>
+        <td><a href="../index.html"><img src="../resources\image\flood\less-than.png" style="width: 30px; height: 35px;"></a></td>
+        <td style="text-align: center; width:100%;"><h2 >Flood Monitoring Systems</h2></td>
+      </tr></table>
+
+        <table style="width: 93%; margin: 0 auto;"><tr style="width: 90%;"><td  style="width: 50%;"><td style="width: 50%; text-align: right;">
+        <p style="font-size: 13px; color:rgb(156, 156, 156) ; display: inline;" id="offline">offline</p> 
+        <p style="font-size: 13px; color:#7BDD0A; display: none;" id="online"> online </p></td>
+        <td>
+          <div class="signal-bars" id="signalBars">
+            <div class="bar" id="bar1" style="height:2px; margin-top:8px;"></div>
+            <div class="bar" id="bar2"style="height:4px;margin-top:6px;" ></div>
+            <div class="bar" id="bar3"style="height:6px;margin-top:4px;"></div>
+            <div class="bar" id="bar4"style="height:8px;margin-top:2px;"></div>
+            <div class="bar" id="bar5"style="height:10px;"></div>
+        </div></td></tr></table>
+  
+      <div id="gui">
+        <div class="gui2">
+        <div id="container">
+           <div  id="water_level"><div id="fill"></div></div>
+            <label for="water"></label>
+      
+            <span class="level">Warning Level-</span>
+            <span class="level">Critical Level-</span>
+            <span class="level">Safe Level-</span>
+          <!-- <span class="level">high Level-</span>--> 
+           
+        <!-- <span id="progress">0%</span>-->
+          </div>
+
+        </div>
+        <div id="overlay_gui"></div>
+
+        </div>
+      <div style="width: 95%; margin: 0 auto;">
+    <p class="main_top"><b>Alert</b></p>
+    
+    <div class="Al">
+    <div class="status_box">
+        <div class="topic"><p class="tooltip">Critical Level Alert </p>
+
+          <div class="tooltip"id="tooltip-element1" onclick="infoBox('tooltip-element1')">  <span class="info_icon">i</span>
+             <span class="tooltiptext"> "If Critical level alerts have been disable. You will not receive notifications for critical levels." <br><img src="../resources\image\flood\gmil.webp" style="width: 25px; height: 25px; margin-left: 45px; margin-top: 2px;"> &nbsp<img src="../resources\image\flood\sms.webp" style="width: 25px; height: 25px; ">  </span>
+  
+          </div>
+        </div>
+        <div class="option">  <div class="toggle">
+        <input type="checkbox" id="c_al" onclick="actionClose('c_al')"><label for="c_al" ></label></div> 
+     </div>
+    </div>
+
+    <div class="status_box">
+        <div class="topic"><p class="tooltip">Warning Level Alert </p>
+
+          <div class="tooltip" id="tooltip-element2" onclick="infoBox('tooltip-element2')">  <span class="info_icon" >i</span>
+            <span class="tooltiptext">"If Warning level alerts have been disable. You will not receive notifications for Warning levels." <br><img src="../resources\image\flood\gmil.webp" style="width: 25px; height: 25px; margin-left: 45px; margin-top: 2px;"> &nbsp<img src="../resources\image\flood\sms.webp" style="width: 25px; height: 25px; "> </span>
+  
+          </div>
+            
+       </div>
+        <div class="option">  <div class="toggle">
+        <input type="checkbox" id="w_al" onclick="actionClose('w_al')" ><label for="w_al" ></label></div> 
+     </div>
+    </div>
+    <div id="overlay_al"></div>
+
+</div>
+    
+<p  class="main_top"><b>Action</b></p>
+
+             <div class="Ac">
+           
+                     <div class="status_box">
+                        <div class="topic"><p class="tooltip">Critical Level  Action</p>
+                          
+                           <div class="tooltip" id="tooltip-element3" onclick="infoBox('tooltip-element3')">  <span class="info_icon">i</span>
+                            <span class="tooltiptext" id="info3" > "If Critical level action have been disable. It will be harm for your Critical level power resources" <br><img src="../resources\image\flood\plugbase.png" style="width: 25px; height: 25px; margin-left: 45px; margin-top: 5px; "> <img src="../resources\image\flood\electricity.png" style="width: 25px; height: 28px; margin-left: 4.5px;"></span>
+                  
+                    </div>
+                 
+
+                        
+                        </div>
+                        <div class="option">  <div class="toggle">
+                        <input type="checkbox" id="c_ac" onclick="actionClose('c_ac')" ><label for="c_ac" ></label></div> 
+                     </div>
+                    </div>
+                    <div class="status_box">
+                        <div class="topic"><p class="tooltip" >Warning Level Action </p>
+
+
+                           <div class="tooltip" id="tooltip-element4" onclick="infoBox('tooltip-element4')"><span class="info_icon">i</span>
+                            <span class="tooltiptext">"If Warning level action have been disable. It will be harm for your Warning level power resources"<br><img src="../resources\image\flood\plugbase.png" style="width: 25px; height: 25px; margin-left: 45px;  margin-top: 5px; "> <img src="../resources\image\flood\electricity.png" style="width: 25px; height: 28px; margin-left: 4.5px;"></span>
+                      
+                          </div>
+                       </div>
+
+
+                        <div class="option">  <div class="toggle">
+                        <input type="checkbox" id="w_ac" onclick="actionClose('w_ac')"  ><label for="w_ac" ></label></div> 
+                     </div>
+                    </div>
+                    <div id="overlay_ac"></div>
+                </div>
+               
+</div> 
+
+<br><br>
+<div id="popup" class="popup">
+  <div style="padding: 20px;">   <div class="popup-content">
+    <p>Are you sure you want to perform this action?</p>  </div></div>
+<div class="pop_button">
+    <div id="noButton"><p>No</p></div>
+      <div id="yesButton"><p>Yes</p></div></div>
+</div>
+<div id="overlay"></div>
+<div id="loding_overlay"></div>
+<div id="loding_box" >
+
+<!--<div id="lds-ring"><div></div><div></div><div></div><div></div></div>
+
+<div id="loading-bar-spinner" class="spinner"><div class="spinner-icon"></div></div>-->
+<div class="spinner">
+  <div class="bar1"></div>
+  <div class="bar2"></div>
+  <div class="bar3"></div>
+  <div class="bar4"></div>
+  <div class="bar5"></div>
+  <div class="bar6"></div>
+  <div class="bar7"></div>
+  <div class="bar8"></div>
+  <div class="bar9"></div>
+  <div class="bar10"></div>
+  <div class="bar11"></div>
+  <div class="bar12"></div>
+</div>
+</div>
+<script>
+
+var id1Value,id1,payload,topic, timer,stat,d=0,
+companyID="node", deviceType="lls2",deviceID="923714-42180e2de6b4",
+publish_topic=companyID+"/"+deviceType+"/"+"b2n/"+deviceID+"/",// publish topic
+subTopic = companyID+"/"+deviceType+"/"+"n2b/"+deviceID+"/+",// subscribe topic
+
+
+level=document.getElementById('fill'),
+c_al=document.getElementById('c_al');
+w_al=document.getElementById('w_al');
+w_ac=document.getElementById('w_ac');
+c_ac=document.getElementById('c_ac');
+gui=document.getElementById('gui');
+
+
+
+function connect(){
+try{
+client.connect({ onSuccess: onConnect,useSSL: mqttUseSSL,userName,password });
+client.onConnectionLost = onConnectionLost;
+client.onMessageArrived = onMessageArrived;
+
+}catch{}}
+
+function onConnect() {
+    console.log("onConnect");    
+      client.subscribe(subTopic);
+     sendCommandToDevice(publish_topic+"info","read");
+}
+
+function sendCommandToDevice(topic,payload) {
+  try{
+    if (client.isConnected()) {
+        console.log("sendCommandToDevice: " + topic + ", Payload: " + payload);
+        var message = new Paho.MQTT.Message(payload);
+        message.destinationName = topic;
+        client.send(message);
+    }}
+    catch(error)
+    {
+      console.log(error);
+    }
+}
+
+
+function onMessageArrived(message) {
+  try{
+   onlinestatus();
+  topic = message.destinationName;
+  payload=message.payloadString;
+    console.log("Payload:" + payload);
+    console.log("Topic:", topic);
+   displayFunction(payload); 
+
+   setTimeout(function(){
+    document.getElementById("loding_overlay").style.display="none";
+      document.getElementById("loding_box").style.display="none";
+     // document.getElementById("lds-ring").style.display="none";
+       },300);
+   
+  }
+  catch(error)
+  {
+    console.log(error);
+  } 
+}
+
+function onConnectionLost(responseObject) {
+  if (responseObject.errorCode !== 0) {
+    console.log("onConnectionLost:"+responseObject.errorMessage);
+    offlinestatus('offline');
+  }
+  
+}
+
+function onlinestatus()
+{
+  document.getElementById("online").style.display="inline";
+  document.getElementById("offline").style.display="none";
+  document.getElementById("overlay_gui").style.display="none";
+  document.getElementById("overlay_ac").style.display="none";
+  document.getElementById("overlay_al").style.display="none";
+
+
+}
+function offlinestatus(stat)
+{
+  if(stat === 'offline'){  document.getElementById("offline").style.color="#FF3827";}
+
+  document.getElementById("online").style.display="none";
+  document.getElementById("offline").style.display="inline";
+
+  document.getElementById("overlay_gui").style.display="block";
+  document.getElementById("overlay_ac").style.display="block";
+  document.getElementById("overlay_al").style.display="block";
+
+
+for(var x = 0; x < bar.length; x++)
+{
+bar[x].style.backgroundColor = "#ccc";
+}
+
+}
+
+function displayFunction(payload)
+{
+  payload = JSON.parse(payload);
+
+ // var v=payload.triggers[1]+payload.triggers[0]
+ // console.log(v);
+
+ v1 = (payload.triggers[0] === 1) ? 8 : (payload.triggers[0] === 0 ? 0 : v1);
+ v2 = (payload.triggers[1] === 1) ? 4 : (payload.triggers[1] === 0 ? 0 : v2);
+ v3 = (payload.triggers[2] === 1) ? 2 : (payload.triggers[2] === 0 ? 0 : v3);
+ v4 = (payload.triggers[3] === 1) ? 1 : (payload.triggers[3] === 0 ? 0 : v4);
+
+ v=v1+v2+v3+v4;
+ console.log(v);
+
+      stat=payload['stat'];
+
+      switch (stat)
+      {
+        case "online":
+          onlinestatus();
+          break;
+        case "offline":
+        offlinestatus(stat);
+          break;
+      }
+      updateSignalStrength(payload['rssi'],payload['stat']);//rssi
+
+  if(stat == 'online')
+  {
+    
+    if (payload.levels[0] == '0' &&  payload.levels[1] == '0' ) 
+    {
+      level.style.height="1%";
+      gui.style.boxShadow ="0.5px 0.5px 3px 0.5px gray";
+      console.log('1');
+
+    }
+    if (payload.levels[0] == '0' &&  payload.levels[1] == '1') 
+    {
+      level.style.height="50%";
+      gui.style.boxShadow = ".5px .5px 4px 2px #FF9200";
+      console.log('50');
+
+    }
+    if ( payload.levels[0] == '1' &&  payload.levels[1] == '0') 
+    {
+      level.style.height="99%";
+      gui.style.boxShadow = ".5px .5px 4px 2px red";
+           console.log('99');
+
+    }
+    if ( payload.levels[0] == '1' &&  payload.levels[1] == '1') 
+    {
+      level.style.height="99%";
+      gui.style.boxShadow = ".5px .5px 4px 2px red";
+      console.log('99 2');
+
+    }
+
+   if( payload.triggers && payload.triggers.length > 0){
+    switch (payload.triggers[0] )
+   {
+    case 0:
+    w_ac.checked=false;
+ 
+     break;
+    case 1:
+    w_ac.checked=true;
+
+    break;
+
+   }
+   switch (payload.triggers[1] )
+   {
+    case 0:
+    c_ac.checked=false;
+     break;
+    case 1:
+    c_ac.checked=true;
+
+    break;
+
+   }
+
+   switch (payload.triggers[2] )
+   {
+    case 0:
+    w_al.checked=false;
+ 
+     break;
+    case 1:
+    w_al.checked=true;
+
+    break;
+
+   }
+   switch (payload.triggers[3] )
+   {
+    case 0:
+    c_al.checked=false;
+     break;
+    case 1:
+    c_al.checked=true;
+
+    break;
+ }
+ }
+  }   
+}
+
+      function add(sum){
+       var d2=v+sum;
+      sendCommandToDevice(topic, d2.toString());
+       }
+
+    var bar=  document.getElementsByClassName("bar");  //signal bar.
+    function updateSignalStrength(rssi,stat) {
+    if(stat === 'online'){
+      if (rssi >= -50) {
+    bar[0].style.backgroundColor = "#565461";
+    bar[1].style.backgroundColor = "#565461";
+    bar[2].style.backgroundColor = "#565461";
+    bar[3].style.backgroundColor = "#565461";
+    bar[4].style.backgroundColor = "#565461";
+} else if (rssi >= -55) {
+    bar[0].style.backgroundColor = "#565461";
+    bar[1].style.backgroundColor = "#565461";
+    bar[2].style.backgroundColor = "#565461";
+    bar[3].style.backgroundColor = "#565461";
+} else if (rssi >= -65) {
+    bar[0].style.backgroundColor = "#565461";
+    bar[1].style.backgroundColor = "#565461";
+    bar[2].style.backgroundColor = "#565461";
+} else if (rssi >= -80) {
+    bar[0].style.backgroundColor = "#565461";
+    bar[1].style.backgroundColor = "#565461";
+} else if (rssi >= -85) {
+    bar[0].style.backgroundColor = "#565461";
+} else if (rssi >= -100) {
+}
+    }
+    }
+
+
+
+
+
+
+
+
+    //
+
+    ///////////////////////////////////////////////////////////////////////////
+  function actionClose(id1){
+    topic=publish_topic+"triggers/set";
+    id1Value=id1;
+    var checkbox = document.getElementById(id1)
+  
+    if (checkbox.checked){
+
+      if (id1Value == 'c_al') {
+        document.getElementById(id1Value).checked = true;
+         v=v+1;
+      clearTimeout(timer); 
+      
+    }
+    if (id1Value == 'w_al') {
+        document.getElementById(id1Value).checked = true;
+        v=v+2;
+    clearTimeout(timer); 
+      
+    }
+
+    if (id1Value == 'c_ac') {
+        document.getElementById(id1Value).checked = true;
+         v=v+4;
+      
+        clearTimeout(timer); 
+      
+    }
+    if (id1Value == 'w_ac') {
+        document.getElementById(id1Value).checked = true;
+        v=v+8;
+     clearTimeout(timer); 
+      
+    }
+    console.log("v :"+v);
+
+     timer=setTimeout(function() {
+      document.getElementById("loding_overlay").style.display="block";
+      document.getElementById("loding_box").style.display="block";
+  
+             sendCommandToDevice(topic, v.toString());
+                 }, 800); 
+
+
+
+
+    }
+    else if (!checkbox.checked) {
+        document.getElementById('popup').style.display = 'block';
+        document.getElementById("overlay").style.display = "block";   
+    }
+
+  }
+document.getElementById('yesButton').addEventListener('click', function() {
+    topic=publish_topic+"triggers/set";
+    document.getElementById('popup').style.display = 'none';
+    document.getElementById("overlay").style.display = "none";
+    if (id1Value == 'c_al') {
+        document.getElementById(id1Value).checked = false;
+        var d2=v-1;
+        clearTimeout(timer); 
+    }
+    if (id1Value == 'w_al') {
+        document.getElementById(id1Value).checked = false;
+        var d2=v-2;
+        clearTimeout(timer); 
+    }
+
+    if (id1Value == 'c_ac') {
+        document.getElementById(id1Value).checked = false;
+        var d2=v-4;
+        clearTimeout(timer); 
+      
+    }
+    if (id1Value == 'w_ac') {
+        document.getElementById(id1Value).checked = false;
+        var d2=v-8;
+        clearTimeout(timer); 
+    }
+        
+    //sendCommandToDevice(topic, d2.toString());
+
+    timer=setTimeout(function() {
+      document.getElementById("loding_overlay").style.display="block";
+      document.getElementById("loding_box").style.display="block";
+  
+             sendCommandToDevice(topic, d2.toString());
+                 }, ); 
+
+    
+   
+});
+
+document.getElementById('noButton').addEventListener('click', function() {
+    topic=publish_topic+"triggers/set";
+    document.getElementById('popup').style.display = 'none';
+    document.getElementById("overlay").style.display = "none";
+    id1Value=document.getElementById(id1Value);
+    if(id1Value)
+    {
+    id1Value.checked = true;
+
+    }
+   
+});
+
+
+
+function infoBox(id) {
+  var element=document.getElementById(id);
+    var tooltipText = element.querySelector('.tooltiptext');
+    if (tooltipText) {
+      tooltipText.classList.toggle('hover-effect');
+
+    /*  function handleClickOutside(event) {
+        if (!element.contains(event.target)) {
+          tooltipText.classList.remove('hover-effect');
+          document.removeEventListener('click', handleClickOutside);
+          document.removeEventListener('touchstart', handleTouchOutside);
+        }
+      }
+
+      function handleTouchOutside(event) {
+        if (!element.contains(event.target)) {
+          tooltipText.classList.remove('hover-effect');
+          document.removeEventListener('click', handleClickOutside);
+          document.removeEventListener('touchstart', handleTouchOutside);
+        }
+      }
+*/
+      document.addEventListener('click', function handleClickOutside(event) {
+        if (!element.contains(event.target)) {
+          tooltipText.classList.remove('hover-effect');
+          document.removeEventListener('click', handleClickOutside);
+        }
+      });
+
+      document.addEventListener('touchstart', function handleTouchOutside(event) {
+        if (!element.contains(event.target)) {
+          tooltipText.classList.remove('hover-effect');
+          document.removeEventListener('touchstart', handleTouchOutside);
+        }
+      });
+
+     // document.addEventListener('click', handleClickOutside);
+      //document.addEventListener('touchstart', handleTouchOutside);
+    }
+  }
+
+
+
+
+connect();
+
+setTimeout(function() {
+  if(stat !== 'online'){
+  offlinestatus('none');}
+   }, 1000);
+
+setInterval(connect, 2000);
+
+    </script>
+</body>
+
+</html>

@@ -64,12 +64,7 @@ p.zone{ font-size: 10px; padding-top: 3px;}
        border-top: 1px; /* Add a border at the top for separation */
        z-index: 1000; /* Ensure it stays above other content */
    }
-  #waterpump.hover-effect{box-shadow: none; opacity: 0.2; background-color: #EEEEEE; }
-  #powerSource.hover-effect{box-shadow: none; opacity: 0.2; background-color: #EEEEEE; }
-  #flood.hover-effect{box-shadow: none; opacity: 0.2; background-color: #EEEEEE; }
-  #cctv.hover-effect{box-shadow: none; opacity: 0.2; background-color: #EEEEEE; }
-  #smoke.hover-effect{box-shadow: none; opacity: 0.2; background-color: #EEEEEE; }
-  #siren.hover-effect{box-shadow: none; opacity: 0.2; background-color: #EEEEEE; }
+  .hover-effect{box-shadow: none; opacity: 0.2; background-color: #bababa; }
   .popup {
     width: 80%;
   display: none; 
@@ -333,6 +328,7 @@ color:blue;
      z-index: 9995;
      cursor: pointer;
     }
+
 
 @media only screen and (max-width: 600px) {
 
@@ -874,7 +870,7 @@ function displaySceneList(payload) {
                 jobElement.className = `box ${boxClass}`;
                 jobElement.innerHTML = `
                 
-                    <div class="${blockClass}" onclick="location.href='scene/scene.html?id=${scene.scene_id}&scene_name=${scene.scene_name}&scene_icon=${scene.scene_icon}'">
+                    <div class="${blockClass}" id='${scene.scene_id}'ontouchstart="addHoverClass('${scene.scene_id}')" ontouchend="removeHoverClass('${scene.scene_id}')" onclick="location.href='scene/scene.html?id=${scene.scene_id}&scene_name=${scene.scene_name}&scene_icon=${scene.scene_icon}'">
                         <img src="resources/image/icons/${scene.scene_icon}.png" alt="${scene.scene_name}">
                         <h5>${scene.scene_name}</h5>
                         <p>${scene.scene_description}</p>
@@ -951,9 +947,11 @@ document.getElementById("cctv").onclick=function(){location.href="controller/cct
 
    function addHoverClass(id) {
     document.getElementById(id).classList.add('hover-effect');
+   
+  
 }
 
-function removeHoverClass() {
+function removeHoverClass(id) {
     document.getElementById(id).classList.remove('hover-effect');
 }
 
