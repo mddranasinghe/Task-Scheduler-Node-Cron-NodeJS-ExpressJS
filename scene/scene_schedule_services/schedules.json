@@ -1,68 +1,14 @@
 [
   {
-    "id": "3_1",
+    "id": "1_1",
     "active": 1,
     "type": 3,
     "action": 0,
-    "scheduleName": "bnb",
-    "sceneName": "Good Night",
-    "sceneIcon": "ic_scn_03",
-    "cronTimes": [
-      "09 13 24 7 *"
-    ]
-  },
-  {
-    "id": "1_2",
-    "active": 1,
-    "type": 3,
-    "action": 0,
-    "scheduleName": "n ",
+    "scheduleName": "qqq",
     "sceneName": "Home Away",
     "sceneIcon": "ic_scn_02",
     "cronTimes": [
-      "09 13 24 7 *"
-    ]
-  },
-  {
-    "id": "5_3",
-    "active": 1,
-    "type": 3,
-    "action": 0,
-    "scheduleName": "jj",
-    "sceneName": "Switch Off All Lights",
-    "sceneIcon": "ic_scn_10",
-    "cronTimes": [
-      "17 13 24 7 *"
-    ]
-  },
-  {
-    "id": "4_4",
-    "active": 1,
-    "type": 3,
-    "action": 0,
-    "scheduleName": "ll",
-    "sceneName": "Shut Down All",
-    "sceneIcon": "ic_scn_17",
-    "cronTimes": [
-      "17 13 24 7 *"
-    ]
-  },
-  {
-    "id": "2_5",
-    "active": 1,
-    "type": 4,
-    "action": 0,
-    "scheduleName": "pp",
-    "sceneName": "Back Home",
-    "sceneIcon": "ic_scn_01",
-    "cronTimes": [
-      "17 13 * * 0",
-      "17 13 * * 1",
-      "17 13 * * 2",
-      "17 13 * * 3",
-      "17 13 * * 4",
-      "17 13 * * 5",
-      "17 13 * * 6"
+      "43 09 25 7 *"
     ]
   }
 ]

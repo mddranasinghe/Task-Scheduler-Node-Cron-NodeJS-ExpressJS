@@ -115,6 +115,7 @@ p.zone{ font-size: 10px; padding-top: 3px;}
   flex-wrap: wrap;
   justify-content: space-between;
   width: 97%; margin: 0 auto;
+  position: relative;
 
 }
 
@@ -131,6 +132,7 @@ p.zone{ font-size: 10px; padding-top: 3px;}
   padding: 8px;
   box-shadow: 0.5px 0.5px 3px 0.5px gray;
   border-radius: 7px;
+  position: relative;
 }
 
 #scene-div img {
@@ -158,6 +160,24 @@ padding-bottom:2px;
 .box:nth-child(2n+1) {
   clear: both;
 }
+#scene-div .Fav_main{
+width: 25px;
+height: 25px;
+position: absolute;
+top: 8px; 
+right: 8px;
+border-radius: 50%;
+background-color: rgb(199, 203, 212);
+}
+
+.Fav_main img{
+  width: 18px !important;
+  height: 18px !important;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top:2px;
+}
 
 #scene_manage {
             width: 100%;
@@ -166,9 +186,9 @@ padding-bottom:2px;
             position: fixed;
             bottom: 20px; 
             height: 75px;
-        }
+ }
 
-        #scene_button  {
+ #scene_button  {
             width: 98%;
             height: 46px;
             text-align: center;
@@ -437,7 +457,7 @@ td{ box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 10px; padding-left: 1
           
           <div id="scene_manage_div" style="display:none; ">
             <header>
-              <img src="resources\image\b1.png" id="backicon" onclick="navSceneList()">
+              <img src="resources\image\backbutton.png" id="backicon" onclick="navSceneList()">
               <h1>Scene Manage</h1>
             </header>
        
@@ -841,7 +861,12 @@ function displaySceneList(payload) {
         try {
             payload.forEach((scene, index) => {
                 const jobElement = document.createElement('div');
-
+                if(scene.favorite == true)
+                {
+                  color ="#7D63BE";
+                }else{
+                  color ="rgb(199, 203, 212)";
+                }
                 // Alternate the class based on index
                 const boxClass = index % 2 === 0 ? 'left-box' : 'right-box';
                 const blockClass = index % 2 === 0 ? 'block-L' : 'block-R';
@@ -853,6 +878,7 @@ function displaySceneList(payload) {
                         <img src="resources/image/icons/${scene.scene_icon}.png" alt="${scene.scene_name}">
                         <h5>${scene.scene_name}</h5>
                         <p>${scene.scene_description}</p>
+                        <div class="Fav_main" style="background-color:${color}"><img src="resources/image/icons/start.png"></div>
                     </div>
                 `;
 

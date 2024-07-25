@@ -23,7 +23,7 @@
         "scene_name": "Good Night",
         "scene_description": "scene",
         "scene_icon": "ic_scn_03",
-        "favorite": true
+        "favorite": false
 
     },
 
@@ -33,7 +33,7 @@
         "scene_name": "Shut Down All",
         "scene_description": "scene",
         "scene_icon": "ic_scn_17",
-        "favorite": false
+        "favorite": true
 
     },
 
