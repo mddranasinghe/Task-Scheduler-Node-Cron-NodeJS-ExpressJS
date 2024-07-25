@@ -10,5 +10,35 @@
     "cronTimes": [
       "43 09 25 7 *"
     ]
+  },
+  {
+    "id": "1_2",
+    "active": 1,
+    "type": 3,
+    "action": 0,
+    "scheduleName": "bbbhbhb",
+    "sceneName": "Home Away",
+    "sceneIcon": "ic_scn_02",
+    "cronTimes": [
+      "44 10 25 7 *"
+    ]
+  },
+  {
+    "id": "1_3",
+    "active": 1,
+    "type": 4,
+    "action": 0,
+    "scheduleName": "jnnj",
+    "sceneName": "Home Away",
+    "sceneIcon": "ic_scn_02",
+    "cronTimes": [
+      "44 10 * * 0",
+      "44 10 * * 1",
+      "44 10 * * 2",
+      "44 10 * * 3",
+      "44 10 * * 4",
+      "44 10 * * 5",
+      "44 10 * * 6"
+    ]
   }
 ]
