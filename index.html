@@ -227,7 +227,7 @@ background-color: rgb(199, 203, 212);
     width: 95%;
     height: 60%;
     position: fixed;
-    top: 100px;
+    top: 80px;
     left: 50%;
     transform: translateX(-50%); 
     margin: 0 auto;
@@ -454,7 +454,7 @@ td{ box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 10px; padding-left: 1
           <div id="scene_manage_div" style="display:none; ">
             <header>
               <img src="resources\image\backbutton.png" id="backicon" onclick="navSceneList()">
-              <h2>Scene Manage</h2>
+              <h2>Delete Scene</h2>
             </header>
        
           <div id="scene_manage_list"></div>
@@ -469,16 +469,16 @@ td{ box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 10px; padding-left: 1
   <div style="padding: 20px;">   <div class="popup-content">
     <p>Are you sure you want to delete schedules releted to this scene?This change can not be undone.</p>  </div></div>
 <div class="pop_button">
-    <div id="noButton"><p>No</p></div>
-      <div id="yesButton"><p>Yes</p></div></div>
+    <div id="noButton"ontouchstart="addHoverClass('noButton')" ontouchend="removeHoverClass('noButton')" ><p>No</p></div>
+      <div id="yesButton" ontouchstart="addHoverClass('yesButton')" ontouchend="removeHoverClass('yesButton')"><p>Yes</p></div></div>
 </div>
 
 <div id="popupDeleteAll" class="popupConfirm">
   <div style="padding: 20px;">   <div class="popup-content">
     <p>Are you sure you want to delete all schedules?This change can not be undone.</p>  </div></div>
 <div class="pop_button">
-    <div id="noButton2"><p>No</p></div>
-      <div id="yesButton2"><p>Yes</p></div></div>
+    <div id="noButton2" ontouchstart="addHoverClass('noButton2')" ontouchend="removeHoverClass('noButton2')"><p>No</p></div>
+      <div id="yesButton2" ontouchstart="addHoverClass('yesButton2')" ontouchend="removeHoverClass('yesButton2')"><p>Yes</p></div></div>
 </div>
 
 
@@ -603,30 +603,6 @@ var  payload, topic,topicsArray,stat1=0,stat2=0,stat3=0,stat4=0,sum_stat=0,
       
       
       }
-
-
-
-      document.addEventListener('DOMContentLoaded', function() {
-      // Prevent right-click context menu on images
-      document.addEventListener('contextmenu', function(event) {
-        if (event.target.matches('.no-save')) {
-          event.preventDefault();
-        }
-      });
-
-      // Prevent long-press save option on mobile devices
-      document.addEventListener('touchstart', function(event) {
-        if (event.target.matches('.no-save')) {
-          event.preventDefault();
-        }
-      }, { passive: false });
-
-      document.addEventListener('mousedown', function(event) {
-        if (event.target.matches('.no-save')) {
-          event.preventDefault();
-        }
-      });
-    });
 
 
 
