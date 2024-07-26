@@ -123,8 +123,9 @@ function loadSchedules() {
         schedule.tasks = schedule.cronTimes.map(pattern => {
           const task = cron.schedule(pattern, () => {
             console.log(`Running scheduled job: ${schedule.scheduleName}`);
+            if(schedule.cronTimes.length == 1){
             schedule.active = 4;
-
+            }
             setTimeout(() => {
               saveSchedules(parsedSchedules);
             }, 1500);
@@ -136,13 +137,16 @@ function loadSchedules() {
       } else {
         schedule.tasks = [];
       }
+     
     });
 
     return parsedSchedules;
+   
   } catch (error) {
     console.error('Error reading schedules file:', error);
     return [];
   }
+
 }
 
 function saveSchedules(schedules) {
@@ -162,6 +166,8 @@ function saveSchedules(schedules) {
     console.log('Schedules saved successfully.');
     loadSchedules();
     getList();
+
+ 
   } catch (error) {
     console.error('Error writing schedules file:', error);
   }
@@ -412,11 +418,6 @@ function jobdelete(payload) {
     console.error('Error deleting schedule:', error);
   }
 }
- 
-
-
-
-
 // only for web appliction 
 function deleteAllSchedules() {
   try {
@@ -438,26 +439,22 @@ function deleteAllSchedules() {
 function deleteSceneSchedule(payload) {
   try {
     payload = JSON.parse(payload);
-    
-    // Filter out schedules that do not match the payload
+ 
     const matchingSchedules = schedules.filter(schedule => schedule.id.split('_')[0] == payload);
     
     if (matchingSchedules.length === 0) {
       console.error(`No schedules with ID ${payload} found`);
       return;
     }
-
-    // Stop tasks for each matching schedule
     matchingSchedules.forEach(schedule => {
       if (schedule.tasks) {
         schedule.tasks.forEach(task => task.stop());
       }
     });
 
-    // Filter out the matching schedules from the main schedules array
     schedules = schedules.filter(schedule => schedule.id.split('_')[0] != payload);
 
-    // Save the updated schedules array
+
     saveSchedules(schedules);
 
     console.log(`Schedules with ID ${payload} deleted`);
@@ -465,3 +462,7 @@ function deleteSceneSchedule(payload) {
     console.error('Error deleting schedules:', error);
   }
 }
+setInterval(() => {
+  schedules = loadSchedules();
+}, 40000);
+setInterval(getList, 60000);
