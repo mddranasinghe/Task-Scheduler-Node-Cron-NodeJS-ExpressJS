@@ -123,7 +123,7 @@ function loadSchedules() {
         schedule.tasks = schedule.cronTimes.map(pattern => {
           const task = cron.schedule(pattern, () => {
             console.log(`Running scheduled job: ${schedule.scheduleName}`);
-            if(schedule.cronTimes.length == 1){
+            if(schedule.type == 3){
             schedule.active = 4;
             }
             setTimeout(() => {

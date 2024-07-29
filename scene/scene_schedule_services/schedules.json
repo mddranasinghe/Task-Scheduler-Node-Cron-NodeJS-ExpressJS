@@ -13,20 +13,53 @@
   },
   {
     "id": "1_2",
-    "active": 1,
-    "type": 4,
+    "active": 4,
+    "type": 3,
     "action": 0,
     "scheduleName": "r",
     "sceneName": "Home Away",
     "sceneIcon": "ic_scn_02",
     "cronTimes": [
-      "25 16 * * 0",
-      "25 16 * * 1",
-      "25 16 * * 2",
-      "25 16 * * 3",
-      "25 16 * * 4",
-      "25 16 * * 5",
-      "25 16 * * 6"
+      "51 09 29 7 *"
+    ]
+  },
+  {
+    "id": "4_3",
+    "active": 1,
+    "type": 4,
+    "action": 0,
+    "scheduleName": "Re",
+    "sceneName": "Shut Down All",
+    "sceneIcon": "ic_scn_17",
+    "cronTimes": [
+      "54 09 * * 1",
+      "54 09 * * 3",
+      "54 09 * * 4",
+      "54 09 * * 5"
+    ]
+  },
+  {
+    "id": "1_4",
+    "active": 1,
+    "type": 4,
+    "action": 0,
+    "scheduleName": "ccccccccc",
+    "sceneName": "Home Away",
+    "sceneIcon": "ic_scn_02",
+    "cronTimes": [
+      "58 09 * * 1"
+    ]
+  },
+  {
+    "id": "1_5",
+    "active": 4,
+    "type": 3,
+    "action": 0,
+    "scheduleName": "r00000",
+    "sceneName": "Home Away",
+    "sceneIcon": "ic_scn_02",
+    "cronTimes": [
+      "00 10 29 7 *"
     ]
   }
 ]
