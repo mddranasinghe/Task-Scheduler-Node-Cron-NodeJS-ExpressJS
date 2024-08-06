@@ -1,31 +1,32 @@
 const cron = require('node-cron');
-const fs = require('fs-extra'); 
-const mqtt = require('mqtt'); 
+const fs = require('fs-extra');
+const mqtt = require('mqtt');
 
-const jobs = {};
-const top = 'v2jlcwytpqaufx/scene/#';
-public_topic="v2jlcwytpqaufx/scene/timers";
+var jobs = {},
 
+
+tasks = [],task=0,payload,topic
 // MQTT Broker details
 
-const mqttBroker = 'ws://home.onesmartapi.com:1884/mqtt'; 
-const userName = 'dinuka';
-const password = 'dinuka';
+company_code='v2jlcwytpqaufx',
 
-const mqttOptions = {
+subscribe_topic = company_code+'/scene/#',
+publish_topic=company_code+"/scene/timers",
+
+
+mqttBroker = 'ws://home.onesmartapi.com:1884/mqtt',
+userName = 'dinuka',
+password = 'dinuka',
+mqttOptions = {
   clientId: `mqtt_${Math.floor(Math.random() * 1000)}`,
   username: userName,
-  password: password,
+  password: password,},
 
-};
-var tasks = [], task;
-
-
-const client = mqtt.connect(mqttBroker, mqttOptions);
+client = mqtt.connect(mqttBroker, mqttOptions);
 
 client.on('connect', () => {
   console.log("Connected to MQTT Broker");
-  client.subscribe(top, (err) => {
+  client.subscribe(subscribe_topic, (err) => {
     if (err) {
       console.error("Subscription error:", err);
     } else {
@@ -122,7 +123,12 @@ function loadSchedules() {
       if (schedule.active === 1) {
         schedule.tasks = schedule.cronTimes.map(pattern => {
           const task = cron.schedule(pattern, () => {
+
+            const scene_id = schedule.id.split("_")[0];
+            sendCommandToDevice(`${company_code}/scene/b2n/${scene_id}/set`, JSON.stringify(schedule.action));
+
             console.log(`Running scheduled job: ${schedule.scheduleName}`);
+
             if(schedule.type == 3){
             schedule.active = 4;
             }
@@ -388,7 +394,7 @@ function getList() {
     };
   });
 
-  sendCommandToDevice(public_topic, JSON.stringify(jobList));
+  sendCommandToDevice(publish_topic, JSON.stringify(jobList));
 }
 
 

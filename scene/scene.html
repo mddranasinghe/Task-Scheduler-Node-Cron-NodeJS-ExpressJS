@@ -105,7 +105,7 @@ font-size: 18px;
 
 
 
-   .cricle-box input[type="checkbox"] {
+  .cricle-box input[type="checkbox"] {
     width: 50px;
     height: 50px; 
     border:2px solid gray; 
@@ -137,7 +137,7 @@ font-size: 18px;
 }
 
         /* Style for checkboxes */
- input[type="checkbox"] {
+input[type="checkbox"] {
     width: 20px;
     height: 20px; 
     border:2px solid #3091E5; 
@@ -425,7 +425,7 @@ font-size: 18px;
             position: fixed;
              margin-left: auto;
             margin-right: auto;
-            top:80%;
+            bottom:120px;
            left:50%;
           text-align:  center;
             transform: translate(-50%, -50%);
@@ -444,6 +444,11 @@ color:blue;
 #yesButton{border-left: none; color:red}
 .pop_button p{ text-align:center; margin-bottom: 10px; margin-top: 16px; }
 .hover-effect{box-shadow: none; opacity: 0.2; background-color: #bababa; }
+
+
+
+  
+
 
     
 </style>
@@ -509,6 +514,8 @@ color:blue;
     <label for="scheduleTime">Set Time:</label>
     <input  type="time" id="scheduleTime" name="scheduleTime" required value="">
    </div> <br>
+
+ 
 </div>
 
     <div id="popup" class="popup" style="z-index: 9999;">
@@ -534,13 +541,14 @@ color:blue;
         <div id="CancelButton"  onclick="resetChanges()">Cancel</div> &nbsp;
         <div id="OkButton"   onclick="removePopup()">Ok</div>
    </div>
+   
       </div>
       
       <div id="errorMessage_popup">Please fill in all required fields.</div>
-
+  
+ 
         </form>
-     
-        
+   
 
 
 <div class="add-button2" style="z-index: 9990;">
@@ -570,7 +578,7 @@ scene_id = urlParams.get('id'),
 scene_name= urlParams.get('scene_name'),
 scene_icon= urlParams.get('scene_icon'),
 
- totalDays = 0, scheduleType=3, active=1,action=0,year=2024;
+ totalDays = 0, scheduleType=3, active=1,action=1,year=2024;
 subTopic="v2jlcwytpqaufx/scene/#",
 publish_topic="v2jlcwytpqaufx/scene/timer/";
 console.log('id '+ scene_id )
