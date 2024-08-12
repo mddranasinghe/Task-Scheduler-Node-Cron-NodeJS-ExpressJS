@@ -1,14 +1,20 @@
 [
   {
-    "id": "1_1",
-    "active": 4,
-    "type": 3,
+    "id": "5_1",
+    "active": 1,
+    "type": 4,
     "action": 1,
-    "scheduleName": "h",
-    "sceneName": "Home Away",
-    "sceneIcon": "ic_scn_02",
+    "scheduleName": "all light off",
+    "sceneName": "Switch Off All Lights",
+    "sceneIcon": "ic_scn_10",
     "cronTimes": [
-      "23 12 6 8 *"
+      "18 10 * * 0",
+      "18 10 * * 1",
+      "18 10 * * 2",
+      "18 10 * * 3",
+      "18 10 * * 4",
+      "18 10 * * 5",
+      "18 10 * * 6"
     ]
   }
 ]

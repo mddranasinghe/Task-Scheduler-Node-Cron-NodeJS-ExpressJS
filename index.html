@@ -86,7 +86,7 @@ p.zone{ font-size: 10px; padding-top: 3px;}
 
 
 #nav-Button{   
-  width: 92%;  margin: 0 auto; overflow: hidden;color:white;font-size: 13px; margin-top: 2vw;
+  width: 95%;  margin: 0 auto; overflow: hidden;color:white;font-size: 13px; margin-top: 2vw;
 }
 #nav-device-div{
   width: 48%; float: left; display: flex; justify-content: center;
@@ -208,7 +208,7 @@ background-color: rgb(199, 203, 212);
 }
 #scene-manage p{
 
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 #scene_manage_div {
@@ -217,8 +217,15 @@ background-color: rgb(199, 203, 212);
 #scene_manage_div header
 {
   position: fixed;
-
+  width: 100%;
   padding: 9px;
+  left: 50%;
+  transform: translate(-50%, 0%);
+}
+#scene_manage_div header h2
+{
+  margin-top: 10px;
+  margin-left: 5px;
 }
 #scene_manage_list {
     border: none;
@@ -360,11 +367,14 @@ td{ box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 10px; padding-left: 1
   #device_div {width: 80%;margin: 0 auto;}
   .dotdiv{width: 80%;}
   #scene-div img{width: 80px; height: 78px;}
-
 .block-L, .block-R {width: 95%;height: 130px;padding: 12px;box-shadow: 0.5px 0.5px 3px 0.5px gray;border-radius: 9px;}
 #scene-div p{font-size: 11px; padding-bottom:2px;}
 #scene-div { display: flex; flex-wrap: wrap; justify-content: space-between; width: 77%; margin: 0 auto;}
-
+#nav-Button {width: 75%;}
+#scene_button { width: 75%;}
+#scene_manage_div header{width: 76.5%;}
+#scene_manage_list {width: 74.5%;}
+#delete_Scene_sch {width: 76.5%;}
 }
 
 
@@ -454,7 +464,7 @@ td{ box-shadow: 0.5px 0.5px 3px 0.5px gray; border-radius: 10px; padding-left: 1
           <div id="scene_manage_div" style="display:none; ">
             <header>
               <img src="resources\image\backbutton.png" id="backicon" onclick="navSceneList()">
-              <h2>Delete Scene</h2>
+              <h2 >Delete Scene</h2>
             </header>
        
           <div id="scene_manage_list"></div>
@@ -750,7 +760,7 @@ function displaySceneManage(jobs) {
         const noJobsElement = document.createElement('div');
         noJobsElement.innerHTML = `
             <div id="empty_schudule">
-                <small>There are no schedules. Tap "Add New Schedule" to create a schedule.</small><br>
+                <small>&nbsp&nbsp&nbsp&nbspThere are no schedules. Tap "Add New Schedule" to create a schedule.</small><br>
                 <img id="no_sch" src="scene/image/no_schdule.png" id="deleimg">
             </div>
         `;

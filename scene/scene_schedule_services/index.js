@@ -8,7 +8,7 @@ var jobs = {},
 tasks = [],task=0,payload,topic
 // MQTT Broker details
 
-company_code='v2jlcwytpqaufx',
+company_code='v2jlcwytpqaufx',// company code.........................
 
 subscribe_topic = company_code+'/scene/#',
 publish_topic=company_code+"/scene/timers",

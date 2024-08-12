@@ -23,8 +23,6 @@ body{
       touch-action: pan-y;
             height: 100%;
             margin: 0;
-           
-          
             justify-content: center;
             align-items: center;
           
@@ -231,6 +229,8 @@ input[type="checkbox"]:checked::after {
             background: white;
             position: fixed;
             top: 0;
+            left: 50%;
+            transform: translate(-50%, 0%)
         }
            .add-button {
             width: 100%;
@@ -291,12 +291,12 @@ input[type="checkbox"]:checked::after {
         {
             width: 95%;
             border: none;
-          position: fixed;
+            position: fixed;
             overflow-y:auto;
-
             height: 50%;       
-            margin-left: 10px;
             margin-top: 80px;
+            left: 50%;
+            transform: translate(-50%, 0%)
         }
 
         .schdule_body p{
@@ -368,6 +368,8 @@ font-size: 18px;
   bottom: 20px;
   height: 130px;
   background-color: white;
+  left: 50%;
+  transform: translate(-50%, 0%);
 }
 
 #schedulButton {
@@ -397,7 +399,7 @@ font-size: 18px;
   position: absolute;
 }
 
-  
+
  .popupConfirm {
             width: 70%;
             display: none;
@@ -448,13 +450,30 @@ color:blue;
 
 
   
+@media only screen and (max-width: 600px) {
+
+
+}
+@media only screen and (min-width: 600px) {
+
+}
+
+@media only screen and (min-width: 1024px) {
+  
+  #scheduleJobsList{width: 67%;}
+  header, .head_schedule {width: 70%;}
+  .add-button {width: 70%;}
+  .schdule_body {width:68%;}
+  .add-button2 {width: 70%;}
+}
+
 
 
     
 </style>
 </head>
 <body>
-  <div id="list" style="display:non">
+  <div id="list" style="display:flex">
     <header>
         <img src="image/backbutton.png" id="backicon" onclick="location.href='../index.html?value=scene-div'">
         <div style="display: flex; align-items: center;">
@@ -653,7 +672,7 @@ function handleFormSubmit(event) {
 
 function backfun() {  // backbutton 
   document.getElementById('add').style.display='none';
-  document.getElementById('list').style.display='block';
+  document.getElementById('list').style.display='flex';
   scheduleType = 3;
 
 }
@@ -1030,8 +1049,7 @@ sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
             `;
             jobsList.appendChild(jobElement);
         }
-        
-      
+
       });
 
     if(count == 0) {
@@ -1039,7 +1057,7 @@ sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
         const noJobsElement = document.createElement('div');
         noJobsElement.innerHTML = `
             <div id="scene-div">
-                <small>There are no schedules. Tap "Add New Schedule" to create a schedule.</small><br>
+                <small>&nbsp&nbsp&nbsp&nbspThere are no schedules. Tap "Add New Schedule" to create a schedule.</small><br>
                 <img id="no_sch" src="image/no_schdule.png">
             </div>
         `;
@@ -1047,7 +1065,7 @@ sendCommandToDevice(publish_topic+'delete', JSON.stringify(id));
         return;
     }
     } catch (error) {
-        console.error('Error displaying jobs:', error);
+      //  console.error('Error displaying jobs:', error);
     }
 }
 
